@@ -23,8 +23,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        $states = State::all();
-        $cities = City::all();
+        $states = State::select('id', 'name')->get();
+        $cities = City::select('id', 'name', 'state_id')->get();
 
         return Inertia::render('Auth/Register', [
             'cities' => $cities,

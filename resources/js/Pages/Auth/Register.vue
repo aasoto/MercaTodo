@@ -12,16 +12,6 @@ const props = defineProps({
     states: Array,
 });
 
-const state_selected = ref(0);
-
-const show_cities = (stateId) => {
-    if (stateId) {
-        state_selected.value = stateId;
-    } else {
-        state_selected.value = 0;
-    }
-}
-
 const form = useForm({
     // name: '',
     firstName: '',
@@ -39,6 +29,17 @@ const form = useForm({
     password_confirmation: '',
     terms: false,
 });
+
+const state_selected = ref(0);
+
+const show_cities = (stateId) => {
+    form.city = '';
+    if (stateId) {
+        state_selected.value = stateId;
+    } else {
+        state_selected.value = 0;
+    }
+}
 
 const submit = () => {
     form.post(route('register'), {
@@ -182,6 +183,7 @@ const submit = () => {
                     id="state"
                     v-model="form.state"
                     @change="show_cities(form.state)"
+                    required
                 >
                     <option value="">Seleccionar...</option>
                     <option
@@ -205,6 +207,7 @@ const submit = () => {
                     name="state"
                     id="state"
                     v-model="form.city"
+                    required
                 >
                     <option value="">Seleccionar...</option>
                     <template v-for="city in cities">
