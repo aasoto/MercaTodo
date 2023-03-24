@@ -20,23 +20,23 @@ defineProps({
 const user = usePage().props.auth.user;
 
 const form = useForm({
-    firstName: user.first_name,
-    secondName: user.second_name,
+    first_name: user.first_name,
+    second_name: user.second_name,
     surname: user.surname,
-    secondSurname: user.second_surname,
+    second_surname: user.second_surname,
     email: user.email,
     birthdate: user.birthdate,
     gender: user.gender,
     phone: user.phone,
     address: user.address,
-    state: user.state_id,
-    city: user.city_id,
+    state_id: user.state_id,
+    city_id: user.city_id,
 });
 
-const state_selected = ref(form.state);
+const state_selected = ref(form.state_id);
 
 const show_cities = (stateId) => {
-    form.city = '';
+    form.city_id = '';
     if (stateId) {
         state_selected.value = stateId;
     } else {
@@ -58,33 +58,33 @@ const show_cities = (stateId) => {
         <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
             <div class="grid grid-cols-2 gap-5">
                 <div class="col-span-1">
-                    <InputLabel for="firstName" value="Primer nombre" />
+                    <InputLabel for="first_name" value="Primer nombre" />
 
                     <TextInput
-                        id="firstName"
+                        id="first_name"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="form.firstName"
+                        v-model="form.first_name"
                         required
                         autofocus
-                        autocomplete="firstName"
+                        autocomplete="first_name"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.firstName" />
+                    <InputError class="mt-2" :message="form.errors.first_name" />
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="secondName" value="Segundo nombre" />
+                    <InputLabel for="second_name" value="Segundo nombre" />
 
                     <TextInput
-                        id="secondName"
+                        id="second_name"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="form.secondName"
-                        autocomplete="secondName"
+                        v-model="form.second_name"
+                        autocomplete="second_name"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.secondName" />
+                    <InputError class="mt-2" :message="form.errors.second_name" />
                 </div>
 
                 <div class="col-span-1">
@@ -102,17 +102,17 @@ const show_cities = (stateId) => {
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="secondSurname" value="Segundo apellido" />
+                    <InputLabel for="second_surname" value="Segundo apellido" />
 
                     <TextInput
-                        id="secondSurname"
+                        id="second_surname"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="form.secondSurname"
-                        autocomplete="secondSurname"
+                        v-model="form.second_surname"
+                        autocomplete="second_surname"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.secondSurname" />
+                    <InputError class="mt-2" :message="form.errors.second_surname" />
                 </div>
 
                 <div class="col-span-1">
@@ -178,14 +178,14 @@ const show_cities = (stateId) => {
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="state" value="Estado" />
+                    <InputLabel for="state_id" value="Estado" />
 
                     <select
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                        name="state"
-                        id="state"
-                        v-model="form.state"
-                        @change="show_cities(form.state)"
+                        name="state_id"
+                        id="state_id"
+                        v-model="form.state_id"
+                        @change="show_cities(form.state_id)"
                         required
                     >
                         <option value="">Seleccionar...</option>
@@ -198,18 +198,18 @@ const show_cities = (stateId) => {
                         </option>
                     </select>
 
-                    <InputError class="mt-2" :message="form.errors.state" />
+                    <InputError class="mt-2" :message="form.errors.state_id" />
 
                 </div>
 
                 <div class="mt-4" v-if="state_selected !== 0">
-                    <InputLabel for="city" value="Ciudad" />
+                    <InputLabel for="city_id" value="Ciudad" />
 
                     <select
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                        name="city"
-                        id="city"
-                        v-model="form.city"
+                        name="city_id"
+                        id="city_id"
+                        v-model="form.city_id"
                         required
                     >
                         <option value="">Seleccionar...</option>
@@ -224,7 +224,7 @@ const show_cities = (stateId) => {
                         </template>
                     </select>
 
-                    <InputError class="mt-2" :message="form.errors.city" />
+                    <InputError class="mt-2" :message="form.errors.city_id" />
 
                 </div>
 
