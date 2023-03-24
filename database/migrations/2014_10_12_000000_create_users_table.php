@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('password');
             $table->date('birthdate'); //
             $table->enum('gender', ['m', 'f', 'o']); //
-            $table->string('phone', 100); //
+            $table->string('phone', 100)->unique(); //
             $table->string('address', 1000);
             $table->foreignId("state_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId("city_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
