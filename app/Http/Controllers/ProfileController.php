@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\City;
+use App\Models\State;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Role;
 
 class ProfileController extends Controller
 {
@@ -18,8 +21,21 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $states = State::select('id', 'name')->get();
+        $cities = City::select('id', 'name', 'state_id')->get();
+        $role = '';
+
+        foreach (Role::all() as $key => $value) {
+            if (Auth::user()->hasRole($value['name'])) {
+                $role = $value['name'];
+            }
+        }
+
         return Inertia::render('Profile/Edit', [
+            'cities' => $cities,
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'role' => $role,
+            'states' => $states,
             'status' => session('status'),
         ]);
     }
