@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\City;
+use App\Models\State;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,8 +22,13 @@ class CityFactory extends Factory
     {
         return [
             'name' => fake()->city(),
-            'state_id' => fake()->numberBetween(1, 5),
+            'state_id' => $this->find_state(),
         ];
+    }
+
+    public function find_state()
+    {
+        return State::select('id')->inRandomOrder()->first();
     }
 
 }
