@@ -48,8 +48,8 @@ class RegisteredUserController extends Controller
             'email' => 'required|string|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'birthdate' => 'required|date|before:18 years',
-            'gender' => 'required|string|max:1',
-            'phone' => 'required|string|max:100',
+            'gender' => 'required|regex:/^[fmo]+$/i|max:1',
+            'phone' => 'required|regex:/^[+\\-\\(\\)\\0-9x ]+$/i|max:100|unique:'.User::class,
             'address' => 'required|string|max:1000',
             'state' => 'required|integer',
             'city' => 'required|integer'

@@ -56,9 +56,11 @@ const show_cities = (stateId) => {
         </header>
 
         <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
-            <div class="grid grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="col-span-1">
-                    <InputLabel for="first_name" value="Primer nombre" />
+                    <InputLabel for="first_name">
+                        Primer nombre<span class="text-red-600"> *</span>
+                    </InputLabel>
 
                     <TextInput
                         id="first_name"
@@ -88,7 +90,9 @@ const show_cities = (stateId) => {
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="surname" value="Primer apellido" />
+                    <InputLabel for="surname">
+                        Primer apellido<span class="text-red-600"> *</span>
+                    </InputLabel>
 
                     <TextInput
                         id="surname"
@@ -116,7 +120,9 @@ const show_cities = (stateId) => {
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="gender" value="Genero" />
+                    <InputLabel for="gender">
+                        Genero<span class="text-red-600"> *</span>
+                    </InputLabel>
 
 
                     <select
@@ -136,7 +142,9 @@ const show_cities = (stateId) => {
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="birthdate" value="Fecha de nacimiento" />
+                    <InputLabel for="birthdate">
+                        Fecha de nacimiento<span class="text-red-600"> *</span>
+                    </InputLabel>
 
                     <TextInput
                         id="birthdate"
@@ -149,8 +157,10 @@ const show_cities = (stateId) => {
                     <InputError class="mt-2" :message="form.errors.birthdate" />
                 </div>
 
-                <div class="mt-4">
-                    <InputLabel for="address" value="Dirección" />
+                <div class="col-span-1">
+                    <InputLabel for="address">
+                        Dirección<span class="text-red-600"> *</span>
+                    </InputLabel>
 
                     <TextInput
                         id="address"
@@ -163,8 +173,10 @@ const show_cities = (stateId) => {
                     <InputError class="mt-2" :message="form.errors.address" />
                 </div>
 
-                <div class="mt-4">
-                    <InputLabel for="phone" value="Telefono o celular" />
+                <div class="col-span-1">
+                    <InputLabel for="phone">
+                        Telefono o celular<span class="text-red-600"> *</span>
+                    </InputLabel>
 
                     <TextInput
                         id="phone"
@@ -177,8 +189,10 @@ const show_cities = (stateId) => {
                     <InputError class="mt-2" :message="form.errors.phone" />
                 </div>
 
-                <div class="mt-4">
-                    <InputLabel for="state_id" value="Estado" />
+                <div class="col-span-1">
+                    <InputLabel for="state_id">
+                        Estado<span class="text-red-600"> *</span>
+                    </InputLabel>
 
                     <select
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
@@ -202,8 +216,10 @@ const show_cities = (stateId) => {
 
                 </div>
 
-                <div class="mt-4" v-if="state_selected !== 0">
-                    <InputLabel for="city_id" value="Ciudad" />
+                <div class="col-span-1" v-if="state_selected !== 0">
+                    <InputLabel for="city_id">
+                        Ciudad<span class="text-red-600"> *</span>
+                    </InputLabel>
 
                     <select
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
@@ -229,7 +245,9 @@ const show_cities = (stateId) => {
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="email" value="Email" />
+                    <InputLabel for="email">
+                        Correo electronico<span class="text-red-600"> *</span>
+                    </InputLabel>
 
                     <TextInput
                         id="email"
@@ -246,14 +264,14 @@ const show_cities = (stateId) => {
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
                 <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                    Your email address is unverified.
+                    Su dirección de correo electronico se encuentra sin verificar.
                     <Link
                         :href="route('verification.send')"
                         method="post"
                         as="button"
                         class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                     >
-                        Click here to re-send the verification email.
+                        Click aquí para reenviar el correo de verificación.
                     </Link>
                 </p>
 
@@ -261,15 +279,15 @@ const show_cities = (stateId) => {
                     v-show="status === 'verification-link-sent'"
                     class="mt-2 font-medium text-sm text-green-600 dark:text-green-400"
                 >
-                    A new verification link has been sent to your email address.
+                    Un nuevo link de verificación ha sido enviado a su dirección de correo electronico.
                 </div>
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
 
                 <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
-                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Saved.</p>
+                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
                 </Transition>
             </div>
         </form>
