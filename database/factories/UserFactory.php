@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\City;
+use App\Models\State;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -12,7 +13,6 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-    public $state;
     /**
      * Define the model's default state.
      *
@@ -20,7 +20,7 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $this->state = fake()->numberBetween(1, 5);
+        $state = $this->search_state();
         return [
             // 'name' => fake()->name(),
             'first_name' => fake()->firstName($gender = 'male'|'female'),
@@ -34,8 +34,8 @@ class UserFactory extends Factory
             'gender' => fake()->randomElement(['m', 'f', 'o']),
             'address' => fake()->streetAddress(),
             'phone' => fake()->phoneNumber(),
-            'state_id' => $this->state,
-            'city_id' => $this->search_city(),
+            'state_id' => $state["id"],
+            'city_id' => $this->search_city($state["id"]),
             // 'remember_token' => Str::random(10),
         ];
     }
@@ -50,8 +50,14 @@ class UserFactory extends Factory
     //     ]);
     // }
 
-    public function search_city ()
+    public function search_state ()
     {
-        return City::select('id')->where('state_id', $this->state)->first();
+        return State::select('id')->inRandomOrder()->first();
+    }
+
+    public function search_city ($state)
+    {
+        $city = City::select('id')->where('state_id', $state)->inRandomOrder()->first();
+        return $city["id"];
     }
 }
