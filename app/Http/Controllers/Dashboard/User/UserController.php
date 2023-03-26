@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Spatie\ModelHasRol;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
@@ -34,10 +35,17 @@ class UserController extends Controller
 
         $roles = Role::select('id', 'name')->get();
 
-        // dd($users, $roles);
+        $user_role = '';
+        foreach (Role::all() as $key => $value) {
+            if (Auth::user()->hasRole($value['name'])) {
+                $user_role = $value['name'];
+            }
+        }
+
         return Inertia::render('User/Index', [
+            'roles' => $roles,
             'users' => $users,
-            'roles' => $roles
+            'userRole' => $user_role,
         ]);
     }
 

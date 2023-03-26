@@ -8,6 +8,10 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+defineProps({
+    userRole: String,
+});
 </script>
 
 <template>
@@ -31,6 +35,11 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                            </div>
+                            <div v-if="userRole == 'admin'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('user.index')" :active="route().current('user.index')">
+                                    Usuarios
                                 </NavLink>
                             </div>
                         </div>
