@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('address', 1000);
             $table->foreignId("state_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId("city_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->boolean('enabled')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
