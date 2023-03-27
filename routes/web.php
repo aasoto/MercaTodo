@@ -32,11 +32,20 @@ Route::get('/', function () {
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    /** DASHBOARD */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    /** PROFILE */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    /** USER */
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::patch('/user/{id}', [UserController::class, 'update'])->name('user.update');
+
 });
 
 require __DIR__.'/auth.php';
