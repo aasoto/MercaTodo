@@ -24,6 +24,7 @@ class UserController extends Controller
                     'users.surname',
                     'users.second_surname',
                     'users.email',
+                    'users.enabled',
                     'states.name as state_name',
                     'cities.name as city_name',
                     'model_has_roles.role_id'
@@ -31,7 +32,7 @@ class UserController extends Controller
             -> join('states', 'users.state_id', 'states.id')
             -> join('cities', 'users.city_id', 'cities.id')
             -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
-            -> get();
+            -> paginate(10);
 
         $roles = Role::select('id', 'name')->get();
 

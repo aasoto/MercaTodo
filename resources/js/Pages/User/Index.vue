@@ -3,13 +3,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import Error404 from "@/Pages/Errors/Error404.vue";
+import Pagination from '@/Components/Pagination.vue';
 
-defineProps({
+const props = defineProps({
     roles: Array,
     users: Array,
     userRole: String,
 });
-
+console.log(props.users);
 </script>
 <template>
     <template v-if="userRole == 'admin'">
@@ -22,7 +23,7 @@ defineProps({
 
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div class="flex justify-center items-center bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="flex flex-col justify-center items-center bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <table class="w-11/12 m-5 rounded-lg">
                             <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
                                 <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
@@ -45,7 +46,7 @@ defineProps({
                                 </th>
                             </thead>
                             <tbody>
-                                <tr class="border-b border-gray-400" v-for="user in users">
+                                <tr class="border-b border-gray-400" v-for="user in users.data">
                                     <td class="px-3 py-3 text-black dark:text-white">
                                         {{ `${user.first_name} ${user.second_name} ${user.surname} ${user.second_surname}` }}
                                     </td>
@@ -61,7 +62,9 @@ defineProps({
                                     <td class="px-3 py-3 text-black dark:text-white">
                                         <template v-for="role in roles">
                                             <template v-if="role.id == user.role_id">
-                                                {{ role.name }}
+                                                <span v-if="user.enabled" class="text-green-600"> ● </span>
+                                                <span v-else class="text-red-600"> ● </span>
+                                                {{ ` ${role.name}` }}
                                             </template>
                                         </template>
                                     </td>
@@ -97,6 +100,7 @@ defineProps({
                                 </th>
                             </tfoot>
                         </table>
+                        <Pagination class="my-6" :links="users.links" />
                     </div>
                 </div>
             </div>
