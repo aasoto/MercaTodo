@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
+use App\Models\State;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -17,22 +20,45 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $state = $this->search_state();
         return [
-            'name' => fake()->name(),
+            // 'name' => fake()->name(),
+            'first_name' => fake()->firstName($gender = 'male'|'female'),
+            'second_name' => fake()->firstName($gender = 'male'|'female'),
+            'surname' => fake()->lastName(),
+            'second_surname' => fake()->lastName() ,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'password' => Hash::make('12345678'), // password
+            'birthdate' => fake()->date(),
+            'gender' => fake()->randomElement(['m', 'f', 'o']),
+            'address' => fake()->streetAddress(),
+            'phone' => fake()->phoneNumber(),
+            'enabled' => true,
+            'state_id' => $state["id"],
+            'city_id' => $this->search_city($state["id"]),
+            // 'remember_token' => Str::random(10),
         ];
     }
 
     /**
      * Indicate that the model's email address should be unverified.
      */
-    public function unverified(): static
+    // public function unverified(): static
+    // {
+    //     return $this->state(fn (array $attributes) => [
+    //         'email_verified_at' => null,
+    //     ]);
+    // }
+
+    public function search_state ()
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return State::select('id')->inRandomOrder()->first();
+    }
+
+    public function search_city ($state)
+    {
+        $city = City::select('id')->where('state_id', $state)->inRandomOrder()->first();
+        return $city["id"];
     }
 }
