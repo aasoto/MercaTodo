@@ -22,7 +22,7 @@ const props = defineProps({
 <template>
     <Head title="Profile" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :userRole="role">
         <template #header v-if="role == 'admin'">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Perfil - Administrador</h2>
         </template>
