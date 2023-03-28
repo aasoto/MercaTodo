@@ -31,7 +31,14 @@ Route::get('/', function () {
 //     return Inertia::render('Dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::get('/user_disabled', function () {
+    return Inertia::render('Auth/UserDisabled');
+})->name('user-disabled');
+Route::get('/405_method_not_allowed', function () {
+    return Inertia::render('Auth/MethodNotAllowed');
+})->name('405');
+
+Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
 
     /** DASHBOARD */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -42,9 +49,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     /** USER */
-    Route::get('/user', [UserController::class, 'index'])->name('user.index');
-    Route::get('/user/{id}', [UserController::class, 'edit'])->name('user.edit');
-    Route::patch('/user/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/user', [UserController::class, 'index'])->name('user.index');
+        Route::get('/user/{id}', [UserController::class, 'edit'])->name('user.edit');
+        Route::patch('/user/{id}', [UserController::class, 'update'])->name('user.update');
+    });
 
 });
 
