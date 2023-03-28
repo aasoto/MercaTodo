@@ -28,6 +28,8 @@ jobs:
       run: |
         mkdir -p database
         touch database/database.sqlite
+    - name: Install node_modules
+      run: npm install
     - name: Run development mode
       run: npm run dev
     - name: Execute tests (Unit and Feature tests) via PHPUnit
