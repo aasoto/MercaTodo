@@ -62,8 +62,11 @@ console.log(props.users);
                                     <td class="px-3 py-3 text-black dark:text-white">
                                         <template v-for="role in roles">
                                             <template v-if="role.id == user.role_id">
-                                                <span v-if="user.enabled" class="text-green-600"> ● </span>
-                                                <span v-else class="text-red-600"> ● </span>
+                                                <span v-if="!user.email_verified_at" class="text-yellow-600"> ● </span>
+                                                <template v-else>
+                                                    <span v-if="user.enabled" class="text-green-600"> ● </span>
+                                                    <span v-else class="text-red-600"> ● </span>
+                                                </template>
                                                 {{ ` ${role.name}` }}
                                             </template>
                                         </template>

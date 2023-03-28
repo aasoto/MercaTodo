@@ -29,6 +29,7 @@ class UserController extends Controller
                     'users.surname',
                     'users.second_surname',
                     'users.email',
+                    'users.email_verified_at',
                     'users.enabled',
                     'states.name as state_name',
                     'cities.name as city_name',
