@@ -39,7 +39,7 @@ defineProps({
                             </div>
                             <div v-if="userRole == 'admin'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('user.index')" :active="route().current('user.index')">
-                                    Usuarios
+                                    Clientes
                                 </NavLink>
                             </div>
                         </div>
@@ -73,9 +73,9 @@ defineProps({
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                                        <DropdownLink :href="route('profile.edit')"> Perfil </DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
-                                            Log Out
+                                            Cerrar sesión
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -127,7 +127,7 @@ defineProps({
                     </div>
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('user.index')" :active="route().current('user.index')">
-                            Usuarios
+                            Clientes
                         </ResponsiveNavLink>
                     </div>
 
@@ -141,9 +141,9 @@ defineProps({
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('profile.edit')"> Perfil </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                                Log Out
+                                Cerrar sesión
                             </ResponsiveNavLink>
                         </div>
                     </div>
