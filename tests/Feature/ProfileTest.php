@@ -13,19 +13,16 @@ class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
-    public $prelim_executed = false;
-
     public function prelim_data(): void
     {
         State::factory()->count(5)->create();
         City::factory()->count(25)->create();
         Role::create(['name' => 'client']);
-        $this->prelim_executed = true;
     }
 
     public function test_profile_page_is_displayed(): void
     {
-        if (!$this->prelim_executed) { $this->prelim_data(); }
+        $this->prelim_data();
 
         $user = User::factory()->create();
 
@@ -38,7 +35,7 @@ class ProfileTest extends TestCase
 
     public function test_profile_information_can_be_updated(): void
     {
-        if (!$this->prelim_executed) { $this->prelim_data(); }
+        $this->prelim_data();
 
         $user = User::factory()->create();
 
@@ -74,7 +71,7 @@ class ProfileTest extends TestCase
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
     {
-        if (!$this->prelim_executed) { $this->prelim_data(); }
+        $this->prelim_data();
 
         $user = User::factory()->create();
 
@@ -103,7 +100,7 @@ class ProfileTest extends TestCase
 
     public function test_user_can_delete_their_account(): void
     {
-        if (!$this->prelim_executed) { $this->prelim_data(); }
+        $this->prelim_data();
 
         $user = User::factory()->create();
 
@@ -123,7 +120,7 @@ class ProfileTest extends TestCase
 
     public function test_correct_password_must_be_provided_to_delete_account(): void
     {
-        if (!$this->prelim_executed) { $this->prelim_data(); }
+        $this->prelim_data();
 
         $user = User::factory()->create();
 
