@@ -118,6 +118,7 @@ class UserTest extends TestCase
         $this->prelim_data();
 
         $user = User::factory()->create()->assignRole('admin');
+        $role = Role::select('id')->first();
 
         $response = $this->post('/login', [
             'email' => $user->email,
@@ -142,7 +143,7 @@ class UserTest extends TestCase
             'address' => $address,
             'state_id' => $user->state_id,
             'city_id' => $user->city_id,
-            'role_id' => 1,
+            'role_id' => $role['id'],
             "enabled" => true
         ]);
 

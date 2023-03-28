@@ -34,6 +34,7 @@ class UserFactory extends Factory
             'gender' => fake()->randomElement(['m', 'f', 'o']),
             'address' => fake()->streetAddress(),
             'phone' => fake()->phoneNumber(),
+            'enabled' => true,
             'state_id' => $state["id"],
             'city_id' => $this->search_city($state["id"]),
             // 'remember_token' => Str::random(10),
