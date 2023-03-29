@@ -8,10 +8,12 @@ use App\Models\City;
 use App\Models\Spatie\ModelHasRole;
 use App\Models\State;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Inertia\Response;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -19,7 +21,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $users = User::query()
             -> select(
@@ -83,7 +85,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id): Response
     {
         $user = User::select(
                 'users.id',
@@ -128,7 +130,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, string $id)
+    public function update(UpdateRequest $request, string $id): RedirectResponse
     {
         $data = $request->validated();
         $user_updated_rol = ModelHasRole::where('model_id', $id)
