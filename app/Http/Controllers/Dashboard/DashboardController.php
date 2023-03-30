@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Traits\AuthHasRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -11,17 +12,13 @@ use Spatie\Permission\Models\Role;
 
 class DashboardController extends Controller
 {
+    use AuthHasRole;
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        $user_role = '';
-        foreach (Role::all() as $key => $value) {
-            if (Auth::user()->hasRole($value['name'])) {
-                $user_role = $value['name'];
-            }
-        }
+        $user_role = $this->authHasRole();
 
         return Inertia::render('Dashboard', [
             'userRole' => $user_role,

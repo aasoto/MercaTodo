@@ -9,6 +9,7 @@ use App\Models\City;
 use App\Models\Spatie\ModelHasRole;
 use App\Models\State;
 use App\Models\User;
+use App\Traits\AuthHasRole;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    use AuthHasRole;
     /**
      * Display a listing of the resource.
      */
@@ -47,12 +49,7 @@ class UserController extends Controller
 
         $roles = Role::select('id', 'name')->get();
 
-        $user_role = '';
-        foreach (Role::all() as $key => $value) {
-            if (Auth::user()->hasRole($value['name'])) {
-                $user_role = $value['name'];
-            }
-        }
+        $user_role = $this->authHasRole();
 
         return Inertia::render('User/Index', [
             'roles' => $roles,
@@ -70,12 +67,7 @@ class UserController extends Controller
         $roles = Role::select('id', 'name')->get();
         $states = State::select('id', 'name')->get();
 
-        $user_role = '';
-        foreach (Role::all() as $key => $value) {
-            if (Auth::user()->hasRole($value['name'])) {
-                $user_role = $value['name'];
-            }
-        }
+        $user_role = $this->authHasRole();
 
         return Inertia::render('User/Create', [
             'cities' => $cities,
@@ -153,12 +145,7 @@ class UserController extends Controller
         $roles = Role::select('id', 'name')->get();
         $states = State::select('id', 'name')->get();
 
-        $user_role = '';
-        foreach (Role::all() as $key => $value) {
-            if (Auth::user()->hasRole($value['name'])) {
-                $user_role = $value['name'];
-            }
-        }
+        $user_role = $this->authHasRole();
 
         return Inertia::render('User/Edit', [
             'cities' => $cities,
@@ -175,10 +162,10 @@ class UserController extends Controller
     public function update(UpdateRequest $request, string $id): RedirectResponse
     {
         $data = $request->validated();
-        $user_updated_rol = ModelHasRole::where('model_id', $id)
+        ModelHasRole::where('model_id', $id)
             ->update(["role_id" => $data["role_id"]]);
         unset($data['role_id']);
-        $user_updated = User::where('id', $id)->update($data);
+        User::where('id', $id)->update($data);
 
         return Redirect::route('user.edit', $id);
 
