@@ -20,6 +20,8 @@ defineProps({
 const user = usePage().props.auth.user;
 
 const form = useForm({
+    type_doc: user.type_doc,
+    num_doc: user.num_doc,
     first_name: user.first_name,
     second_name: user.second_name,
     surname: user.surname,
@@ -57,6 +59,46 @@ const show_cities = (stateId) => {
 
         <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <div class="col-span-1">
+                    <InputLabel for="type_doc">
+                        Tipo de documento<span class="text-red-600"> *</span>
+                    </InputLabel>
+
+                    <select
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        name="type_doc"
+                        id="type_doc"
+                        v-model="form.type_doc"
+                        autofocus
+                        required
+                    >
+                        <option value="">Seleccionar...</option>
+                        <option value="cc">Cédula de ciudadanía</option>
+                        <option value="pas">Pasaporte</option>
+                        <option value="o">Otro</option>
+                    </select>
+
+                    <InputError class="mt-2" :message="form.errors.type_doc" />
+
+                </div>
+
+                <div class="col-span-1">
+                    <InputLabel for="num_doc">
+                        Número de documento<span class="text-red-600"> *</span>
+                    </InputLabel>
+                    <TextInput
+                        id="num_doc"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.num_doc"
+                        required
+                        autocomplete="num_doc"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.num_doc" />
+                </div>
+
                 <div class="col-span-1">
                     <InputLabel for="first_name">
                         Primer nombre<span class="text-red-600"> *</span>
@@ -68,7 +110,6 @@ const show_cities = (stateId) => {
                         class="mt-1 block w-full"
                         v-model="form.first_name"
                         required
-                        autofocus
                         autocomplete="first_name"
                     />
 
