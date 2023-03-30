@@ -13,8 +13,6 @@ use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Inertia\Testing\AssertableInertia as Assert;
 
-use function PHPSTORM_META\map;
-
 class UserTest extends TestCase
 {
     use RefreshDatabase;
@@ -132,6 +130,8 @@ class UserTest extends TestCase
         $address = fake()->streetAddress();
 
         $response = $this->actingAs($user)->patch(route('user.update', $user->id), [
+            'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
+            'num_doc' => strval(fake()->randomNumber(5, true)),
             'first_name' => $first_name,
             'second_name' => $user->second_name,
             'surname' => $user->surname,
@@ -156,5 +156,82 @@ class UserTest extends TestCase
         $this->assertSame($first_name, $user->first_name);
         $this->assertSame($address, $user->address);
         $this->assertNotNull($user->email_verified_at);
+    }
+
+    public function test_new_user_can_be_created(): void
+    {
+        $this->prelim_data();
+
+        $user = User::factory()->create()->assignRole('admin');
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => '12345678',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(RouteServiceProvider::HOME);
+
+        $response = $this->get(route('user.create'));
+
+        $response->assertInertia(
+            fn (Assert $page) => $page
+                -> component('User/Create')
+                -> has('cities.0', fn (Assert $page) => $page
+                    -> has('id')
+                    -> has('name')
+                    -> has('state_id')
+                )
+                -> has('roles.0', fn (Assert $page) => $page
+                    -> has('id')
+                    -> has('name')
+                )
+                -> has('states.0', fn (Assert $page) => $page
+                    -> has('id')
+                    -> has('name')
+                )
+                -> has('userRole')
+        );
+    }
+
+    public function test_user_can_be_saved(): void
+    {
+        $this->prelim_data();
+
+        $user = User::factory()->create()->assignRole('admin');
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => '12345678',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(RouteServiceProvider::HOME);
+
+
+        $state = State::select('id')->inRandomOrder()->first();
+        $city = City::select('id')->where('state_id', $state["id"])->inRandomOrder()->first();
+        $role = Role::select('id')->inRandomOrder()->first();
+
+        $response = $this->post(route('user.store'), [
+            'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
+            'num_doc' => strval(fake()->randomNumber(5, true)),
+            'first_name' => fake()->firstName($gender = 'male'|'female'),
+            'second_name' => fake()->firstName($gender = 'male'|'female'),
+            'surname' => fake()->lastName(),
+            'second_Surname' => fake()->lastName(),
+            'email' => fake()->safeEmail(),
+            'birthdate' => '1989-12-04',
+            'gender' => fake()->randomElement(['m', 'f', 'o']),
+            'phone' => fake()->phoneNumber(),
+            'address' => fake()->streetAddress(),
+            'state_id' => $state["id"],
+            'city_id' => $city["id"],
+            'role_id' => $role["id"]
+        ]);
+
+        $response
+            -> assertSessionHasNoErrors()
+            -> assertRedirect(route('user.index'));
     }
 }

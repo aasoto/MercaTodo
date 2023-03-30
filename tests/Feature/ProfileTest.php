@@ -45,6 +45,8 @@ class ProfileTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->patch('/profile', [
+                'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
+                'num_doc' => strval(fake()->randomNumber(5, true)),
                 'first_name' => $first_name,
                 'second_name' => $user->second_name,
                 'surname' => $user->surname,
@@ -78,6 +80,8 @@ class ProfileTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->patch('/profile', [
+                'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
+                'num_doc' => strval(fake()->randomNumber(5, true)),
                 'first_name' => 'Test User',
                 'second_name' => $user->second_name,
                 'surname' => $user->surname,

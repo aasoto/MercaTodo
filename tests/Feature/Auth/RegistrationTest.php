@@ -30,6 +30,8 @@ class RegistrationTest extends TestCase
         $city = City::select('id')->where('state_id', $state["id"])->inRandomOrder()->first();
 
         $response = $this->post('/register', [
+            'typeDoc' => fake()->randomElement(['cc', 'pas', 'o']),
+            'numDoc' => strval(fake()->randomNumber(5, true)),
             'firstName' => fake()->firstName($gender = 'male'|'female'),
             'secondName' => fake()->firstName($gender = 'male'|'female'),
             'surname' => fake()->lastName(),
