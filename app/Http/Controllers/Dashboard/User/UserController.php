@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\User\StoreRequest;
 use App\Http\Requests\Dashboard\User\UpdateRequest;
 use App\Models\City;
 use App\Models\Spatie\ModelHasRole;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -26,6 +28,7 @@ class UserController extends Controller
         $users = User::query()
             -> select(
                     'users.id',
+                    'users.num_doc',
                     'users.first_name',
                     'users.second_name',
                     'users.surname',
@@ -61,17 +64,54 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
-        //
+        $cities = City::select('id', 'name', 'state_id')->get();
+        $roles = Role::select('id', 'name')->get();
+        $states = State::select('id', 'name')->get();
+
+        $user_role = '';
+        foreach (Role::all() as $key => $value) {
+            if (Auth::user()->hasRole($value['name'])) {
+                $user_role = $value['name'];
+            }
+        }
+
+        return Inertia::render('User/Create', [
+            'cities' => $cities,
+            'roles' => $roles,
+            'states' => $states,
+            'userRole' => $user_role,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request): RedirectResponse
     {
-        //
+        $data = $request->validated();
+        $role = Role::select('name')->where('id', $data["role_id"])->first();
+
+        User::create([
+            "type_doc" => $data["type_doc"],
+            "num_doc" => $data["num_doc"],
+            "first_name" => $data["first_name"],
+            "second_name" => $data["second_name"],
+            "surname" => $data["surname"],
+            "email" => $data["email"],
+            "password" => Hash::make($data["num_doc"]),
+            "birthdate" => $data["birthdate"],
+            "gender" => $data["gender"],
+            "phone" => $data["phone"],
+            "address" => $data["address"],
+            "state_id" => $data["state_id"],
+            "city_id" => $data["city_id"]
+        ])
+            -> assignRole($role["name"])
+            -> sendEmailVerificationNotification();
+
+        return Redirect::route('user.index');
     }
 
     /**
@@ -89,6 +129,8 @@ class UserController extends Controller
     {
         $user = User::select(
                 'users.id',
+                'users.type_doc',
+                'users.num_doc',
                 'users.first_name',
                 'users.second_name',
                 'users.surname',
