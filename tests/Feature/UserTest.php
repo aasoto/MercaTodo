@@ -17,49 +17,14 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function prelim_data(): void
-    {
-        State::factory()->count(5)->create();
-        City::factory()->count(25)->create();
-        Role::create(['name' => 'admin']);
-        Role::create(['name' => 'client']);
-    }
-
     public function test_can_list_users(): void
     {
-        $this->prelim_data();
+        $this->seed();
+
         $user = User::factory()->create()->assignRole('admin');
 
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => '12345678',
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
-
-        $response = $this->get(route('user.index'));
-
-        $users = User::query()
-            -> select(
-                    'users.first_name',
-                    'users.second_name',
-                    'users.surname',
-                    'users.second_surname',
-                    'users.email',
-                    'users.birthdate',
-                    'users.gender',
-                    'users.phone',
-                    'users.address',
-                    'users.enabled',
-                    'states.name as state_name',
-                    'cities.name as city_name',
-                    'model_has_roles.role_id'
-                )
-            -> join('states', 'users.state_id', 'states.id')
-            -> join('cities', 'users.city_id', 'cities.id')
-            -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
-            -> paginate(10);
+        $response = $this->actingAs($user)
+            ->get(route('user.index'));
 
         $roles = Role::select('id', 'name')->get();
 
@@ -76,19 +41,12 @@ class UserTest extends TestCase
 
     public function test_user_can_be_edited(): void
     {
-        $this->prelim_data();
+        $this->seed();
 
         $user = User::factory()->create()->assignRole('admin');
 
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => '12345678',
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
-
-        $response = $this->get(route('user.edit', $user));
+        $response = $this->actingAs($user)
+        ->get(route('user.edit', $user));
 
         $response->assertInertia(
             fn (Assert $page) => $page
@@ -113,18 +71,10 @@ class UserTest extends TestCase
 
     public function test_user_can_be_updated(): void
     {
-        $this->prelim_data();
+        $this->seed();
 
         $user = User::factory()->create()->assignRole('admin');
         $role = Role::select('id')->first();
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => '12345678',
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
 
         $first_name = fake()->firstName($gender = 'male'|'female');
         $address = fake()->streetAddress();
@@ -160,19 +110,12 @@ class UserTest extends TestCase
 
     public function test_new_user_can_be_created(): void
     {
-        $this->prelim_data();
+        $this->seed();
 
         $user = User::factory()->create()->assignRole('admin');
 
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => '12345678',
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
-
-        $response = $this->get(route('user.create'));
+        $response = $this->actingAs($user)
+            ->get(route('user.create'));
 
         $response->assertInertia(
             fn (Assert $page) => $page
@@ -196,24 +139,16 @@ class UserTest extends TestCase
 
     public function test_user_can_be_saved(): void
     {
-        $this->prelim_data();
+        $this->seed();
 
         $user = User::factory()->create()->assignRole('admin');
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => '12345678',
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
-
 
         $state = State::select('id')->inRandomOrder()->first();
         $city = City::select('id')->where('state_id', $state["id"])->inRandomOrder()->first();
         $role = Role::select('id')->inRandomOrder()->first();
 
-        $response = $this->post(route('user.store'), [
+        $response = $this->actingAs($user)
+        ->post(route('user.store'), [
             'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
             'num_doc' => strval(fake()->randomNumber(5, true)),
             'first_name' => fake()->firstName($gender = 'male'|'female'),
