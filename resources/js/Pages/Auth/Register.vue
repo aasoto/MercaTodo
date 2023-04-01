@@ -14,6 +14,8 @@ const props = defineProps({
 
 const form = useForm({
     // name: '',
+    typeDoc: '',
+    numDoc: '',
     firstName: '',
     secondName: '',
     surname: '',
@@ -56,6 +58,45 @@ const submit = () => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                 <div class="col-span-1">
+                    <InputLabel for="typeDoc">
+                        Tipo de documento<span class="text-red-600"> *</span>
+                    </InputLabel>
+
+                    <select
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        name="typeDoc"
+                        id="typeDoc"
+                        v-model="form.typeDoc"
+                        autofocus
+                        required
+                    >
+                        <option value="">Seleccionar...</option>
+                        <option value="cc">Cédula de ciudadanía</option>
+                        <option value="pas">Pasaporte</option>
+                        <option value="o">Otro</option>
+                    </select>
+
+                    <InputError class="mt-2" :message="form.errors.typeDoc" />
+
+                </div>
+
+                <div class="col-span-1">
+                    <InputLabel for="numDoc">
+                        Número de documento<span class="text-red-600"> *</span>
+                    </InputLabel>
+                    <TextInput
+                        id="numDoc"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.numDoc"
+                        required
+                        autocomplete="numDoc"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.numDoc" />
+                </div>
+
+                <div class="col-span-1">
                     <InputLabel for="firstName">
                         Primer nombre<span class="text-red-600"> *</span>
                     </InputLabel>
@@ -65,7 +106,6 @@ const submit = () => {
                         class="mt-1 block w-full"
                         v-model="form.firstName"
                         required
-                        autofocus
                         autocomplete="firstName"
                     />
 
@@ -178,7 +218,7 @@ const submit = () => {
 
                     <TextInput
                         id="phone"
-                        type="number"
+                        type="text"
                         class="mt-1 block w-full"
                         v-model="form.phone"
                         required

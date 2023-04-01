@@ -39,8 +39,9 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // dd($request);
         $request->validate([
+            'typeDoc' => 'required|string|max:3',
+            'numDoc' => 'required|regex:/^[0-9A-Z]+$/i|max:100|unique:users,num_doc',
             'firstName' => 'required|string|max:100',
             'secondName' => 'nullable|string|max:100',
             'surname' => 'required|string|max:100',
@@ -56,6 +57,8 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
+            'type_doc' => $request->typeDoc,
+            'num_doc' => $request->numDoc,
             'first_name' => $request->firstName,
             'second_name' => $request->secondName,
             'surname' => $request->surname,

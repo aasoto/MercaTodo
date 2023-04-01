@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\City;
 use App\Models\State;
+use App\Traits\AuthHasRole;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ use Spatie\Permission\Models\Role;
 
 class ProfileController extends Controller
 {
+    use AuthHasRole;
     /**
      * Display the user's profile form.
      */
@@ -23,13 +25,8 @@ class ProfileController extends Controller
     {
         $states = State::select('id', 'name')->get();
         $cities = City::select('id', 'name', 'state_id')->get();
-        $role = '';
 
-        foreach (Role::all() as $key => $value) {
-            if (Auth::user()->hasRole($value['name'])) {
-                $role = $value['name'];
-            }
-        }
+        $role = $this->authHasRole(Role::select('id', 'name')->get());
 
         return Inertia::render('Profile/Edit', [
             'cities' => $cities,

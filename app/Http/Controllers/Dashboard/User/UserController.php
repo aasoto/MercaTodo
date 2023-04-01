@@ -3,27 +3,34 @@
 namespace App\Http\Controllers\Dashboard\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\User\StoreRequest;
 use App\Http\Requests\Dashboard\User\UpdateRequest;
 use App\Models\City;
 use App\Models\Spatie\ModelHasRole;
 use App\Models\State;
 use App\Models\User;
+use App\Traits\AuthHasRole;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Inertia\Response;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    use AuthHasRole;
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $role = "1"): Response
     {
         $users = User::query()
             -> select(
                     'users.id',
+                    'users.num_doc',
                     'users.first_name',
                     'users.second_name',
                     'users.surname',
@@ -38,18 +45,15 @@ class UserController extends Controller
             -> join('states', 'users.state_id', 'states.id')
             -> join('cities', 'users.city_id', 'cities.id')
             -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+            -> where('model_has_roles.role_id', $role)
             -> paginate(10);
 
         $roles = Role::select('id', 'name')->get();
 
-        $user_role = '';
-        foreach (Role::all() as $key => $value) {
-            if (Auth::user()->hasRole($value['name'])) {
-                $user_role = $value['name'];
-            }
-        }
+        $user_role = $this->authHasRole($roles);
 
         return Inertia::render('User/Index', [
+            'roleSearch' => $role,
             'roles' => $roles,
             'users' => $users,
             'userRole' => $user_role,
@@ -59,17 +63,49 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
-        //
+        $cities = City::select('id', 'name', 'state_id')->get();
+        $roles = Role::select('id', 'name')->get();
+        $states = State::select('id', 'name')->get();
+
+        $user_role = $this->authHasRole($roles);
+
+        return Inertia::render('User/Create', [
+            'cities' => $cities,
+            'roles' => $roles,
+            'states' => $states,
+            'userRole' => $user_role,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request): RedirectResponse
     {
-        //
+        $data = $request->validated();
+        $role = Role::select('name')->where('id', $data["role_id"])->first();
+
+        User::create([
+            "type_doc" => $data["type_doc"],
+            "num_doc" => $data["num_doc"],
+            "first_name" => $data["first_name"],
+            "second_name" => $data["second_name"],
+            "surname" => $data["surname"],
+            "email" => $data["email"],
+            "password" => Hash::make($data["num_doc"]),
+            "birthdate" => $data["birthdate"],
+            "gender" => $data["gender"],
+            "phone" => $data["phone"],
+            "address" => $data["address"],
+            "state_id" => $data["state_id"],
+            "city_id" => $data["city_id"]
+        ])
+            -> assignRole($role["name"])
+            -> sendEmailVerificationNotification();
+
+        return Redirect::route('user.index', $data['role_id']);
     }
 
     /**
@@ -83,10 +119,12 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id): Response
     {
         $user = User::select(
                 'users.id',
+                'users.type_doc',
+                'users.num_doc',
                 'users.first_name',
                 'users.second_name',
                 'users.surname',
@@ -109,12 +147,7 @@ class UserController extends Controller
         $roles = Role::select('id', 'name')->get();
         $states = State::select('id', 'name')->get();
 
-        $user_role = '';
-        foreach (Role::all() as $key => $value) {
-            if (Auth::user()->hasRole($value['name'])) {
-                $user_role = $value['name'];
-            }
-        }
+        $user_role = $this->authHasRole($roles);
 
         return Inertia::render('User/Edit', [
             'cities' => $cities,
@@ -128,13 +161,13 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, string $id)
+    public function update(UpdateRequest $request, string $id): RedirectResponse
     {
         $data = $request->validated();
-        $user_updated_rol = ModelHasRole::where('model_id', $id)
+        ModelHasRole::where('model_id', $id)
             ->update(["role_id" => $data["role_id"]]);
         unset($data['role_id']);
-        $user_updated = User::where('id', $id)->update($data);
+        User::where('id', $id)->update($data);
 
         return Redirect::route('user.edit', $id);
 

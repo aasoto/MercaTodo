@@ -24,6 +24,8 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'type_doc'          => ['required', 'string', 'max:3'],
+            'num_doc'           => ['required', 'regex:/^[0-9A-Z]+$/i', 'max:100', Rule::unique(User::class)->ignore($this->route('id'))],
             'first_name'        => ['required', 'string', 'max:100'],
             'second_name'       => ['nullable', 'string', 'max:100'],
             'surname'           => ['required', 'string', 'max:100'],
@@ -36,7 +38,7 @@ class UpdateRequest extends FormRequest
             'state_id'          => ['required', 'integer'],
             'city_id'           => ['required', 'integer'],
             'role_id'           => ['required', 'integer'],
-            'enabled'           => ['required', 'boolean']
+            'enabled'           => ['required', 'boolean', Rule::prohibitedIf(($this->route('id') == auth()->user()->id) && ($this->request->get('enabled') == false))]
         ];
     }
 }
