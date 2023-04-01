@@ -23,6 +23,8 @@ class UserFactory extends Factory
         $state = $this->search_state();
         return [
             // 'name' => fake()->name(),
+            'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
+            'num_doc' => fake()->randomNumber(5, true),
             'first_name' => fake()->firstName($gender = 'male'|'female'),
             'second_name' => fake()->firstName($gender = 'male'|'female'),
             'surname' => fake()->lastName(),

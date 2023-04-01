@@ -1,13 +1,21 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Dashboard\User;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProfileUpdateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return auth()->user()->hasRole('admin');
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,10 +33,11 @@ class ProfileUpdateRequest extends FormRequest
             'email'             => ['required', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'birthdate'         => ['required', 'date', 'before:18 years'],
             'gender'            => ['required', 'regex:/^[fmo]+$/i', 'max:1'],
-            'phone'             => ['required', 'regex:/^[+\\-\\(\\)\\0-9x ]+$/i', 'max:100', Rule::unique(User::class)->ignore($this->user()->id)],
+            'phone'             => ['required', 'regex:/^[+\\-\\(\\)\\.\\0-9x ]+$/i', 'max:100', Rule::unique(User::class)->ignore($this->user()->id)],
             'address'           => ['required', 'string', 'max:1000'],
             'state_id'          => ['required', 'integer'],
             'city_id'           => ['required', 'integer'],
+            'role_id'           => ['required', 'integer']
         ];
     }
 }

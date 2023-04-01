@@ -11,30 +11,27 @@ const props = defineProps({
     cities: Array,
     roles: Array,
     states: Array,
-    user: Object,
     userRole: String,
 });
 
-console.log(props.user);
 const form = useForm({
-    type_doc: props.user.type_doc,
-    num_doc: props.user.num_doc,
-    first_name: props.user.first_name,
-    second_name: props.user.second_name,
-    surname: props.user.surname,
-    second_surname: props.user.second_surname,
-    email: props.user.email,
-    birthdate: props.user.birthdate,
-    gender: props.user.gender,
-    phone: props.user.phone,
-    address: props.user.address,
-    state_id: props.user.state_id,
-    city_id: props.user.city_id,
-    role_id: props.user.role_id,
-    enabled: props.user.enabled == 1 ? true : false,
+    type_doc: '',
+    num_doc: '',
+    first_name: '',
+    second_name: '',
+    surname: '',
+    second_surname: '',
+    email: '',
+    birthdate: '',
+    gender: '',
+    phone: '',
+    address: '',
+    state_id: '',
+    city_id: '',
+    role_id: '',
 });
 
-const state_selected = ref(form.state_id);
+const state_selected = ref(0);
 
 const show_cities = (stateId) => {
     form.city_id = '';
@@ -44,23 +41,21 @@ const show_cities = (stateId) => {
         state_selected.value = 0;
     }
 }
-
 </script>
-
 <template>
-    <Head title="Editar de cliente" />
+    <Head title="Agregar usuario" />
 
     <AuthenticatedLayout :userRole="userRole">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Editar clientes
+                Agregar usuario
             </h2>
         </template>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="m-5">
-                        <form @submit.prevent="form.patch(route('user.update', user.id))" class="mt-6 space-y-6">
+                        <form @submit.prevent="form.post(route('user.store'))" class="mt-6 space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                                 <div class="col-span-1">
@@ -324,31 +319,6 @@ const show_cities = (stateId) => {
                                     <InputError class="mt-2" :message="form.errors.role_id" />
                                 </div>
 
-                                <div class="col-span-1 md:col-span-2 flex justify-center items-center gap-5">
-                                    <template v-if="form.enabled">
-                                        <input
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            type="checkbox"
-                                            name="enabled"
-                                            id="enabled"
-                                            v-model="form.enabled"
-                                            checked
-                                        >
-                                    </template>
-                                    <template v-else>
-                                        <input
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            type="checkbox"
-                                            name="enabled"
-                                            id="enabled"
-                                            v-model="form.enabled"
-                                        >
-                                    </template>
-                                    <label for="enabled" class="text-black dark:text-white">
-                                        Habilitado
-                                    </label>
-                                    <InputError class="mt-2" :message="form.errors.enabled" />
-                                </div>
                             </div>
 
                             <div class="flex items-center gap-4">
