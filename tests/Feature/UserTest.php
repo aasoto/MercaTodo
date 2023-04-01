@@ -24,7 +24,7 @@ class UserTest extends TestCase
         $user = User::factory()->create()->assignRole('admin');
 
         $response = $this->actingAs($user)
-            ->get(route('user.index'));
+            ->get(route('user.index', "1"));
 
         $roles = Role::select('id', 'name')->get();
 
@@ -167,6 +167,6 @@ class UserTest extends TestCase
 
         $response
             -> assertSessionHasNoErrors()
-            -> assertRedirect(route('user.index'));
+            -> assertRedirect(route('user.index', $role['id']));
     }
 }
