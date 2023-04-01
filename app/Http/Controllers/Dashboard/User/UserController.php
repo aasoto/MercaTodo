@@ -50,7 +50,7 @@ class UserController extends Controller
 
         $roles = Role::select('id', 'name')->get();
 
-        $user_role = $this->authHasRole();
+        $user_role = $this->authHasRole($roles);
 
         return Inertia::render('User/Index', [
             'roleSearch' => $role,
@@ -69,7 +69,7 @@ class UserController extends Controller
         $roles = Role::select('id', 'name')->get();
         $states = State::select('id', 'name')->get();
 
-        $user_role = $this->authHasRole();
+        $user_role = $this->authHasRole($roles);
 
         return Inertia::render('User/Create', [
             'cities' => $cities,
@@ -147,7 +147,7 @@ class UserController extends Controller
         $roles = Role::select('id', 'name')->get();
         $states = State::select('id', 'name')->get();
 
-        $user_role = $this->authHasRole();
+        $user_role = $this->authHasRole($roles);
 
         return Inertia::render('User/Edit', [
             'cities' => $cities,

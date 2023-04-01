@@ -18,7 +18,7 @@ class DashboardController extends Controller
      */
     public function index(): Response
     {
-        $user_role = $this->authHasRole();
+        $user_role = $this->authHasRole(Role::select('id', 'name')->get());
 
         return Inertia::render('Dashboard', [
             'userRole' => $user_role,

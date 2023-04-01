@@ -9,9 +9,9 @@ use Spatie\Permission\Models\Role;
  */
 trait AuthHasRole
 {
-    public function authHasRole(): string
+    public function authHasRole($roles): string
     {
-        foreach (Role::all() as $key => $value) {
+        foreach ($roles as $key => $value) {
             if (auth()->user()->hasRole($value['name'])) {
                 return $value['name'];
             }

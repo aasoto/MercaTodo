@@ -26,7 +26,7 @@ class ProfileController extends Controller
         $states = State::select('id', 'name')->get();
         $cities = City::select('id', 'name', 'state_id')->get();
 
-        $role = $this->authHasRole();
+        $role = $this->authHasRole(Role::select('id', 'name')->get());
 
         return Inertia::render('Profile/Edit', [
             'cities' => $cities,
