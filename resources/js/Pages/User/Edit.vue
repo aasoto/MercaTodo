@@ -48,12 +48,12 @@ const show_cities = (stateId) => {
 </script>
 
 <template>
-    <Head title="Editar de cliente" />
+    <Head title="Editar usuarios" />
 
     <AuthenticatedLayout :userRole="userRole">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Editar clientes
+                Editar usuarios
             </h2>
         </template>
         <div class="py-12">
