@@ -17,7 +17,7 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'type_doc'          => ['required', 'string', 'max:3'],
-            'num_doc'           => ['required', 'string', 'max:100', Rule::unique(User::class)->ignore($this->user()->id)],
+            'num_doc'           => ['required', 'regex:/^[0-9A-Z]+$/i', 'max:100', Rule::unique(User::class)->ignore($this->user()->id)],
             'first_name'        => ['required', 'string', 'max:100'],
             'second_name'       => ['nullable', 'string', 'max:100'],
             'surname'           => ['required', 'string', 'max:100'],

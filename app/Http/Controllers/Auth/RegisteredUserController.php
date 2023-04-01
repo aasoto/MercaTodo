@@ -41,7 +41,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'typeDoc' => 'required|string|max:3',
-            'numDoc' => 'required|string|max:100|unique:users,num_doc',
+            'numDoc' => 'required|regex:/^[0-9A-Z]+$/i|max:100|unique:users,num_doc',
             'firstName' => 'required|string|max:100',
             'secondName' => 'nullable|string|max:100',
             'surname' => 'required|string|max:100',
