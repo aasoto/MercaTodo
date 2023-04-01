@@ -39,7 +39,7 @@ defineProps({
                             </div>
                             <div v-if="userRole == 'admin'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('user.index', '1')" :active="route().current('user.index')">
-                                    Clientes
+                                    Usuarios
                                 </NavLink>
                             </div>
                         </div>
