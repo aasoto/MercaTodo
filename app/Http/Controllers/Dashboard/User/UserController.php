@@ -25,7 +25,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(string $role = "1"): Response
     {
         $users = User::query()
             -> select(
@@ -45,6 +45,7 @@ class UserController extends Controller
             -> join('states', 'users.state_id', 'states.id')
             -> join('cities', 'users.city_id', 'cities.id')
             -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+            -> where('model_has_roles.role_id', $role)
             -> paginate(10);
 
         $roles = Role::select('id', 'name')->get();
@@ -52,6 +53,7 @@ class UserController extends Controller
         $user_role = $this->authHasRole();
 
         return Inertia::render('User/Index', [
+            'roleSearch' => $role,
             'roles' => $roles,
             'users' => $users,
             'userRole' => $user_role,
@@ -103,7 +105,7 @@ class UserController extends Controller
             -> assignRole($role["name"])
             -> sendEmailVerificationNotification();
 
-        return Redirect::route('user.index');
+        return Redirect::route('user.index', $data['role_id']);
     }
 
     /**

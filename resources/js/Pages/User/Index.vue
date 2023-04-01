@@ -4,13 +4,16 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import Pagination from '@/Components/Pagination.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
+import { reactive } from 'vue';
 
 const props = defineProps({
+    roleSearch: String,
     roles: Array,
     users: Object,
     userRole: String,
 });
 console.log(props.users);
+
 </script>
 <template>
     <Head title="Listado de usuarios" />
@@ -28,6 +31,21 @@ console.log(props.users);
                             <Link :href="route('user.create')">
                                 <SuccessButton>Agregar usuario</SuccessButton>
                             </Link>
+                            <div class="flex justify-center items-center gap-5">
+                                <label class="text-black dark:text-white" for="showRole">Rol: </label>
+                                <div class="flex">
+                                    <template v-for="role in roles">
+                                        <Link :href="route('user.index', `${role.id}`)">
+                                            <button v-if="roleSearch == role.id" :disabled="roleSearch == role.id" class="bg-gray-500 text-white px-5 py-2 capitalize opacity-50">
+                                                {{ role.name }}
+                                            </button>
+                                            <button v-else class="bg-gray-500 text-white px-5 py-2 capitalize">
+                                                {{ role.name }}
+                                            </button>
+                                        </Link>
+                                    </template>
+                                </div>
+                            </div>
                         </div>
                         <table class="w-full m-5 rounded-lg">
                             <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">

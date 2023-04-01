@@ -38,7 +38,7 @@ defineProps({
                                 </NavLink>
                             </div>
                             <div v-if="userRole == 'admin'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('user.index')" :active="route().current('user.index')">
+                                <NavLink :href="route('user.index', '1')" :active="route().current('user.index')">
                                     Clientes
                                 </NavLink>
                             </div>
@@ -126,7 +126,7 @@ defineProps({
                         </ResponsiveNavLink>
                     </div>
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('user.index')" :active="route().current('user.index')">
+                        <ResponsiveNavLink :href="route('user.index', '1')" :active="route().current('user.index')">
                             Clientes
                         </ResponsiveNavLink>
                     </div>
