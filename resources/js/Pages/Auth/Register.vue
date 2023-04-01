@@ -218,7 +218,7 @@ const submit = () => {
 
                     <TextInput
                         id="phone"
-                        type="number"
+                        type="text"
                         class="mt-1 block w-full"
                         v-model="form.phone"
                         required
