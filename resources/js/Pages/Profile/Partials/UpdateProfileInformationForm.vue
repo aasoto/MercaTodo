@@ -15,13 +15,14 @@ defineProps({
     status: {
         type: String,
     },
+    typeDocuments: Object,
 });
 
 const user = usePage().props.auth.user;
 
 const form = useForm({
-    type_doc: user.type_doc,
-    num_doc: user.num_doc,
+    type_document: user.type_document,
+    number_document: user.number_document,
     first_name: user.first_name,
     second_name: user.second_name,
     surname: user.surname,
@@ -61,42 +62,46 @@ const show_cities = (stateId) => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                 <div class="col-span-1">
-                    <InputLabel for="type_doc">
+                    <InputLabel for="type_document">
                         Tipo de documento<span class="text-red-600"> *</span>
                     </InputLabel>
 
                     <select
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                        name="type_doc"
-                        id="type_doc"
-                        v-model="form.type_doc"
+                        name="type_document"
+                        id="type_document"
+                        v-model="form.type_document"
                         autofocus
                         required
                     >
                         <option value="">Seleccionar...</option>
-                        <option value="cc">Cédula de ciudadanía</option>
-                        <option value="pas">Pasaporte</option>
-                        <option value="o">Otro</option>
+                        <option
+                            v-for="typeDocument in typeDocuments"
+                            :value="typeDocument.code"
+                            :key="typeDocument.id"
+                        >
+                            {{ typeDocument.name }}
+                        </option>
                     </select>
 
-                    <InputError class="mt-2" :message="form.errors.type_doc" />
+                    <InputError class="mt-2" :message="form.errors.type_document" />
 
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="num_doc">
+                    <InputLabel for="number_document">
                         Número de documento<span class="text-red-600"> *</span>
                     </InputLabel>
                     <TextInput
-                        id="num_doc"
+                        id="number_document"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="form.num_doc"
+                        v-model="form.number_document"
                         required
-                        autocomplete="num_doc"
+                        autocomplete="number_document"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.num_doc" />
+                    <InputError class="mt-2" :message="form.errors.number_document" />
                 </div>
 
                 <div class="col-span-1">

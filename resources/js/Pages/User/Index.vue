@@ -74,7 +74,7 @@ console.log(props.users);
                             <tbody>
                                 <tr class="border-b border-gray-400" v-for="user in users.data">
                                     <td class="px-3 py-3 text-black dark:text-white">
-                                        {{ user.num_doc }}
+                                        {{ user.number_document }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white">
                                         <template v-if="!user.second_name">

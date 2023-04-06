@@ -8,6 +8,7 @@ use App\Http\Requests\Dashboard\User\UpdateRequest;
 use App\Models\City;
 use App\Models\Spatie\ModelHasRole;
 use App\Models\State;
+use App\Models\TypeDocument;
 use App\Models\User;
 use App\Traits\AuthHasRole;
 use Illuminate\Http\RedirectResponse;
@@ -30,7 +31,7 @@ class UserController extends Controller
         $users = User::query()
             -> select(
                     'users.id',
-                    'users.num_doc',
+                    'users.number_document',
                     'users.first_name',
                     'users.second_name',
                     'users.surname',
@@ -68,6 +69,7 @@ class UserController extends Controller
         $cities = City::select('id', 'name', 'state_id')->get();
         $roles = Role::select('id', 'name')->get();
         $states = State::select('id', 'name')->get();
+        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
 
         $user_role = $this->authHasRole($roles);
 
@@ -75,6 +77,7 @@ class UserController extends Controller
             'cities' => $cities,
             'roles' => $roles,
             'states' => $states,
+            'typeDocuments' => $type_documents,
             'userRole' => $user_role,
         ]);
     }
@@ -88,13 +91,13 @@ class UserController extends Controller
         $role = Role::select('name')->where('id', $data["role_id"])->first();
 
         User::create([
-            "type_doc" => $data["type_doc"],
-            "num_doc" => $data["num_doc"],
+            "type_document" => $data["type_document"],
+            "number_document" => $data["number_document"],
             "first_name" => $data["first_name"],
             "second_name" => $data["second_name"],
             "surname" => $data["surname"],
             "email" => $data["email"],
-            "password" => Hash::make($data["num_doc"]),
+            "password" => Hash::make($data["number_document"]),
             "birthdate" => $data["birthdate"],
             "gender" => $data["gender"],
             "phone" => $data["phone"],
@@ -123,8 +126,8 @@ class UserController extends Controller
     {
         $user = User::select(
                 'users.id',
-                'users.type_doc',
-                'users.num_doc',
+                'users.type_document',
+                'users.number_document',
                 'users.first_name',
                 'users.second_name',
                 'users.surname',
@@ -146,6 +149,7 @@ class UserController extends Controller
         $cities = City::select('id', 'name', 'state_id')->get();
         $roles = Role::select('id', 'name')->get();
         $states = State::select('id', 'name')->get();
+        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
 
         $user_role = $this->authHasRole($roles);
 
@@ -155,6 +159,7 @@ class UserController extends Controller
             'states' => $states,
             'user' => $user,
             'userRole' => $user_role,
+            'typeDocuments' => $type_documents,
         ]);
     }
 

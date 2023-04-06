@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\City;
 use App\Models\State;
+use App\Models\TypeDocument;
 use App\Traits\AuthHasRole;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -25,6 +26,7 @@ class ProfileController extends Controller
     {
         $states = State::select('id', 'name')->get();
         $cities = City::select('id', 'name', 'state_id')->get();
+        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
 
         $role = $this->authHasRole(Role::select('id', 'name')->get());
 
@@ -34,6 +36,7 @@ class ProfileController extends Controller
             'role' => $role,
             'states' => $states,
             'status' => session('status'),
+            'typeDocuments' => $type_documents,
         ]);
     }
 

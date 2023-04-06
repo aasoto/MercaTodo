@@ -15,6 +15,7 @@ const props = defineProps({
     status: {
         type: String,
     },
+    typeDocuments: Object,
 });
 
 </script>
@@ -38,6 +39,7 @@ const props = defineProps({
                         :must-verify-email="mustVerifyEmail"
                         :states="states"
                         :status="status"
+                        :typeDocuments="typeDocuments"
                         class="w-full"
                     />
                 </div>
