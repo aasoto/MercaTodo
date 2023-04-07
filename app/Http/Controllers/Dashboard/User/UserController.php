@@ -27,8 +27,17 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(string $role = "1"): Response
+    public function index(string $role = "admin"): Response
     {
+        $roles = Cache::get('roles');
+        $role_id = 0;
+
+        foreach ($roles as $key => $value) {
+            if ($value['name'] === $role) {
+                $role_id = $value['id'];
+            }
+        }
+
         $users = User::query()
             -> select(
                     'users.id',
@@ -47,10 +56,8 @@ class UserController extends Controller
             -> join('states', 'users.state_id', 'states.id')
             -> join('cities', 'users.city_id', 'cities.id')
             -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
-            -> where('model_has_roles.role_id', $role)
+            -> where('model_has_roles.role_id', $role_id)
             -> paginate(10);
-
-        $roles = Role::select('id', 'name')->get();
 
         $user_role = $this->authHasRole($roles);
 

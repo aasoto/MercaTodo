@@ -35,8 +35,12 @@ console.log(props.users);
                                 <label class="text-black dark:text-white" for="showRole">Rol: </label>
                                 <div class="flex">
                                     <template v-for="role in roles">
-                                        <Link :href="route('user.index', `${role.id}`)">
-                                            <button v-if="roleSearch == role.id" :disabled="roleSearch == role.id" class="bg-gray-500 text-white px-5 py-2 capitalize opacity-50">
+                                        <Link :href="route('user.index', `${role.name}`)">
+                                            <button
+                                                v-if="roleSearch == role.name"
+                                                :disabled="roleSearch == role.name"
+                                                class="bg-gray-500 text-white px-5 py-2 capitalize opacity-50"
+                                            >
                                                 {{ role.name }}
                                             </button>
                                             <button v-else class="bg-gray-500 text-white px-5 py-2 capitalize">
