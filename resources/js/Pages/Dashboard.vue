@@ -1,15 +1,21 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { useSignedRoleStore } from '@/Store/SignedRole';
 import { Head } from '@inertiajs/vue3';
-defineProps({
+
+const props = defineProps({
     userRole: String,
 });
+
+const useSignedRole = useSignedRoleStore();
+const { assignRole } = useSignedRole;
+assignRole(props.userRole);
 </script>
 
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout :userRole="userRole">
+    <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
         </template>

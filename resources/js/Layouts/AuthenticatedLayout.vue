@@ -6,12 +6,13 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import { useSignedRoleStore } from '@/Store/SignedRole';
+import { storeToRefs } from 'pinia';
 
 const showingNavigationDropdown = ref(false);
 
-defineProps({
-    userRole: String,
-});
+const useSignedRole = useSignedRoleStore();
+const { role } = storeToRefs(useSignedRole);
 </script>
 
 <template>
@@ -37,7 +38,7 @@ defineProps({
                                     Dashboard
                                 </NavLink>
                             </div>
-                            <div v-if="userRole == 'admin'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="role == 'admin'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('user.index', 'admin')" :active="route().current('user.index')">
                                     Usuarios
                                 </NavLink>
@@ -125,7 +126,7 @@ defineProps({
                             Dashboard
                         </ResponsiveNavLink>
                     </div>
-                    <div class="pt-2 pb-3 space-y-1">
+                    <div v-if="role == 'admin'" class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('user.index', 'admin')" :active="route().current('user.index')">
                             Usuarios
                         </ResponsiveNavLink>

@@ -10,7 +10,6 @@ const props = defineProps({
     roleSearch: String,
     roles: Array,
     users: Object,
-    userRole: String,
 });
 console.log(props.users);
 
@@ -18,7 +17,7 @@ console.log(props.users);
 <template>
     <Head title="Listado de usuarios" />
 
-    <AuthenticatedLayout :userRole="userRole">
+    <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Listado de usuarios</h2>
         </template>

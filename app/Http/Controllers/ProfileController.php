@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Traits\AuthHasRole;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,11 +11,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
 
 class ProfileController extends Controller
 {
-    use AuthHasRole;
     /**
      * Display the user's profile form.
      */
@@ -26,12 +23,9 @@ class ProfileController extends Controller
         $states = Cache::get('states');
         $type_documents = Cache::get('type_documents');
 
-        $role = $this->authHasRole(Role::select('id', 'name')->get());
-
         return Inertia::render('Profile/Edit', [
             'cities' => $cities,
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'role' => $role,
             'states' => $states,
             'status' => session('status'),
             'typeDocuments' => $type_documents,

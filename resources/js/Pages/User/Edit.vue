@@ -13,7 +13,6 @@ const props = defineProps({
     states: Array,
     typeDocuments: Object,
     user: Object,
-    userRole: String,
 });
 
 console.log(props.user);
@@ -51,7 +50,7 @@ const show_cities = (stateId) => {
 <template>
     <Head title="Editar usuarios" />
 
-    <AuthenticatedLayout :userRole="userRole">
+    <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Editar usuarios

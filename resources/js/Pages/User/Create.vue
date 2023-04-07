@@ -11,7 +11,6 @@ const props = defineProps({
     cities: Array,
     roles: Array,
     states: Array,
-    userRole: String,
     typeDocuments: Object,
 });
 
@@ -46,7 +45,7 @@ const show_cities = (stateId) => {
 <template>
     <Head title="Agregar usuario" />
 
-    <AuthenticatedLayout :userRole="userRole">
+    <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Agregar usuario

@@ -5,12 +5,8 @@ namespace App\Http\Controllers\Dashboard\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\User\StoreRequest;
 use App\Http\Requests\Dashboard\User\UpdateRequest;
-use App\Models\City;
 use App\Models\Spatie\ModelHasRole;
-use App\Models\State;
-use App\Models\TypeDocument;
 use App\Models\User;
-use App\Traits\AuthHasRole;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +19,6 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    use AuthHasRole;
     /**
      * Display a listing of the resource.
      */
@@ -59,13 +54,10 @@ class UserController extends Controller
             -> where('model_has_roles.role_id', $role_id)
             -> paginate(10);
 
-        $user_role = $this->authHasRole($roles);
-
         return Inertia::render('User/Index', [
             'roleSearch' => $role,
             'roles' => $roles,
             'users' => $users,
-            'userRole' => $user_role,
         ]);
     }
 
@@ -79,14 +71,11 @@ class UserController extends Controller
         $states = Cache::get('states');
         $type_documents = Cache::get('type_documents');
 
-        $user_role = $this->authHasRole($roles);
-
         return Inertia::render('User/Create', [
             'cities' => $cities,
             'roles' => $roles,
             'states' => $states,
             'typeDocuments' => $type_documents,
-            'userRole' => $user_role,
         ]);
     }
 
@@ -159,15 +148,12 @@ class UserController extends Controller
         $states = Cache::get('states');
         $type_documents = Cache::get('type_documents');
 
-        $user_role = $this->authHasRole($roles);
-
         return Inertia::render('User/Edit', [
             'cities' => $cities,
             'roles' => $roles,
             'states' => $states,
-            'user' => $user,
-            'userRole' => $user_role,
             'typeDocuments' => $type_documents,
+            'user' => $user,
         ]);
     }
 
