@@ -5,14 +5,12 @@ namespace App\Http\Controllers\Dashboard\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\User\StoreRequest;
 use App\Http\Requests\Dashboard\User\UpdateRequest;
-use App\Models\City;
 use App\Models\Spatie\ModelHasRole;
-use App\Models\State;
 use App\Models\User;
-use App\Traits\AuthHasRole;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -21,16 +19,24 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    use AuthHasRole;
     /**
      * Display a listing of the resource.
      */
-    public function index(string $role = "1"): Response
+    public function index(string $role = "admin"): Response
     {
+        $roles = Cache::get('roles');
+        $role_id = 0;
+
+        foreach ($roles as $key => $value) {
+            if ($value['name'] === $role) {
+                $role_id = $value['id'];
+            }
+        }
+
         $users = User::query()
             -> select(
                     'users.id',
-                    'users.num_doc',
+                    'users.number_document',
                     'users.first_name',
                     'users.second_name',
                     'users.surname',
@@ -45,18 +51,13 @@ class UserController extends Controller
             -> join('states', 'users.state_id', 'states.id')
             -> join('cities', 'users.city_id', 'cities.id')
             -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
-            -> where('model_has_roles.role_id', $role)
+            -> where('model_has_roles.role_id', $role_id)
             -> paginate(10);
-
-        $roles = Role::select('id', 'name')->get();
-
-        $user_role = $this->authHasRole($roles);
 
         return Inertia::render('User/Index', [
             'roleSearch' => $role,
             'roles' => $roles,
             'users' => $users,
-            'userRole' => $user_role,
         ]);
     }
 
@@ -65,17 +66,16 @@ class UserController extends Controller
      */
     public function create(): Response
     {
-        $cities = City::select('id', 'name', 'state_id')->get();
-        $roles = Role::select('id', 'name')->get();
-        $states = State::select('id', 'name')->get();
-
-        $user_role = $this->authHasRole($roles);
+        $cities = Cache::get('cities');
+        $roles = Cache::get('roles');
+        $states = Cache::get('states');
+        $type_documents = Cache::get('type_documents');
 
         return Inertia::render('User/Create', [
             'cities' => $cities,
             'roles' => $roles,
             'states' => $states,
-            'userRole' => $user_role,
+            'typeDocuments' => $type_documents,
         ]);
     }
 
@@ -88,13 +88,13 @@ class UserController extends Controller
         $role = Role::select('name')->where('id', $data["role_id"])->first();
 
         User::create([
-            "type_doc" => $data["type_doc"],
-            "num_doc" => $data["num_doc"],
+            "type_document" => $data["type_document"],
+            "number_document" => $data["number_document"],
             "first_name" => $data["first_name"],
             "second_name" => $data["second_name"],
             "surname" => $data["surname"],
             "email" => $data["email"],
-            "password" => Hash::make($data["num_doc"]),
+            "password" => Hash::make($data["number_document"]),
             "birthdate" => $data["birthdate"],
             "gender" => $data["gender"],
             "phone" => $data["phone"],
@@ -123,8 +123,8 @@ class UserController extends Controller
     {
         $user = User::select(
                 'users.id',
-                'users.type_doc',
-                'users.num_doc',
+                'users.type_document',
+                'users.number_document',
                 'users.first_name',
                 'users.second_name',
                 'users.surname',
@@ -143,18 +143,17 @@ class UserController extends Controller
         -> where('users.id', $id)
         -> first();
 
-        $cities = City::select('id', 'name', 'state_id')->get();
-        $roles = Role::select('id', 'name')->get();
-        $states = State::select('id', 'name')->get();
-
-        $user_role = $this->authHasRole($roles);
+        $cities = Cache::get('cities');
+        $roles = Cache::get('roles');
+        $states = Cache::get('states');
+        $type_documents = Cache::get('type_documents');
 
         return Inertia::render('User/Edit', [
             'cities' => $cities,
             'roles' => $roles,
             'states' => $states,
+            'typeDocuments' => $type_documents,
             'user' => $user,
-            'userRole' => $user_role,
         ]);
     }
 

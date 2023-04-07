@@ -10,7 +10,6 @@ const props = defineProps({
     roleSearch: String,
     roles: Array,
     users: Object,
-    userRole: String,
 });
 console.log(props.users);
 
@@ -18,7 +17,7 @@ console.log(props.users);
 <template>
     <Head title="Listado de usuarios" />
 
-    <AuthenticatedLayout :userRole="userRole">
+    <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Listado de usuarios</h2>
         </template>
@@ -35,8 +34,12 @@ console.log(props.users);
                                 <label class="text-black dark:text-white" for="showRole">Rol: </label>
                                 <div class="flex">
                                     <template v-for="role in roles">
-                                        <Link :href="route('user.index', `${role.id}`)">
-                                            <button v-if="roleSearch == role.id" :disabled="roleSearch == role.id" class="bg-gray-500 text-white px-5 py-2 capitalize opacity-50">
+                                        <Link :href="route('user.index', `${role.name}`)">
+                                            <button
+                                                v-if="roleSearch == role.name"
+                                                :disabled="roleSearch == role.name"
+                                                class="bg-gray-500 text-white px-5 py-2 capitalize opacity-50"
+                                            >
                                                 {{ role.name }}
                                             </button>
                                             <button v-else class="bg-gray-500 text-white px-5 py-2 capitalize">
@@ -74,7 +77,7 @@ console.log(props.users);
                             <tbody>
                                 <tr class="border-b border-gray-400" v-for="user in users.data">
                                     <td class="px-3 py-3 text-black dark:text-white">
-                                        {{ user.num_doc }}
+                                        {{ user.number_document }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white">
                                         <template v-if="!user.second_name">

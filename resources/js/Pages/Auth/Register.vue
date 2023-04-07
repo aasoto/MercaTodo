@@ -10,12 +10,13 @@ import { ref } from 'vue';
 const props = defineProps({
     cities: Array,
     states: Array,
+    typeDocuments: Object,
 });
-
+console.log(props.typeDocuments);
 const form = useForm({
     // name: '',
-    typeDoc: '',
-    numDoc: '',
+    typeDocument: '',
+    numberDocument: '',
     firstName: '',
     secondName: '',
     surname: '',
@@ -58,42 +59,46 @@ const submit = () => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                 <div class="col-span-1">
-                    <InputLabel for="typeDoc">
+                    <InputLabel for="typeDocument">
                         Tipo de documento<span class="text-red-600"> *</span>
                     </InputLabel>
 
                     <select
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                        name="typeDoc"
-                        id="typeDoc"
-                        v-model="form.typeDoc"
+                        name="typeDocument"
+                        id="typeDocument"
+                        v-model="form.typeDocument"
                         autofocus
                         required
                     >
                         <option value="">Seleccionar...</option>
-                        <option value="cc">Cédula de ciudadanía</option>
-                        <option value="pas">Pasaporte</option>
-                        <option value="o">Otro</option>
+                        <option
+                            v-for="typeDocument in typeDocuments"
+                            :value="typeDocument.code"
+                            :key="typeDocument.id"
+                        >
+                            {{ typeDocument.name }}
+                        </option>
                     </select>
 
-                    <InputError class="mt-2" :message="form.errors.typeDoc" />
+                    <InputError class="mt-2" :message="form.errors.typeDocument" />
 
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="numDoc">
+                    <InputLabel for="numberDocument">
                         Número de documento<span class="text-red-600"> *</span>
                     </InputLabel>
                     <TextInput
-                        id="numDoc"
+                        id="numberDocument"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="form.numDoc"
+                        v-model="form.numberDocument"
                         required
-                        autocomplete="numDoc"
+                        autocomplete="numberDocument"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.numDoc" />
+                    <InputError class="mt-2" :message="form.errors.numberDocument" />
                 </div>
 
                 <div class="col-span-1">

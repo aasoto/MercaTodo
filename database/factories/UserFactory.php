@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\City;
 use App\Models\State;
+use App\Models\TypeDocument;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,8 +24,8 @@ class UserFactory extends Factory
         $state = $this->search_state();
         return [
             // 'name' => fake()->name(),
-            'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
-            'num_doc' => fake()->randomNumber(7, true),
+            'type_document' => $this->search_type_document(),
+            'number_document' => fake()->randomNumber(7, true),
             'first_name' => fake()->firstName($gender = 'male'|'female'),
             'second_name' => fake()->firstName($gender = 'male'|'female'),
             'surname' => fake()->lastName(),
@@ -52,6 +53,12 @@ class UserFactory extends Factory
     //         'email_verified_at' => null,
     //     ]);
     // }
+
+    public function search_type_document ()
+    {
+        $type = TypeDocument::select('code')->inRandomOrder()->first();
+        return $type['code'];
+    }
 
     public function search_state ()
     {

@@ -11,14 +11,14 @@ const props = defineProps({
     cities: Array,
     roles: Array,
     states: Array,
+    typeDocuments: Object,
     user: Object,
-    userRole: String,
 });
 
 console.log(props.user);
 const form = useForm({
-    type_doc: props.user.type_doc,
-    num_doc: props.user.num_doc,
+    type_document: props.user.type_document,
+    number_document: props.user.number_document,
     first_name: props.user.first_name,
     second_name: props.user.second_name,
     surname: props.user.surname,
@@ -50,7 +50,7 @@ const show_cities = (stateId) => {
 <template>
     <Head title="Editar usuarios" />
 
-    <AuthenticatedLayout :userRole="userRole">
+    <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Editar usuarios
@@ -64,42 +64,46 @@ const show_cities = (stateId) => {
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                                 <div class="col-span-1">
-                                    <InputLabel for="type_doc">
+                                    <InputLabel for="type_document">
                                         Tipo de documento<span class="text-red-600"> *</span>
                                     </InputLabel>
 
                                     <select
                                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                        name="type_doc"
-                                        id="type_doc"
-                                        v-model="form.type_doc"
+                                        name="type_document"
+                                        id="type_document"
+                                        v-model="form.type_document"
                                         autofocus
                                         required
                                     >
                                         <option value="">Seleccionar...</option>
-                                        <option value="cc">Cédula de ciudadanía</option>
-                                        <option value="pas">Pasaporte</option>
-                                        <option value="o">Otro</option>
+                                        <option
+                                            v-for="typeDocument in typeDocuments"
+                                            :value="typeDocument.code"
+                                            :key="typeDocument.id"
+                                        >
+                                            {{ typeDocument.name }}
+                                        </option>
                                     </select>
 
-                                    <InputError class="mt-2" :message="form.errors.type_doc" />
+                                    <InputError class="mt-2" :message="form.errors.type_document" />
 
                                 </div>
 
                                 <div class="col-span-1">
-                                    <InputLabel for="num_doc">
+                                    <InputLabel for="number_document">
                                         Número de documento<span class="text-red-600"> *</span>
                                     </InputLabel>
                                     <TextInput
-                                        id="num_doc"
+                                        id="number_document"
                                         type="text"
                                         class="mt-1 block w-full"
-                                        v-model="form.num_doc"
+                                        v-model="form.number_document"
                                         required
-                                        autocomplete="num_doc"
+                                        autocomplete="number_document"
                                     />
 
-                                    <InputError class="mt-2" :message="form.errors.num_doc" />
+                                    <InputError class="mt-2" :message="form.errors.number_document" />
                                 </div>
 
                                 <div class="col-span-1">
@@ -289,19 +293,18 @@ const show_cities = (stateId) => {
 
                                 <div class="col-span-1">
                                     <InputLabel for="email">
-                                        Correo electronico<span class="text-red-600"> *</span>
+                                        Correo electronico
                                     </InputLabel>
 
                                     <TextInput
                                         id="email"
                                         type="email"
-                                        class="mt-1 block w-full"
+                                        class="mt-1 block w-full bg-slate-200"
                                         v-model="form.email"
-                                        required
                                         autocomplete="username"
+                                        readonly
                                     />
 
-                                    <InputError class="mt-2" :message="form.errors.email" />
                                 </div>
 
                                 <div class="col-span-1">

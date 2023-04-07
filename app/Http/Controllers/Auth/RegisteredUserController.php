@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\State;
+use App\Models\TypeDocument;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -23,12 +24,14 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        $states = State::select('id', 'name')->get();
         $cities = City::select('id', 'name', 'state_id')->get();
+        $states = State::select('id', 'name')->get();
+        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
 
         return Inertia::render('Auth/Register', [
             'cities' => $cities,
-            'states' => $states
+            'states' => $states,
+            'typeDocuments' => $type_documents,
         ]);
     }
 
@@ -40,8 +43,8 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'typeDoc' => 'required|string|max:3',
-            'numDoc' => 'required|regex:/^[0-9A-Z]+$/i|max:100|unique:users,num_doc',
+            'typeDocument' => 'required|string|max:3',
+            'numberDocument' => 'required|regex:/^[0-9A-Z]+$/i|max:100|unique:users,number_document',
             'firstName' => 'required|string|max:100',
             'secondName' => 'nullable|string|max:100',
             'surname' => 'required|string|max:100',
@@ -57,8 +60,8 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'type_doc' => $request->typeDoc,
-            'num_doc' => $request->numDoc,
+            'type_document' => $request->typeDocument,
+            'number_document' => $request->numberDocument,
             'first_name' => $request->firstName,
             'second_name' => $request->secondName,
             'surname' => $request->surname,
