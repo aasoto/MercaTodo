@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\City;
-use App\Models\State;
-use App\Models\TypeDocument;
 use App\Traits\AuthHasRole;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,9 +22,9 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
-        $states = State::select('id', 'name')->get();
-        $cities = City::select('id', 'name', 'state_id')->get();
-        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
+        $cities = Cache::get('cities');
+        $states = Cache::get('states');
+        $type_documents = Cache::get('type_documents');
 
         $role = $this->authHasRole(Role::select('id', 'name')->get());
 

@@ -14,6 +14,7 @@ use App\Traits\AuthHasRole;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -66,10 +67,10 @@ class UserController extends Controller
      */
     public function create(): Response
     {
-        $cities = City::select('id', 'name', 'state_id')->get();
-        $roles = Role::select('id', 'name')->get();
-        $states = State::select('id', 'name')->get();
-        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
+        $cities = Cache::get('cities');
+        $roles = Cache::get('roles');
+        $states = Cache::get('states');
+        $type_documents = Cache::get('type_documents');
 
         $user_role = $this->authHasRole($roles);
 
@@ -146,10 +147,10 @@ class UserController extends Controller
         -> where('users.id', $id)
         -> first();
 
-        $cities = City::select('id', 'name', 'state_id')->get();
-        $roles = Role::select('id', 'name')->get();
-        $states = State::select('id', 'name')->get();
-        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
+        $cities = Cache::get('cities');
+        $roles = Cache::get('roles');
+        $states = Cache::get('states');
+        $type_documents = Cache::get('type_documents');
 
         $user_role = $this->authHasRole($roles);
 
