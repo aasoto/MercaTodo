@@ -38,6 +38,15 @@ class UserTest extends TestCase
             fn (Assert $page) => $page
                 -> component('User/Index')
                 -> has('users')
+                -> has('users.data.0', fn (Assert $page) => $page
+                    -> has('number_document')
+                    -> has('first_name')
+                    -> has('second_name')
+                    -> has('surname')
+                    -> has('second_surname')
+                    -> has('email')
+                    -> etc()
+                )
                 -> has('roles', count($roles))
         );
 
