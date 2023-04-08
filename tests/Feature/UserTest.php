@@ -3,12 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\City;
-use App\Models\Spatie\ModelHasRol;
 use App\Models\State;
+use App\Models\TypeDocument;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -23,8 +24,11 @@ class UserTest extends TestCase
 
         $user = User::factory()->create()->assignRole('admin');
 
+        $roles = Role::select('id', 'name')->get();
+        Cache::put('roles', $roles);
+
         $response = $this->actingAs($user)
-            ->get(route('user.index', "1"));
+            ->get(route('user.index', "admin"));
 
         $roles = Role::select('id', 'name')->get();
 
@@ -75,13 +79,14 @@ class UserTest extends TestCase
 
         $user = User::factory()->create()->assignRole('admin');
         $role = Role::select('id')->first();
+        $type = TypeDocument::select('code')->inRandomOrder()->first();
 
         $first_name = fake()->firstName($gender = 'male'|'female');
         $address = fake()->streetAddress();
 
         $response = $this->actingAs($user)->patch(route('user.update', $user->id), [
-            'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
-            'num_doc' => strval(fake()->randomNumber(5, true)),
+            'type_document' => $type['code'],
+            'number_document' => strval(fake()->randomNumber(5, true)),
             'first_name' => $first_name,
             'second_name' => $user->second_name,
             'surname' => $user->surname,
@@ -114,6 +119,18 @@ class UserTest extends TestCase
 
         $user = User::factory()->create()->assignRole('admin');
 
+        $cities = City::select('id', 'name', 'state_id')->get();
+        Cache::put('cities', $cities);
+
+        $roles = Role::select('id', 'name')->get();
+        Cache::put('roles', $roles);
+
+        $states = State::select('id', 'name')->get();
+        Cache::put('states', $states);
+
+        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
+        Cache::put('type_documents', $type_documents);
+
         $response = $this->actingAs($user)
             ->get(route('user.create'));
 
@@ -133,8 +150,14 @@ class UserTest extends TestCase
                     -> has('id')
                     -> has('name')
                 )
-                -> has('userRole')
+                -> has('typeDocuments.0', fn (Assert $page) => $page
+                    -> has('id')
+                    -> has('code')
+                    -> has('name')
+                )
         );
+
+        Cache::flush();
     }
 
     public function test_user_can_be_saved(): void
@@ -146,11 +169,12 @@ class UserTest extends TestCase
         $state = State::select('id')->inRandomOrder()->first();
         $city = City::select('id')->where('state_id', $state["id"])->inRandomOrder()->first();
         $role = Role::select('id')->inRandomOrder()->first();
+        $type = TypeDocument::select('code')->inRandomOrder()->first();
 
         $response = $this->actingAs($user)
         ->post(route('user.store'), [
-            'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
-            'num_doc' => strval(fake()->randomNumber(5, true)),
+            'type_document' => $type['code'],
+            'number_document' => strval(fake()->randomNumber(5, true)),
             'first_name' => fake()->firstName($gender = 'male'|'female'),
             'second_name' => fake()->firstName($gender = 'male'|'female'),
             'surname' => fake()->lastName(),
