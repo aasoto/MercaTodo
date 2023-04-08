@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\City;
 use App\Models\State;
+use App\Models\TypeDocument;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
@@ -22,16 +23,15 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
-        State::factory()->count(5)->create();
-        City::factory()->count(25)->create();
-        Role::create(['name' => 'client']);
+        $this->seed();
 
         $state = State::select('id')->inRandomOrder()->first();
         $city = City::select('id')->where('state_id', $state["id"])->inRandomOrder()->first();
+        $type = TypeDocument::select('code')->inRandomOrder()->first();
 
         $response = $this->post('/register', [
-            'typeDoc' => fake()->randomElement(['cc', 'pas', 'o']),
-            'numDoc' => strval(fake()->randomNumber(5, true)),
+            'typeDocument' => $type['code'],
+            'numberDocument' => strval(fake()->randomNumber(5, true)),
             'firstName' => fake()->firstName($gender = 'male'|'female'),
             'secondName' => fake()->firstName($gender = 'male'|'female'),
             'surname' => fake()->lastName(),

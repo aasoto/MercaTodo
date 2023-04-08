@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\City;
 use App\Models\State;
+use App\Models\TypeDocument;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
@@ -31,6 +32,7 @@ class ProfileTest extends TestCase
         $this->seed();
 
         $user = User::factory()->create();
+        $type = TypeDocument::select('code')->inRandomOrder()->first();
 
         $first_name = fake()->firstName($gender = 'male'|'female');
         $address = fake()->streetAddress();
@@ -38,8 +40,8 @@ class ProfileTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->patch('/profile', [
-                'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
-                'num_doc' => strval(fake()->randomNumber(5, true)),
+                'type_document' => $type['code'],
+                'number_document' => strval(fake()->randomNumber(5, true)),
                 'first_name' => $first_name,
                 'second_name' => $user->second_name,
                 'surname' => $user->surname,
@@ -69,12 +71,13 @@ class ProfileTest extends TestCase
         $this->seed();
 
         $user = User::factory()->create();
+        $type = TypeDocument::select('code')->inRandomOrder()->first();
 
         $response = $this
             ->actingAs($user)
             ->patch('/profile', [
-                'type_doc' => fake()->randomElement(['cc', 'pas', 'o']),
-                'num_doc' => strval(fake()->randomNumber(5, true)),
+                'type_document' => $type['code'],
+                'number_document' => strval(fake()->randomNumber(5, true)),
                 'first_name' => 'Test User',
                 'second_name' => $user->second_name,
                 'surname' => $user->surname,
