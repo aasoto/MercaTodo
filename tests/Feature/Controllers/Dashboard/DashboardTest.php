@@ -39,6 +39,7 @@ class DashboardTest extends TestCase
             ->get(route('dashboard'));
 
         $response->assertStatus(200);
+
     }
 
     public function test_shows_dashboard_page(): void
@@ -55,5 +56,7 @@ class DashboardTest extends TestCase
                 ->component('Dashboard')
                 ->has('userRole')
         );
+
+        $response->assertView('h2')->contains('Dashboard');
     }
 }
