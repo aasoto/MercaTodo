@@ -11,14 +11,24 @@ class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_profile_page_is_displayed(): void
+    private User $user;
+    private TypeDocument $type;
+
+    public function setUp(): void
     {
+        parent::setUp();
+
         $this->seed();
 
-        $user = User::factory()->create();
+        $this->user = User::factory()->create();
+        $this->type = TypeDocument::select('code')->inRandomOrder()->first();
+    }
+
+    public function test_profile_page_is_displayed(): void
+    {
 
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->get('/profile');
 
         $response->assertOk();
@@ -26,115 +36,98 @@ class ProfileTest extends TestCase
 
     public function test_profile_information_can_be_updated(): void
     {
-        $this->seed();
-
-        $user = User::factory()->create();
-        $type = TypeDocument::select('code')->inRandomOrder()->first();
-
         $first_name = fake()->firstName($gender = 'male'|'female');
         $address = fake()->streetAddress();
 
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->patch('/profile', [
-                'type_document' => $type['code'],
+                'type_document' => $this->type['code'],
                 'number_document' => strval(fake()->randomNumber(5, true)),
                 'first_name' => $first_name,
-                'second_name' => $user->second_name,
-                'surname' => $user->surname,
-                'second_surname' => $user->second_surname,
-                'email' => $user->email,
-                'birthdate' => $user->birthdate,
-                'gender' => $user->gender,
-                'phone' => $user->phone,
+                'second_name' => $this->user->second_name,
+                'surname' => $this->user->surname,
+                'second_surname' => $this->user->second_surname,
+                'email' => $this->user->email,
+                'birthdate' => $this->user->birthdate,
+                'gender' => $this->user->gender,
+                'phone' => $this->user->phone,
                 'address' => $address,
-                'state_id' => $user->state_id,
-                'city_id' => $user->city_id,
+                'state_id' => $this->user->state_id,
+                'city_id' => $this->user->city_id,
             ]);
 
         $response
             ->assertSessionHasNoErrors()
             ->assertRedirect('/profile');
 
-        $user->refresh();
+        $this->user->refresh();
 
-        $this->assertSame($first_name, $user->first_name);
-        $this->assertSame($address, $user->address);
-        $this->assertNotNull($user->email_verified_at);
+        $this->assertSame($first_name, $this->user->first_name);
+        $this->assertSame($address, $this->user->address);
+        $this->assertNotNull($this->user->email_verified_at);
     }
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
     {
-        $this->seed();
-
-        $user = User::factory()->create();
-        $type = TypeDocument::select('code')->inRandomOrder()->first();
 
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->patch('/profile', [
-                'type_document' => $type['code'],
+                'type_document' => $this->type['code'],
                 'number_document' => strval(fake()->randomNumber(5, true)),
                 'first_name' => 'Test User',
-                'second_name' => $user->second_name,
-                'surname' => $user->surname,
-                'second_surname' => $user->second_surname,
-                'email' => $user->email,
-                'birthdate' => $user->birthdate,
-                'gender' => $user->gender,
-                'phone' => $user->phone,
-                'address' => $user->address,
-                'state_id' => $user->state_id,
-                'city_id' => $user->city_id,
+                'second_name' => $this->user->second_name,
+                'surname' => $this->user->surname,
+                'second_surname' => $this->user->second_surname,
+                'email' => $this->user->email,
+                'birthdate' => $this->user->birthdate,
+                'gender' => $this->user->gender,
+                'phone' => $this->user->phone,
+                'address' => $this->user->address,
+                'state_id' => $this->user->state_id,
+                'city_id' => $this->user->city_id,
             ]);
 
         $response
             ->assertSessionHasNoErrors()
             ->assertRedirect('/profile');
 
-        $this->assertNotNull($user->refresh()->email_verified_at);
+        $this->assertNotNull($this->user->refresh()->email_verified_at);
     }
 
     public function test_email_verification_status_is_changed_when_the_email_address_is_changed(): void
     {
-        $this->seed();
-
-        $user = User::factory()->create();
-
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->patch('/profile', [
-                'type_document' => $user->type_document,
-                'number_document' => $user->number_document,
-                'first_name' => $user->first_name,
-                'second_name' => $user->second_name,
-                'surname' => $user->surname,
-                'second_surname' => $user->second_surname,
+                'type_document' => $this->user->type_document,
+                'number_document' => $this->user->number_document,
+                'first_name' => $this->user->first_name,
+                'second_name' => $this->user->second_name,
+                'surname' => $this->user->surname,
+                'second_surname' => $this->user->second_surname,
                 'email' => 'changed@example.com',
-                'birthdate' => $user->birthdate,
-                'gender' => $user->gender,
-                'phone' => $user->phone,
-                'address' => $user->address,
-                'state_id' => $user->state_id,
-                'city_id' => $user->city_id,
+                'birthdate' => $this->user->birthdate,
+                'gender' => $this->user->gender,
+                'phone' => $this->user->phone,
+                'address' => $this->user->address,
+                'state_id' => $this->user->state_id,
+                'city_id' => $this->user->city_id,
             ]);
 
         $response
             ->assertSessionHasNoErrors()
             ->assertRedirect('/profile');
 
-        $this->assertNull($user->refresh()->email_verified_at);
+        $this->assertNull($this->user->refresh()->email_verified_at);
     }
 
 
     public function test_user_can_delete_their_account(): void
     {
-        $this->seed();
-
-        $user = User::factory()->create();
-
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->delete('/profile', [
                 'password' => '12345678',
             ]);
@@ -144,17 +137,13 @@ class ProfileTest extends TestCase
             ->assertRedirect('/');
 
         $this->assertGuest();
-        $this->assertNull($user->fresh());
+        $this->assertNull($this->user->fresh());
     }
 
     public function test_correct_password_must_be_provided_to_delete_account(): void
     {
-        $this->seed();
-
-        $user = User::factory()->create();
-
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->from('/profile')
             ->delete('/profile', [
                 'password' => 'wrong-password',
@@ -164,6 +153,6 @@ class ProfileTest extends TestCase
             ->assertSessionHasErrors('password')
             ->assertRedirect('/profile');
 
-        $this->assertNotNull($user->fresh());
+        $this->assertNotNull($this->user->fresh());
     }
 }
