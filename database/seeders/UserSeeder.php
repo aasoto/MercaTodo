@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         User::factory()
             ->create([
-                'email' => env('ADMIN_EMAIL', 'andresalfredosotosuarez@gmail.com'),
+                'email' => env('ADMIN_EMAIL', 'admin@gmail.com'),
                 'password' => env('ADMIN_PASSWORD', '12345678'),
             ])
         ->assignRole('admin');
