@@ -24,9 +24,6 @@ class UserTest extends TestCase
 
         $user = User::factory()->create()->assignRole('admin');
 
-        $roles = Role::select('id', 'name')->get();
-        Cache::put('roles', $roles);
-
         $response = $this->actingAs($user)
             ->get(route('user.index', "admin"));
 
@@ -127,18 +124,6 @@ class UserTest extends TestCase
         $this->seed();
 
         $user = User::factory()->create()->assignRole('admin');
-
-        $cities = City::select('id', 'name', 'state_id')->get();
-        Cache::put('cities', $cities);
-
-        $roles = Role::select('id', 'name')->get();
-        Cache::put('roles', $roles);
-
-        $states = State::select('id', 'name')->get();
-        Cache::put('states', $states);
-
-        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
-        Cache::put('type_documents', $type_documents);
 
         $response = $this->actingAs($user)
             ->get(route('user.create'));
