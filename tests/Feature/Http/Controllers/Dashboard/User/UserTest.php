@@ -7,6 +7,7 @@ use App\Models\State;
 use App\Models\TypeDocument;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Traits\useCache;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
@@ -16,18 +17,26 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, useCache;
+
+    private User $user;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed();
+
+        $this->user = User::factory()->create()->assignRole('admin');
+    }
 
     public function test_can_list_users(): void
     {
-        $this->seed();
 
-        $user = User::factory()->create()->assignRole('admin');
-
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->user)
             ->get(route('user.index', "admin"));
 
-        $roles = Role::select('id', 'name')->get();
+        $roles = $this->getRoles();
 
         $response->assertStatus(200);
 
@@ -51,29 +60,26 @@ class UserTest extends TestCase
 
     public function test_user_can_be_edited(): void
     {
-        $this->seed();
 
-        $user = User::factory()->create()->assignRole('admin');
-
-        $response = $this->actingAs($user)
-        ->get(route('user.edit', $user));
+        $response = $this->actingAs($this->user)
+        ->get(route('user.edit', $this->user));
 
         $response->assertInertia(
             fn (Assert $page) => $page
                 -> component('User/Edit')
                 -> has('user', fn (Assert $page) => $page
-                    -> where('id', $user->id)
-                    -> where('first_name', $user->first_name)
-                    -> where('second_name', $user->second_name)
-                    -> where('surname', $user->surname)
-                    -> where('second_surname', $user->second_surname)
-                    -> where('email', $user->email)
-                    -> where('birthdate', $user->birthdate)
-                    -> where('gender', $user->gender)
-                    -> where('phone', $user->phone)
-                    -> where('address', $user->address)
-                    -> where('state_id', $user->state_id)
-                    -> where('city_id', $user->city_id)
+                    -> where('id', $this->user->id)
+                    -> where('first_name', $this->user->first_name)
+                    -> where('second_name', $this->user->second_name)
+                    -> where('surname', $this->user->surname)
+                    -> where('second_surname', $this->user->second_surname)
+                    -> where('email', $this->user->email)
+                    -> where('birthdate', $this->user->birthdate)
+                    -> where('gender', $this->user->gender)
+                    -> where('phone', $this->user->phone)
+                    -> where('address', $this->user->address)
+                    -> where('state_id', $this->user->state_id)
+                    -> where('city_id', $this->user->city_id)
                     -> etc()
                 )
         );
@@ -81,51 +87,44 @@ class UserTest extends TestCase
 
     public function test_user_can_be_updated(): void
     {
-        $this->seed();
-
-        $user = User::factory()->create()->assignRole('admin');
-        $role = Role::select('id')->first();
-        $type = TypeDocument::select('code')->inRandomOrder()->first();
+        $role = $this->getRoles();
+        $type = $this->getTypeDocument();
 
         $first_name = fake()->firstName($gender = 'male'|'female');
         $address = fake()->streetAddress();
 
-        $response = $this->actingAs($user)->patch(route('user.update', $user->id), [
-            'type_document' => $type['code'],
+        $response = $this->actingAs($this->user)->patch(route('user.update', $this->user->id), [
+            'type_document' => $type[0]['code'],
             'number_document' => strval(fake()->randomNumber(5, true)),
             'first_name' => $first_name,
-            'second_name' => $user->second_name,
-            'surname' => $user->surname,
-            'second_surname' => $user->second_surname,
-            'email' => $user->email,
-            'birthdate' => $user->birthdate,
-            'gender' => $user->gender,
-            'phone' => $user->phone,
+            'second_name' => $this->user->second_name,
+            'surname' => $this->user->surname,
+            'second_surname' => $this->user->second_surname,
+            'email' => $this->user->email,
+            'birthdate' => $this->user->birthdate,
+            'gender' => $this->user->gender,
+            'phone' => $this->user->phone,
             'address' => $address,
-            'state_id' => $user->state_id,
-            'city_id' => $user->city_id,
-            'role_id' => $role['id'],
+            'state_id' => $this->user->state_id,
+            'city_id' => $this->user->city_id,
+            'role_id' => $role[0]['id'],
             "enabled" => true
         ]);
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect(route('user.edit', $user->id));
+            ->assertRedirect(route('user.edit', $this->user->id));
 
-        $user->refresh();
+        $this->user->refresh();
 
-        $this->assertSame($first_name, $user->first_name);
-        $this->assertSame($address, $user->address);
-        $this->assertNotNull($user->email_verified_at);
+        $this->assertSame($first_name, $this->user->first_name);
+        $this->assertSame($address, $this->user->address);
+        $this->assertNotNull($this->user->email_verified_at);
     }
 
     public function test_new_user_can_be_created(): void
     {
-        $this->seed();
-
-        $user = User::factory()->create()->assignRole('admin');
-
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->user)
             ->get(route('user.create'));
 
         $response->assertInertia(
@@ -151,23 +150,18 @@ class UserTest extends TestCase
                 )
         );
 
-        Cache::flush();
     }
 
     public function test_user_can_be_saved(): void
     {
-        $this->seed();
+        $state = $this->getStates();
+        $city = City::select('id')->where('state_id', $state[0]["id"])->inRandomOrder()->first();
+        $role = $this->getRoles();
+        $type = $this->getTypeDocument();
 
-        $user = User::factory()->create()->assignRole('admin');
-
-        $state = State::select('id')->inRandomOrder()->first();
-        $city = City::select('id')->where('state_id', $state["id"])->inRandomOrder()->first();
-        $role = Role::select('id')->inRandomOrder()->first();
-        $type = TypeDocument::select('code')->inRandomOrder()->first();
-
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->user)
         ->post(route('user.store'), [
-            'type_document' => $type['code'],
+            'type_document' => $type[0]['code'],
             'number_document' => strval(fake()->randomNumber(5, true)),
             'first_name' => fake()->firstName($gender = 'male'|'female'),
             'second_name' => fake()->firstName($gender = 'male'|'female'),
@@ -178,13 +172,13 @@ class UserTest extends TestCase
             'gender' => fake()->randomElement(['m', 'f', 'o']),
             'phone' => fake()->phoneNumber(),
             'address' => fake()->streetAddress(),
-            'state_id' => $state["id"],
+            'state_id' => $state[0]["id"],
             'city_id' => $city["id"],
-            'role_id' => $role["id"]
+            'role_id' => $role[0]["id"]
         ]);
 
         $response
             -> assertSessionHasNoErrors()
-            -> assertRedirect(route('user.index', $role['id']));
+            -> assertRedirect(route('user.index', $role[0]['id']));
     }
 }
