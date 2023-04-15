@@ -12,9 +12,14 @@ class EmailVerificationPromptTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp (): void
+    {
+        parent::setUp();
+        $this->seed();
+    }
+
     public function test_if_email_is_verfied_direct_dashboard(): void
     {
-        $this->seed();
         $user = User::first();
 
         $response = $this->actingAs($user)->get(route('verification.notice'));
@@ -25,7 +30,6 @@ class EmailVerificationPromptTest extends TestCase
 
     public function test_if_email_is_not_verfied_direct_verify_email_page(): void
     {
-        $this->seed();
         $user = User::factory()->create(['email_verified_at' => null]);
 
         $response = $this->actingAs($user)->get(route('verification.notice'));
