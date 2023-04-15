@@ -3,15 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\City;
-use App\Models\State;
-use App\Models\TypeDocument;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use App\Traits\useCache;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Cache;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Inertia\Testing\AssertableInertia as Assert;
 

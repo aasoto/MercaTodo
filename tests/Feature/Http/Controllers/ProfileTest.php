@@ -68,7 +68,7 @@ class ProfileTest extends TestCase
         $this->assertNotNull($this->user->email_verified_at);
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
+    public function test_email_verification_status_do_not_change_when_the_email_address_has_not_been_changed(): void
     {
 
         $response = $this
@@ -96,7 +96,7 @@ class ProfileTest extends TestCase
         $this->assertNotNull($this->user->refresh()->email_verified_at);
     }
 
-    public function test_email_verification_status_is_changed_when_the_email_address_is_changed(): void
+    public function test_email_verification_status_changes_when_the_email_address_has_been_changed(): void
     {
         $response = $this
             ->actingAs($this->user)
