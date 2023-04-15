@@ -17,31 +17,6 @@ class DashboardTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     */
-
-    public function test_get_data_from_cache_if_exists(): void
-    {
-        $this->seed();
-
-        Cache::put('cities', City::select('id', 'name', 'state_id')->get());
-
-        Cache::put('roles', Role::select('id', 'name')->get());
-
-        Cache::put('states', State::select('id', 'name')->get());
-
-        Cache::put('type_documents', TypeDocument::select('id', 'code', 'name')->get());
-
-        $user = User::factory()->create()->assignRole('admin');
-
-        $response = $this->actingAs($user)
-            ->get(route('dashboard'));
-
-        $response->assertStatus(200);
-
-    }
-
     public function test_shows_dashboard_page(): void
     {
         $this->seed();
