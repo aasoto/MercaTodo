@@ -49,4 +49,16 @@ class AuthenticationTest extends TestCase
 
         $this->assertGuest();
     }
+
+    public function test_user_can_logout_session():void
+    {
+        $this->seed();
+
+        $user = User::factory()->create()->assignRole('admin');
+
+        $response = $this->actingAs($user)
+            ->post(route('logout'));
+
+        $response->assertRedirect('/');
+    }
 }

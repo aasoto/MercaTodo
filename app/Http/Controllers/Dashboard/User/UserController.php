@@ -7,9 +7,8 @@ use App\Http\Requests\Dashboard\User\StoreRequest;
 use App\Http\Requests\Dashboard\User\UpdateRequest;
 use App\Models\Spatie\ModelHasRole;
 use App\Models\User;
+use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
@@ -19,12 +18,13 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    use useCache;
     /**
      * Display a listing of the resource.
      */
     public function index(string $role = "admin"): Response
     {
-        $roles = Cache::get('roles');
+        $roles = $this->getRoles();
         $role_id = 0;
 
         foreach ($roles as $key => $value) {
@@ -66,10 +66,10 @@ class UserController extends Controller
      */
     public function create(): Response
     {
-        $cities = Cache::get('cities');
-        $roles = Cache::get('roles');
-        $states = Cache::get('states');
-        $type_documents = Cache::get('type_documents');
+        $cities = $this->getCities();
+        $roles = $this->getRoles();
+        $states = $this->getStates();
+        $type_documents = $this->getTypeDocument();
 
         return Inertia::render('User/Create', [
             'cities' => $cities,
@@ -111,10 +111,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+    // public function show(string $id)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -143,10 +143,10 @@ class UserController extends Controller
         -> where('users.id', $id)
         -> first();
 
-        $cities = Cache::get('cities');
-        $roles = Cache::get('roles');
-        $states = Cache::get('states');
-        $type_documents = Cache::get('type_documents');
+        $cities = $this->getCities();
+        $roles = $this->getRoles();
+        $states = $this->getStates();
+        $type_documents = $this->getTypeDocument();
 
         return Inertia::render('User/Edit', [
             'cities' => $cities,
@@ -175,8 +175,8 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+    // public function destroy(string $id)
+    // {
+    //     //
+    // }
 }

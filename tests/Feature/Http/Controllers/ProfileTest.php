@@ -2,12 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\City;
-use App\Models\State;
 use App\Models\TypeDocument;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -97,6 +94,38 @@ class ProfileTest extends TestCase
 
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
+
+    public function test_email_verification_status_is_changed_when_the_email_address_is_changed(): void
+    {
+        $this->seed();
+
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'type_document' => $user->type_document,
+                'number_document' => $user->number_document,
+                'first_name' => $user->first_name,
+                'second_name' => $user->second_name,
+                'surname' => $user->surname,
+                'second_surname' => $user->second_surname,
+                'email' => 'changed@example.com',
+                'birthdate' => $user->birthdate,
+                'gender' => $user->gender,
+                'phone' => $user->phone,
+                'address' => $user->address,
+                'state_id' => $user->state_id,
+                'city_id' => $user->city_id,
+            ]);
+
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/profile');
+
+        $this->assertNull($user->refresh()->email_verified_at);
+    }
+
 
     public function test_user_can_delete_their_account(): void
     {

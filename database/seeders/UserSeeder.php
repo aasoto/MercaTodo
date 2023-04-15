@@ -13,7 +13,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create()->assignRole('admin');
+        User::factory()
+            ->create([
+                'email' => env('ADMIN_EMAIL', 'andresalfredosotosuarez@gmail.com'),
+                'password' => env('ADMIN_PASSWORD', '12345678'),
+            ])
+        ->assignRole('admin');
+
         User::factory()->create()->assignRole('client');
     }
 }
