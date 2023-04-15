@@ -8,6 +8,7 @@ use App\Models\State;
 use App\Models\TypeDocument;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Traits\useCache;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,14 +20,15 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
+    use useCache;
     /**
      * Display the registration view.
      */
     public function create(): Response
     {
-        $cities = City::select('id', 'name', 'state_id')->get();
-        $states = State::select('id', 'name')->get();
-        $type_documents = TypeDocument::select('id', 'code', 'name')->get();
+        $cities = $this->getCities();
+        $states = $this->getStates();
+        $type_documents = $this->getTypeDocument();
 
         return Inertia::render('Auth/Register', [
             'cities' => $cities,

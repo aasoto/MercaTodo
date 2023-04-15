@@ -6,13 +6,14 @@ use App\Models\City;
 use App\Models\State;
 use App\Models\TypeDocument;
 use App\Providers\RouteServiceProvider;
+use App\Traits\useCache;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, useCache;
 
     public function test_registration_screen_can_be_rendered(): void
     {
@@ -25,12 +26,12 @@ class RegistrationTest extends TestCase
     {
         $this->seed();
 
-        $state = State::select('id')->inRandomOrder()->first();
-        $city = City::select('id')->where('state_id', $state["id"])->inRandomOrder()->first();
-        $type = TypeDocument::select('code')->inRandomOrder()->first();
+        $state = $this->getStates();
+        $city = City::select('id')->where('state_id', $state[0]["id"])->inRandomOrder()->first();
+        $type = $this->getTypeDocument();
 
         $response = $this->post('/register', [
-            'typeDocument' => $type['code'],
+            'typeDocument' => $type[0]['code'],
             'numberDocument' => strval(fake()->randomNumber(5, true)),
             'firstName' => fake()->firstName($gender = 'male'|'female'),
             'secondName' => fake()->firstName($gender = 'male'|'female'),
@@ -43,7 +44,7 @@ class RegistrationTest extends TestCase
             'gender' => fake()->randomElement(['m', 'f', 'o']),
             'phone' => fake()->phoneNumber(),
             'address' => fake()->streetAddress(),
-            'state' => $state["id"],
+            'state' => $state[0]["id"],
             'city' => $city["id"],
         ]);
 
