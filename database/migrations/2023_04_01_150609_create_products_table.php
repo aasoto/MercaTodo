@@ -17,15 +17,14 @@ return new class extends Migration
             $table->foreignId("products_category_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->text('barcode')->unique();
             $table->text('description')->nullable();
-            $table->integer('price');
+            $table->double('price', 15, 2);
             $table->enum('unit', ['unit', 'pair', 'dozen', 'box']);
-            $table->integer('num_unit')->nullable();
             $table->integer('stock')->nullable();
             $table->text('picture_1');
             $table->text('picture_2')->nullable();
             $table->text('picture_3')->nullable();
             $table->boolean('availability')->default(true);
-            $table->text('tags');
+            // $table->text('tags');
             $table->timestamps();
         });
     }
