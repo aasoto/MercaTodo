@@ -19,6 +19,7 @@ class ProductFactory extends Factory
     {
         return [
             'name' => fake()->words(4, true),
+            'slug' => fake()->slug(4),
             'products_category_id' => ProductCategory::select('id')->inRandomOrder()->first(),
             'barcode' => fake()->randomNumber(5, true).fake()->randomNumber(5, true),
             'description' => fake()->paragraph(),
