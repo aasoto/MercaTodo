@@ -19,7 +19,8 @@ return new class extends Migration
             $table->text('barcode')->unique();
             $table->text('description')->nullable();
             $table->double('price', 15, 2);
-            $table->enum('unit', ['unit', 'pair', 'dozen', 'box']);
+            $table->string("unit", 100);
+            $table->foreign("unit")->references("code")->on("units");
             $table->integer('stock')->nullable();
             $table->text('picture_1');
             $table->text('picture_2')->nullable();

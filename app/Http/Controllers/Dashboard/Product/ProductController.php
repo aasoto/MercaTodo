@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Dashboard\Product;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Unit;
+use App\Traits\useCache;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProductController extends Controller
 {
+    use useCache;
     /**
      * Display a listing of the resource.
      */
@@ -29,9 +32,12 @@ class ProductController extends Controller
             -> orderBy('products.id')
             -> paginate(10);
 
-            return Inertia::render('Product/Index', [
-                'products' => $products,
-            ]);
+        $units = $this->getUnits();
+
+        return Inertia::render('Product/Index', [
+            'products' => $products,
+            'units' => $units,
+        ]);
     }
 
     /**

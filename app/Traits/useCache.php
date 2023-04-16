@@ -4,6 +4,7 @@ namespace App\Traits;
 use App\Models\City;
 use App\Models\State;
 use App\Models\TypeDocument;
+use App\Models\Unit;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Collection as Collection;
 use Spatie\Permission\Models\Role;
@@ -54,6 +55,17 @@ trait useCache
             $type_documents = TypeDocument::select('id', 'code', 'name')->get();
             Cache::put('type_documents', $type_documents);
             return $type_documents;
+        }
+    }
+
+    public function getUnits(): Collection
+    {
+        if (Cache::has('units')) {
+            return Cache::get('units');
+        } else {
+            $units = Unit::select('id', 'code', 'name')->get();
+            Cache::put('units', $units);
+            return $units;
         }
     }
 }

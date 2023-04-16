@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\ProductCategory;
+use App\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,12 +25,18 @@ class ProductFactory extends Factory
             'barcode' => fake()->randomNumber(5, true).fake()->randomNumber(5, true),
             'description' => fake()->paragraph(),
             'price' => fake()->randomFloat(2, 10000, 1000000),
-            'unit' => fake()->randomElement(['unit', 'pair', 'dozen', 'box']),
+            'unit' => $this->get_code_unit(),
             'stock' => fake()->randomNumber(2, true),
             // vendor\fakerphp\faker\src\Faker\Provider\Image.php
             'picture_1' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
             'picture_2' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
             'picture_3' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
         ];
+    }
+
+    public function get_code_unit(): string
+    {
+        $unit = Unit::select('code')->inRandomOrder()->first();
+        return $unit['code'];
     }
 }
