@@ -7,6 +7,7 @@ import Pagination from '@/Components/Pagination.vue';
 const props = defineProps({
     products: Object,
 });
+
 </script>
 
 <template>
@@ -45,7 +46,7 @@ const props = defineProps({
                                     Stock
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Disponibilidad
+                                    Estado
                                 </th>
                                 <th class="rounded-tr-lg py-3 text-black dark:text-white text-lg font-bold text-center">
                                     Acciones
@@ -59,8 +60,8 @@ const props = defineProps({
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
                                         {{ product.category }}
                                     </td>
-                                    <td class="px-3 py-3 text-black dark:text-white">
-                                        {{ product.price }}
+                                    <td class="px-3 py-3 text-black dark:text-white text-right">
+                                        {{ product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
                                         {{ product.unit }}
@@ -68,12 +69,16 @@ const props = defineProps({
                                     <td class="px-3 py-3 text-black dark:text-white">
                                         {{ product.stock }}
                                     </td>
-                                    <td class="px-3 py-3 text-black dark:text-white">
+                                    <td class="px-3 py-3 text-center text-sm">
                                         <template v-if="product.availability">
-                                            Disponible
+                                            <button class="w-10/12 px-3 py-1 bg-green-600 text-white rounded cursor-auto">
+                                                Habilitado
+                                            </button>
                                         </template>
                                         <template v-else>
-                                            No disponible
+                                            <button class="w-10/12 px-3 py-1 bg-red-600 text-white rounded cursor-auto">
+                                                Inhabilitado
+                                            </button>
                                         </template>
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white flex justify-center items-center">
@@ -106,7 +111,7 @@ const props = defineProps({
                                     Stock
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Disponibilidad
+                                    Estado
                                 </th>
                                 <th class="rounded-br-lg py-3 text-black dark:text-white text-lg font-bold text-center">
                                     Acciones

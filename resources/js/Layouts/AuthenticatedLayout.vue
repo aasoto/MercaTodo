@@ -136,6 +136,11 @@ const { role } = storeToRefs(useSignedRole);
                             Usuarios
                         </ResponsiveNavLink>
                     </div>
+                    <div v-if="role == 'admin'" class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('products.index')" :active="route().current('products.index')">
+                            Productos
+                        </ResponsiveNavLink>
+                    </div>
 
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
