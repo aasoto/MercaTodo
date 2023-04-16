@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\Product\ProductController;
 use App\Http\Controllers\Dashboard\User\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -57,6 +58,12 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::patch('/user/edit/{id}', [UserController::class, 'update'])->name('user.update');
     });
 
+    /** PRODUCTS */
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/product', [ProductController::class, 'create'])->name('product.create');
+        Route::get('/product/edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
+    });
 });
 
 require __DIR__.'/auth.php';

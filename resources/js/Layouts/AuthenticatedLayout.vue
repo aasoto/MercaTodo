@@ -43,6 +43,11 @@ const { role } = storeToRefs(useSignedRole);
                                     Usuarios
                                 </NavLink>
                             </div>
+                            <div v-if="role == 'admin'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('products.index')" :active="route().current('products.index')">
+                                    Productos
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
