@@ -105,7 +105,7 @@ class UserController extends Controller
             -> assignRole($role["name"])
             -> sendEmailVerificationNotification();
 
-        return Redirect::route('user.index', $data['role_id']);
+        return Redirect::route('user.index', $role["name"]);
     }
 
     /**
