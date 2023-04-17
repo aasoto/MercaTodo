@@ -21,7 +21,7 @@ return new class extends Migration
             $table->double('price', 15, 2);
             $table->string("unit", 100);
             $table->foreign("unit")->references("code")->on("units");
-            $table->integer('stock')->nullable();
+            $table->integer('stock');
             $table->text('picture_1');
             $table->text('picture_2')->nullable();
             $table->text('picture_3')->nullable();

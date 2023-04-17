@@ -2,6 +2,7 @@
 namespace App\Traits;
 
 use App\Models\City;
+use App\Models\ProductCategory;
 use App\Models\State;
 use App\Models\TypeDocument;
 use App\Models\Unit;
@@ -22,6 +23,17 @@ trait useCache
             $cities = City::select('id', 'name', 'state_id')->get();
             Cache::put('cities', $cities);
             return $cities;
+        }
+    }
+
+    public function getProductsCategories(): Collection
+    {
+        if (Cache::has('products_categories')) {
+            return Cache::get('products_categories');
+        } else {
+            $products_categories = ProductCategory::select('id', 'name')->get();
+            Cache::put('products_categories', $products_categories);
+            return $products_categories;
         }
     }
 

@@ -45,7 +45,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $products_categories = $this->getProductsCategories();
+        $units = $this->getUnits();
+        return Inertia::render('Product/Create', [
+            'products_categories' => $products_categories,
+            'units' => $units,
+        ]);
     }
 
     /**
@@ -53,7 +58,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**

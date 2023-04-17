@@ -62,6 +62,7 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/product', [ProductController::class, 'create'])->name('product.create');
+        Route::post('/product', [ProductController::class, 'store'])->name('product.store');
         Route::get('/product/edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
     });
 });
