@@ -75,6 +75,12 @@ class ProductController extends Controller
             $request->picture_2->storeAs('images/products', $filename, 'public');
         }
 
+        if (isset($data['picture_3'])) {
+            $counter++;
+            $data['picture_3'] = $filename = time().$counter.'.'.$data['picture_3']->extension();
+            $request->picture_3->storeAs('images/products', $filename, 'public');
+        }
+
         Product::create($data);
 
         return Redirect::route('products.index');
