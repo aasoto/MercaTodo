@@ -25,12 +25,11 @@ const form = useForm({
     picture_1: '',
     picture_2: '',
     picture_3: '',
-    availability: '',
 });
 
-router.post('/product', form, {
-  forceFormData: true,
-});
+// router.post('/product', form, {
+//   forceFormData: true,
+// });
 
 </script>
 <template>

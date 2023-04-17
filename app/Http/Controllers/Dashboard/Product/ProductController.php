@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Dashboard\Product;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\Product\StoreRequest;
 use App\Models\Product;
 use App\Models\Unit;
 use App\Traits\useCache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -56,9 +58,27 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        dd($request);
+        $data = $request->validated();
+
+        $counter = 0;
+        if (isset($data['picture_1'])) {
+            $counter++;
+            $data['picture_1'] = $filename = time().$counter.'.'.$data['picture_1']->extension();
+            $request->picture_1->storeAs('images/products', $filename, 'public');
+        }
+
+        if (isset($data['picture_2'])) {
+            $counter++;
+            $data['picture_2'] = $filename = time().$counter.'.'.$data['picture_2']->extension();
+            $request->picture_2->storeAs('images/products', $filename, 'public');
+        }
+
+        Product::create($data);
+
+        return Redirect::route('products.index');
+
     }
 
     /**
