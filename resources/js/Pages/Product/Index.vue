@@ -3,9 +3,11 @@ import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import Pagination from '@/Components/Pagination.vue';
+import Alert from '@/Components/Alert.vue';
 
 const props = defineProps({
     products: Object,
+    success: String,
     units: Object,
 });
 
@@ -160,5 +162,12 @@ const props = defineProps({
                 </div>
             </div>
         </div>
+        <Alert
+            v-if="success === 'Product created.'"
+            icon="success"
+            title="¡Bien Hecho!"
+            text="Producto guardado satisfactoriamente."
+            :btn-close="true"
+        />
     </AuthenticatedLayout>
 </template>

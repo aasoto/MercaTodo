@@ -36,8 +36,11 @@ class ProductController extends Controller
 
         $units = $this->getUnits();
 
+        $success = session('success');
+
         return Inertia::render('Product/Index', [
             'products' => $products,
+            'success' => $success,
             'units' => $units,
         ]);
     }
@@ -83,7 +86,7 @@ class ProductController extends Controller
 
         Product::create($data);
 
-        return Redirect::route('products.index');
+        return Redirect::route('products.index')->with('success', 'Product created.');
 
     }
 

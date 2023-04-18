@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers\Dashboard\Product;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\Unit;
 use App\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\ProductCategorySeeder;
@@ -43,10 +44,7 @@ class ProductTest extends TestCase
 
     public function test_can_show_page_of_products(): void
     {
-        Product::factory([
-            'picture_2' => null,
-            'picture_3' => null
-        ])->create();
+        Product::factory()->create();
 
         $response = $this->actingAs($this->user)
         ->get(route('products.index'));
@@ -87,6 +85,7 @@ class ProductTest extends TestCase
     public function test_new_product_can_be_saved(): void
     {
         $category = ProductCategory::select('id')->inRandomOrder()->first();
+        $unit = Unit::select('code')->inRandomOrder()->first();
 
         $response = $this->actingAs($this->user)
         -> post(route('product.store'), [
@@ -94,7 +93,7 @@ class ProductTest extends TestCase
             'products_category_id' => $category['id'],
             'barcode' => fake()->randomNumber(5, true).fake()->randomNumber(5, true),
             'price' => fake()->randomFloat(2, 10000, 1000000),
-            'unit' => 'unit',
+            'unit' => $unit['code'],
             'stock' => fake()->randomNumber(2, true),
             'picture_1' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
         ]);
