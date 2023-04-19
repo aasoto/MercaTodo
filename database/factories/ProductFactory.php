@@ -28,9 +28,9 @@ class ProductFactory extends Factory
             'unit' => $this->get_code_unit(),
             'stock' => fake()->randomNumber(2, true),
             // vendor\fakerphp\faker\src\Faker\Provider\Image.php
-            'picture_1' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
-            'picture_2' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
-            'picture_3' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
+            'picture_1' => fake()->image(public_path('images/products'), 500, 500, null, false),
+            'picture_2' => fake()->image(public_path('images/products'), 500, 500, null, false),
+            'picture_3' => fake()->image(public_path('images/products'), 500, 500, null, false),
         ];
     }
 
