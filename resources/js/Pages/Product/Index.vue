@@ -1,10 +1,15 @@
 <script setup>
-import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import Pagination from '@/Components/Pagination.vue';
-import Alert from '@/Components/Alert.vue';
 import { ref } from 'vue';
+
+import { Head, Link, useForm } from '@inertiajs/vue3';
+
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
+import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
+import Pagination from '@/Components/Pagination.vue';
+import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
+import AlertQuestion from '@/Components/Alerts/AlertQuestion.vue';
+import LoadingModal from '@/Components/LoadingModal.vue';
 
 const props = defineProps({
     products: Object,
@@ -17,6 +22,10 @@ const alertDelete = ref(false);
 const form = useForm({
     slug: '',
 });
+
+const resetAlertDelete = () => {
+    alertDelete.value = false;
+}
 
 const showAlertDelete = (slug) => {
     alertDelete.value = true;
@@ -185,25 +194,25 @@ const deleteProduct = () => {
                 </div>
             </div>
         </div>
-        <Alert
+        <AlertSuccess
             v-if="success === 'Product created.'"
-            icon="success"
             title="¡Bien Hecho!"
             text="Producto guardado satisfactoriamente."
             :close="false"
             :btn-close="true"
         />
-        <Alert
+        <AlertQuestion
             v-if="alertDelete"
-            icon="question"
             title="¿Desea eliminar este producto?"
             text="Si así lo desea de click en el botón eliminar."
             :delete-register="deleteProduct"
             :btn-delete="true"
             :close="false"
+            :reset-alert="resetAlertDelete"
             :btn-close="true"
         />
-        <Alert
+        <LoadingModal v-show="form.processing"/>
+        <AlertSuccess
             v-if="success === 'Product deleted.'"
             icon="success"
             title="¡Listo!"
