@@ -20,28 +20,23 @@ class ProductController extends Controller
      */
     public function index(): Response
     {
-        $products = Product::query()
-            -> select(
-                    'products.name',
-                    'products.slug',
-                    'products_categories.name as category',
-                    'products.price',
-                    'products.unit',
-                    'products.stock',
-                    'products.availability',
-                )
-            -> join('products_categories', 'products.products_category_id', 'products_categories.id')
-            -> orderBy('products.id')
-            -> paginate(10);
-
-        $units = $this->getUnits();
-
-        $success = session('success');
 
         return Inertia::render('Product/Index', [
-            'products' => $products,
-            'success' => $success,
-            'units' => $units,
+            'products' => Product::query()
+                -> select(
+                        'products.name',
+                        'products.slug',
+                        'products_categories.name as category',
+                        'products.price',
+                        'units.name as unit',
+                        'products.stock',
+                        'products.availability',
+                    )
+                -> join('products_categories', 'products.products_category_id', 'products_categories.id')
+                -> join('units', 'products.unit', 'units.code')
+                -> orderBy('products.id')
+                -> paginate(10),
+            'success' => session('success'),
         ]);
     }
 

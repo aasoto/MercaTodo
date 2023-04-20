@@ -14,7 +14,6 @@ import LoadingModal from '@/Components/LoadingModal.vue';
 const props = defineProps({
     products: Object,
     success: String,
-    units: Object,
 });
 
 const alertDelete = ref(false);
@@ -131,11 +130,7 @@ const deleteProduct = () => {
                                         {{ product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        <template v-for="unit in units">
-                                            <template v-if="unit.code == product.unit">
-                                                {{ unit.name }}
-                                            </template>
-                                        </template>
+                                        {{ product.unit }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white">
                                         {{ product.stock }}
