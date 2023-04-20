@@ -14,13 +14,14 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()
-            ->create([
-                'email' => env('ADMIN_EMAIL', 'admin@gmail.com'),
-                'password' => Hash::make(env('ADMIN_PASSWORD', '12345678')),
-            ])
-        ->assignRole('admin');
+        User::factory()->create([
+            'email' => env('ADMIN_EMAIL', 'admin@example.com'),
+            'password' => Hash::make(env('ADMIN_PASSWORD', '12345678')),
+        ])->assignRole('admin');
 
-        User::factory()->create()->assignRole('client');
+        User::factory()->create([
+            'email' => env('CLIENT_EMAIL', 'client@example.com'),
+            'password' => Hash::make(env('CLIENT_PASSWORD', '12345678')),
+        ])->assignRole('client');
     }
 }
