@@ -35,7 +35,7 @@ class StoreRequest extends FormRequest
             'slug' => ['required', 'string', 'max:100', Rule::unique(Product::class)],
             // 'slug' => ['required', 'string', 'max:100', 'unique:products,slug,'.$this->route('products')->id],
             'products_category_id' => ['required', 'integer'],
-            'barcode' => ['required', 'integer'],
+            'barcode' => ['required', 'integer', Rule::unique(Product::class)],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric'],
             'unit' => ['required', 'string', 'max:100'],
