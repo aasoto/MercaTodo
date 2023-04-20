@@ -153,7 +153,7 @@ class ProductController extends Controller
         $files = json_decode($files);
         $counter = 0;
 
-        if ($data['picture_1']) {
+        if (isset($data['picture_1'])) {
             $counter++;
             $data['picture_1'] = $filename = time().$counter.'.'.$data['picture_1']->extension();
             $request->picture_1->move(public_path('images/products'), $filename);
@@ -163,7 +163,7 @@ class ProductController extends Controller
             unset($data['picture_1']);
         }
 
-        if ($data['picture_2']) {
+        if (isset($data['picture_2'])) {
             $counter++;
             $data['picture_2'] = $filename = time().$counter.'.'.$data['picture_2']->extension();
             $request->picture_2->move(public_path('images/products'), $filename);
@@ -175,7 +175,7 @@ class ProductController extends Controller
             unset($data['picture_2']);
         }
 
-        if ($data['picture_3']) {
+        if (isset($data['picture_3'])) {
             $counter++;
             $data['picture_3'] = $filename = time().$counter.'.'.$data['picture_3']->extension();
             $request->picture_3->move(public_path('images/products'), $filename);

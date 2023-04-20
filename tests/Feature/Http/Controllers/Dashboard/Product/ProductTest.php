@@ -63,7 +63,7 @@ class ProductTest extends TestCase
                     -> has('unit')
                     -> etc()
                 )
-                -> has('units')
+                -> has('success')
         );
     }
 
@@ -148,16 +148,31 @@ class ProductTest extends TestCase
 
     public function test_can_update_product_information(): void
     {
-        $response = $this->actingAs($this->user)
-        ->patch(route('product.update', $this->product->slug));
-
-        $response->assertStatus(200);
-
-        $response->assertInertia(fn (Assert $page) => $page
-                ->component('Product/Edit')
-                ->has('status')
-                ->etc()
+        $files = array(
+            'picture_1' => $this->product->picture_1,
+            'picture_2' => $this->product->picture_2,
+            'picture_3' => $this->product->picture_3
         );
+
+        $name = fake()->words(4, true);
+
+        $response = $this->actingAs($this->user)
+        ->patch('product/edit/'.$this->product->id.'/'.json_encode($files), [
+            'name' => $name,
+            'products_category_id' => $this->product->products_category_id,
+            'barcode' => $this->product->barcode,
+            'description' => $this->product->description,
+            'price' => $this->product->price,
+            'unit' => $this->product->unit,
+            'stock' => $this->product->stock,
+        ]);
+
+        $response->assertFound();
+
+        $this->product->refresh();
+        $this->assertSame($name, $this->product->name);
+
+        $response->assertRedirect(route('product.edit', $this->product->slug));
     }
 
     // public function test_can_destroy_product(): void
