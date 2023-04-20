@@ -23,6 +23,7 @@ class ProductTest extends TestCase
 {
     use RefreshDatabase;
 
+    private Product $product;
     private User $user;
 
     public function setUp(): void
@@ -39,13 +40,12 @@ class ProductTest extends TestCase
             UnitSeeder::class,
         ]);
 
+        $this->product = Product::factory()->create();
         $this->user = User::factory()->create()->assignRole('admin');
     }
 
     public function test_can_show_page_of_products(): void
     {
-        Product::factory()->create();
-
         $response = $this->actingAs($this->user)
         ->get(route('products.index'));
 
@@ -100,4 +100,77 @@ class ProductTest extends TestCase
 
         $response->assertRedirect(route('products.index'));
     }
+
+    public function test_can_show_product_information(): void
+    {
+        $response = $this->actingAs($this->user)
+        ->get(route('product.show', $this->product->slug));
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(
+            fn (Assert $page) => $page
+                -> component('Product/Show')
+                -> has('product', fn (Assert $page) => $page
+                    -> where('name', $this->product->name)
+                    -> where('slug', $this->product->slug)
+                    -> where('description', $this->product->description)
+                    -> where('price', $this->product->price)
+                    -> where('stock', $this->product->stock)
+                    -> where('picture_1', $this->product->picture_1)
+                    -> etc()
+                )
+        );
+    }
+
+    public function test_can_edit_product_information(): void
+    {
+        $response = $this->actingAs($this->user)
+        ->get(route('product.edit', $this->product->slug));
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(
+            fn (Assert $page) => $page
+                -> component('Product/Edit')
+                -> has('product', fn (Assert $page) => $page
+                    -> where('name', $this->product->name)
+                    -> where('description', $this->product->description)
+                    -> where('price', $this->product->price)
+                    -> where('stock', $this->product->stock)
+                    -> where('picture_1', $this->product->picture_1)
+                    -> etc()
+                )
+                -> has('products_categories')
+                -> has('units')
+        );
+    }
+
+    public function test_can_update_product_information(): void
+    {
+        $response = $this->actingAs($this->user)
+        ->patch(route('product.update', $this->product->slug));
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(fn (Assert $page) => $page
+                ->component('Product/Edit')
+                ->has('status')
+                ->etc()
+        );
+    }
+
+    // public function test_can_destroy_product(): void
+    // {
+    //     $response = $this->actingAs($this->user)
+    //     ->delete('product/'.$this->product->slug);
+
+    //     $response->assertStatus(200);
+
+    //     $response->assertInertia(fn (Assert $page) => $page
+    //             ->component('Product/Index')
+    //             ->has('status')
+    //             ->etc()
+    //     );
+    // }
 }
