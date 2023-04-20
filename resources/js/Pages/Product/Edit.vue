@@ -1,23 +1,26 @@
 <script setup>
 import InputError from '@/Components/InputError.vue';
 import ImageFormatError from './Partials/ImageFormatError.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 
 const editor = ClassicEditor;
 
 const props = defineProps({
+    errors: Object,
     product: Object,
     products_categories: Object,
+    success: String,
     units: Object,
 });
-console.log(props.product);
-const form = useForm({
+
+const form = reactive({
     name: props.product.name,
     products_category_id: props.product.products_category_id,
     barcode: props.product.barcode,
@@ -56,6 +59,7 @@ const validateAttachPicture1 = () => {
             picture1Error.value = false;
         });
     }
+
 }
 
 const picture2Charged = ref(false);
@@ -101,6 +105,24 @@ const validateAttachPicture3 = () => {
         });
     }
 }
+
+const submit = () => {
+    router.post(`/product/edit/${props.product.id}/${JSON.stringify(currentFiles.value)}`, {
+      _method: 'patch',
+      name: form.name,
+      products_category_id: form.products_category_id,
+      barcode: form.barcode,
+      description: form.description,
+      price: form.price,
+      unit: form.unit,
+      stock: form.stock,
+      picture_1: form.picture_1,
+      picture_2: form.picture_2,
+      picture_3: form.picture_3,
+    });
+}
+
+
 </script>
 <template>
     <Head title="Editar producto" />
@@ -116,7 +138,7 @@ const validateAttachPicture3 = () => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="m-5">
-                        <form @submit.prevent="form.post(route('product.store'))" class="mt-6 space-y-6">
+                        <form @submit.prevent="submit" class="mt-6 space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div class="col-span-1">
                                     <InputLabel for="name">
@@ -131,7 +153,7 @@ const validateAttachPicture3 = () => {
                                         autofocus
                                         required
                                     />
-                                    <InputError class="mt-2" :message="form.errors.name" />
+                                    <InputError class="mt-2" :message="errors.name" />
                                 </div>
                                 <div class="col-span-1">
                                     <InputLabel for="products_category_id">
@@ -155,7 +177,7 @@ const validateAttachPicture3 = () => {
                                         </option>
                                     </select>
 
-                                    <InputError class="mt-2" :message="form.errors.products_category_id" />
+                                    <InputError class="mt-2" :message="errors.products_category_id" />
 
                                 </div>
 
@@ -173,7 +195,7 @@ const validateAttachPicture3 = () => {
                                         autocomplete="barcode"
                                     />
 
-                                    <InputError class="mt-2" :message="form.errors.barcode" />
+                                    <InputError class="mt-2" :message="errors.barcode" />
                                 </div>
                                 <div class="col-span-1">
                                     <InputLabel for="price">
@@ -182,14 +204,13 @@ const validateAttachPicture3 = () => {
 
                                     <TextInput
                                         id="price"
-                                        type="number"
+                                        type="text"
                                         class="mt-1 block w-full"
                                         v-model="form.price"
                                         required
                                         autocomplete="price"
                                     />
-
-                                    <InputError class="mt-2" :message="form.errors.price" />
+                                    <InputError class="mt-2" :message="errors.price" />
                                 </div>
                                 <div class="col-span-1">
                                     <InputLabel for="unit">
@@ -213,7 +234,7 @@ const validateAttachPicture3 = () => {
                                         </option>
                                     </select>
 
-                                    <InputError class="mt-2" :message="form.errors.unit" />
+                                    <InputError class="mt-2" :message="errors.unit" />
 
                                 </div>
                                 <div class="col-span-1">
@@ -230,7 +251,7 @@ const validateAttachPicture3 = () => {
                                         autocomplete="stock"
                                     />
 
-                                    <InputError class="mt-2" :message="form.errors.stock" />
+                                    <InputError class="mt-2" :message="errors.stock" />
                                 </div>
                                 <div class="col-span-2">
                                     <InputLabel for="description">
@@ -240,7 +261,7 @@ const validateAttachPicture3 = () => {
                                 </div>
                                 <div class="col-span-1">
                                     <InputLabel for="picture_1">
-                                        Foto principal<span class="text-red-600"> *</span>
+                                        Foto principal
                                     </InputLabel>
 
                                     <input
@@ -254,10 +275,9 @@ const validateAttachPicture3 = () => {
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
                                         dark:file:bg-gray-700 dark:file:text-gray-400"
-                                        required
                                     >
 
-                                    <InputError class="mt-2" :message="form.errors.picture_1" />
+                                    <InputError class="mt-2" :message="errors.picture_1" />
                                     <ImageFormatError v-show="picture1Error"/>
                                     <img
                                         id="show_picture_1"
@@ -284,7 +304,7 @@ const validateAttachPicture3 = () => {
                                         dark:file:bg-gray-700 dark:file:text-gray-400"
                                     >
 
-                                    <InputError class="mt-2" :message="form.errors.picture_2" />
+                                    <InputError class="mt-2" :message="errors.picture_2" />
                                     <ImageFormatError v-show="picture2Error"/>
                                     <img
                                         v-show="currentFiles.picture_2 || picture2Charged"
@@ -312,7 +332,7 @@ const validateAttachPicture3 = () => {
                                         dark:file:bg-gray-700 dark:file:text-gray-400"
                                     >
 
-                                    <InputError class="mt-2" :message="form.errors.picture_3" />
+                                    <InputError class="mt-2" :message="errors.picture_3" />
                                     <ImageFormatError v-show="picture3Error"/>
                                     <img
                                         v-show="currentFiles.picture_3 || picture3Charged"
@@ -341,5 +361,12 @@ const validateAttachPicture3 = () => {
                 </div>
             </div>
         </div>
+        <AlertSuccess
+            v-if="success === 'Product updated.'"
+            title="¡Bien Hecho!"
+            text="Producto actualizado satisfactoriamente."
+            :close="false"
+            :btn-close="true"
+        />
     </AuthenticatedLayout>
 </template>

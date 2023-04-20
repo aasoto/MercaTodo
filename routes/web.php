@@ -65,7 +65,7 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::post('/product', [ProductController::class, 'store'])->name('product.store');
         Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
         Route::get('/product/edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
-        Route::patch('/product/edit/{slug}', [ProductController::class, 'update'])->name('product.update');
+        Route::patch('/product/edit/{id}/{files}', [ProductController::class, 'update'])->name('product.update');
         Route::delete('/product/{slug}', [ProductController::class, 'destroy'])->name('product.destroy');
     });
 });

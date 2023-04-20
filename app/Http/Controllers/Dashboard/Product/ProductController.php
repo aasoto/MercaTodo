@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\Product\StoreRequest;
+use App\Http\Requests\Dashboard\Product\UpdateRequest;
 use App\Models\Product;
 use App\Models\Unit;
 use App\Traits\useCache;
@@ -11,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+
+use function PHPUnit\Framework\isEmpty;
 
 class ProductController extends Controller
 {
@@ -120,6 +123,7 @@ class ProductController extends Controller
     {
         return Inertia::render('Product/Edit', [
             'product' => Product::select(
+                    'products.id',
                     'products.name',
                     'products.products_category_id',
                     'products.barcode',
@@ -136,15 +140,56 @@ class ProductController extends Controller
                 -> first(),
             'products_categories' => $this->getProductsCategories(),
             'units' => $this->getUnits(),
+            'success' => session('success'),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id, string $files)
     {
-        //
+        $data = $request->validated();
+        $files = json_decode($files);
+        $counter = 0;
+
+        if ($data['picture_1']) {
+            $counter++;
+            $data['picture_1'] = $filename = time().$counter.'.'.$data['picture_1']->extension();
+            $request->picture_1->move(public_path('images/products'), $filename);
+
+            unlink('images/products/'.$files->picture_1);
+        } else {
+            unset($data['picture_1']);
+        }
+
+        if ($data['picture_2']) {
+            $counter++;
+            $data['picture_2'] = $filename = time().$counter.'.'.$data['picture_2']->extension();
+            $request->picture_2->move(public_path('images/products'), $filename);
+
+            if (isset($files->picture_2)) {
+                unlink('images/products/'.$files->picture_2);
+            }
+        } else {
+            unset($data['picture_2']);
+        }
+
+        if ($data['picture_3']) {
+            $counter++;
+            $data['picture_3'] = $filename = time().$counter.'.'.$data['picture_3']->extension();
+            $request->picture_3->move(public_path('images/products'), $filename);
+
+            if (isset($files->picture_3)) {
+                unlink('images/products/'.$files->picture_3);
+            }
+        } else {
+            unset($data['picture_3']);
+        }
+
+        Product::where('id', $id)->update($data);
+
+        return Redirect::route('product.edit', $data['slug'])->with('success', 'Product updated.');
     }
 
     /**
