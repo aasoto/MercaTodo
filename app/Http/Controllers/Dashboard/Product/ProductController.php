@@ -116,9 +116,27 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $slug)
     {
-        //
+        return Inertia::render('Product/Edit', [
+            'product' => Product::select(
+                    'products.name',
+                    'products.products_category_id',
+                    'products.barcode',
+                    'products.description',
+                    'products.price',
+                    'products.unit',
+                    'products.stock',
+                    'products.picture_1',
+                    'products.picture_2',
+                    'products.picture_3',
+                    'products.availability'
+                )
+                -> where('slug', $slug)
+                -> first(),
+            'products_categories' => $this->getProductsCategories(),
+            'units' => $this->getUnits(),
+        ]);
     }
 
     /**
