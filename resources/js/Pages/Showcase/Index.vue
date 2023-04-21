@@ -29,7 +29,7 @@ assignRole(props.userRole);
                     v-for="product in products.data"
                     class="bg-white rounded-md p-4 shadow-md hover:shadow-lg scale-100 hover:scale-105 transition duration-200 flex flex-col gap-4"
                 >
-                    <Link :href="route('product.show', product.slug)">
+                    <Link :href="route('showcase.show', product.slug)">
                         <img
                             class="w-full h-1/2 rounded object-cover object-center cursor-pointer"
                             :src="`../images/products/${product.picture_1}`"

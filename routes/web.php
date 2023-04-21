@@ -73,6 +73,7 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
     /** SHOWCASE */
     Route::middleware(['role:client'])->group( function () {
         Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase.index');
+        Route::get('/showcase/{slug}', [ShowcaseController::class, 'show'])->name('showcase.show');
     });
 });
 
