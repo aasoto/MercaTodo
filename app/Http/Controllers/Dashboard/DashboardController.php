@@ -3,17 +3,12 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\City;
-use App\Models\State;
-use App\Models\TypeDocument;
 use App\Traits\AuthHasRole;
 use App\Traits\useCache;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
 
 class DashboardController extends Controller
 {
@@ -21,15 +16,19 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(): Response | RedirectResponse
     {
-        $roles = $this->getRoles();
+        $user_role = $this->authHasRole($this->getRoles());
 
-        $user_role = $this->authHasRole($roles);
+        if ($user_role == 'admin') {
+            return Inertia::render('Dashboard', [
+                'userRole' => $user_role,
+            ]);
+        }
 
-        return Inertia::render('Dashboard', [
-            'userRole' => $user_role,
-        ]);
+        if ($user_role == 'client') {
+            return Redirect::route('showcase.index');
+        }
     }
 
     /*public function create()

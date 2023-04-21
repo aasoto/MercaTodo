@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Client\Showcase\ShowcaseController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\Product\ProductController;
 use App\Http\Controllers\Dashboard\User\UserController;
@@ -67,6 +68,11 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::get('/product/edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
         Route::patch('/product/edit/{id}/{files}', [ProductController::class, 'update'])->name('product.update');
         Route::delete('/product/{slug}', [ProductController::class, 'destroy'])->name('product.destroy');
+    });
+
+    /** SHOWCASE */
+    Route::middleware(['role:client'])->group( function () {
+        Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase.index');
     });
 });
 
