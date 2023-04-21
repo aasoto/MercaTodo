@@ -9,6 +9,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { reactive, ref } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
+import { useShowImage } from "@/Composables/showImage";
 
 const editor = ClassicEditor;
 
@@ -44,22 +45,15 @@ const picture1Error = ref(false);
 
 const validateAttachPicture1 = () => {
 
-    if (form.picture_1.type !== 'image/jpeg' && form.picture_1.type !== 'image/png') {
-        form.picture_1 = '';
-        document.getElementById('picture_1').value = '';
-        picture1Charged.value = false;
-        picture1Error.value = true;
-    } else {
-        const readerImage = new FileReader;
-        readerImage.readAsDataURL(form.picture_1);
-        readerImage.addEventListener('load', event => {
-            const routeImage = event.target.result;
-            document.getElementById('show_picture_1').src = routeImage;
-            picture1Charged.value = true;
-            picture1Error.value = false;
-        });
-    }
+    const picture1 = useShowImage(
+        form.picture_1,
+        document.getElementById('picture_1'),
+        document.getElementById('show_picture_1')
+    );
 
+    form.picture_1 = picture1.image;
+    picture1Charged.value = picture1.charged;
+    picture1Error.value = picture1.error;
 }
 
 const picture2Charged = ref(false);
@@ -67,21 +61,15 @@ const picture2Error = ref(false);
 
 const validateAttachPicture2 = () => {
 
-    if (form.picture_2.type !== 'image/jpeg' && form.picture_2.type !== 'image/png') {
-        form.picture_2 = '';
-        document.getElementById('picture_2').value = '';
-        picture2Charged.value = false;
-        picture2Error.value = true;
-    } else {
-        const readerImage = new FileReader;
-        readerImage.readAsDataURL(form.picture_2);
-        readerImage.addEventListener('load', event => {
-            const routeImage = event.target.result;
-            document.getElementById('show_picture_2').src = routeImage;
-            picture2Charged.value = true;
-            picture2Error.value = false;
-        });
-    }
+    const picture2 = useShowImage(
+        form.picture_2,
+        document.getElementById('picture_2'),
+        document.getElementById('show_picture_2')
+    );
+
+    form.picture_2 = picture2.image;
+    picture2Charged.value = picture2.charged;
+    picture2Error.value = picture2.error;
 }
 
 const picture3Charged = ref(false);
@@ -89,36 +77,31 @@ const picture3Error = ref(false);
 
 const validateAttachPicture3 = () => {
 
-    if (form.picture_3.type !== 'image/jpeg' && form.picture_3.type !== 'image/png') {
-        form.picture_3 = '';
-        document.getElementById('picture_3').value = '';
-        picture3Charged.value = false;
-        picture3Error.value = true;
-    } else {
-        const readerImage = new FileReader;
-        readerImage.readAsDataURL(form.picture_3);
-        readerImage.addEventListener('load', event => {
-            const routeImage = event.target.result;
-            picture3Charged.value = true;
-            document.getElementById('show_picture_3').src = routeImage;
-            picture3Error.value = false;
-        });
-    }
+
+    const picture3 = useShowImage(
+        form.picture_3,
+        document.getElementById('picture_3'),
+        document.getElementById('show_picture_3')
+    );
+
+    form.picture_3 = picture3.image;
+    picture3Charged.value = picture3.charged;
+    picture3Error.value = picture3.error;
 }
 
 const submit = () => {
     router.post(`/product/edit/${props.product.id}/${JSON.stringify(currentFiles.value)}`, {
-      _method: 'patch',
-      name: form.name,
-      products_category_id: form.products_category_id,
-      barcode: form.barcode,
-      description: form.description,
-      price: form.price,
-      unit: form.unit,
-      stock: form.stock,
-      picture_1: form.picture_1,
-      picture_2: form.picture_2,
-      picture_3: form.picture_3,
+        _method: 'patch',
+        name: form.name,
+        products_category_id: form.products_category_id,
+        barcode: form.barcode,
+        description: form.description,
+        price: form.price,
+        unit: form.unit,
+        stock: form.stock,
+        picture_1: form.picture_1,
+        picture_2: form.picture_2,
+        picture_3: form.picture_3,
     });
 }
 
