@@ -41,7 +41,7 @@ class ShowcaseController extends Controller
 
     public function show(string $slug): Response
     {
-        return Inertia::render('Product/Show', [
+        return Inertia::render('Showcase/Show', [
             'product' => Product::select(
                 'products.name',
                 'products.slug',
