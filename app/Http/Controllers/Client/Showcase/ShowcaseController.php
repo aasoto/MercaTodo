@@ -14,10 +14,14 @@ class ShowcaseController extends Controller
 {
     use AuthHasRole, useCache;
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return Inertia::render('Showcase/Index', [
+            'filters' => $request->only('search'),
             'products' => Product::query()
+                -> when($request->input('search'), function ($query, $search) {
+                    $query->where('products.name', 'like', '%'.$search.'%');
+                })
                 -> select(
                         'products.name',
                         'products.slug',
@@ -29,7 +33,8 @@ class ShowcaseController extends Controller
                 -> join('products_categories', 'products.products_category_id', 'products_categories.id')
                 -> join('units', 'products.unit', 'units.code')
                 -> orderBy('products.id')
-                -> paginate(12),
+                -> paginate(12)
+                -> withQueryString(),
             'userRole' => $this->authHasRole($this->getRoles()),
         ]);
     }

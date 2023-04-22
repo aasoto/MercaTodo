@@ -2,9 +2,11 @@
 import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useSignedRoleStore } from '@/Store/SignedRole';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
+    filters: Object,
     products: Object,
     userRole: String,
 });
@@ -13,15 +15,32 @@ const useSignedRole = useSignedRoleStore();
 const { assignRole} = useSignedRole;
 assignRole(props.userRole);
 
+const search = ref(props.filters.search);
+
+watch(search, value => {
+    router.get('/showcase', {search: value}, {
+        preserveState: true,
+        replace: true,
+    });
+});
+
 </script>
 <template>
     <Head title="Vitrina de productos" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Vitrina de productos
-            </h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Vitrina de productos
+                </h2>
+                <input
+                    v-model="search"
+                    type="text"
+                    class="px-5 py-2 border border-gray-400 rounded-md"
+                    placeholder="Buscar"
+                >
+            </div>
         </template>
         <div class="p-6 text-gray-900 dark:text-gray-100">
             <div class="grid grid-cols-4 gap-4">
