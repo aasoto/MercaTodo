@@ -1,34 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Traits\AuthHasRole;
 use App\Traits\useCache;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DashboardController extends Controller
 {
     use AuthHasRole, useCache;
+
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response | RedirectResponse
+    public function index(): Response
     {
-        $user_role = $this->authHasRole($this->getRoles());
-
-        if ($user_role == 'admin') {
-            return Inertia::render('Dashboard', [
-                'userRole' => $user_role,
-            ]);
-        }
-
-        if ($user_role == 'client') {
-            return Redirect::route('showcase.index');
-        }
+        return Inertia::render('Dashboard', [
+            'userRole' => session('user_role') ? session('user_role') : $this->authHasRole($this->getRoles()),
+        ]);
     }
 
     /*public function create()

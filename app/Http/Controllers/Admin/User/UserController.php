@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\User;
+namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Dashboard\User\StoreRequest;
-use App\Http\Requests\Dashboard\User\UpdateRequest;
+use App\Http\Requests\Admin\User\StoreRequest;
+use App\Http\Requests\Admin\User\UpdateRequest;
 use App\Models\Spatie\ModelHasRole;
 use App\Models\User;
 use App\Traits\useCache;

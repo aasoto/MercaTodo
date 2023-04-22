@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\Product;
+namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Dashboard\Product\StoreRequest;
-use App\Http\Requests\Dashboard\Product\UpdateRequest;
+use App\Http\Requests\Admin\Product\StoreRequest;
+use App\Http\Requests\Admin\Product\UpdateRequest;
 use App\Models\Product;
-use App\Models\Unit;
 use App\Traits\useCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;

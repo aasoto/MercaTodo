@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\Client\Showcase\ShowcaseController;
-use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\Product\ProductController;
-use App\Http\Controllers\Dashboard\User\UserController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StartController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,8 +43,10 @@ Route::get('/405_method_not_allowed', function () {
 
 Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
 
+    Route::get('/start', [StartController::class, 'index'])->name('start');
+
     /** DASHBOARD */
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     /** PROFILE */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

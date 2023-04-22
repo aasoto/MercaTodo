@@ -35,7 +35,7 @@ class ShowcaseController extends Controller
                 -> orderBy('products.id')
                 -> paginate(12)
                 -> withQueryString(),
-            'userRole' => $this->authHasRole($this->getRoles()),
+            'userRole' => session('user_role') ? session('user_role') : $this->authHasRole($this->getRoles()),
         ]);
     }
 
