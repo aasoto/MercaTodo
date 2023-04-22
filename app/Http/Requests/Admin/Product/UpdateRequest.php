@@ -43,6 +43,7 @@ class UpdateRequest extends FormRequest
             'picture_1' => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
             'picture_2' => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
             'picture_3' => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
+            'availability' => ['required', 'boolean'],
         ];
     }
 }

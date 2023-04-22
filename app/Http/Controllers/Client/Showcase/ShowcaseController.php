@@ -33,6 +33,7 @@ class ShowcaseController extends Controller
                 -> join('products_categories', 'products.products_category_id', 'products_categories.id')
                 -> join('units', 'products.unit', 'units.code')
                 -> orderBy('products.id')
+                -> where('availability', 1)
                 -> paginate(12)
                 -> withQueryString(),
             'userRole' => session('user_role') ? session('user_role') : $this->authHasRole($this->getRoles()),

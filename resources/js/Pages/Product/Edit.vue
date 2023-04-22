@@ -32,7 +32,13 @@ const form = reactive({
     picture_1: '',
     picture_2: '',
     picture_3: '',
+    availability: props.product.availability == 1 ? true : false,
 });
+
+
+const changeAvailability = () => {
+    form.availability = !form.availability;
+}
 
 const currentFiles = ref({
     picture_1: props.product.picture_1,
@@ -102,6 +108,7 @@ const submit = () => {
         picture_1: form.picture_1,
         picture_2: form.picture_2,
         picture_3: form.picture_3,
+        availability: form.availability,
     });
 }
 
@@ -235,6 +242,26 @@ const submit = () => {
                                     />
 
                                     <InputError class="mt-2" :message="errors.stock" />
+                                </div>
+                                <div class="col-span-1 flex justify-center items-center gap-5">
+                                    <div
+                                        @click="changeAvailability()"
+                                        :class="form.availability ?
+                                            'bg-green-600 text-white px-4 py-1 flex gap-4 rounded cursor-pointer' :
+                                            'bg-red-600 text-white px-4 py-1 flex gap-4 rounded cursor-pointer'"
+                                    >
+                                        <template v-if="form.availability">
+                                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                                            </svg> Disponible
+                                        </template>
+                                        <template v-else>
+                                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z" clip-rule="evenodd" />
+                                            </svg> No disponible
+                                        </template>
+                                    </div>
+                                    <InputError class="mt-2" :message="errors.availability" />
                                 </div>
                                 <div class="col-span-2">
                                     <InputLabel for="description">

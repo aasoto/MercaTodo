@@ -112,7 +112,7 @@ const deleteProduct = () => {
                                     Stock
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Estado
+                                    Habilitado
                                 </th>
                                 <th class="rounded-tr-lg py-3 text-black dark:text-white text-lg font-bold text-center">
                                     Acciones
@@ -135,17 +135,13 @@ const deleteProduct = () => {
                                     <td class="px-3 py-3 text-black dark:text-white">
                                         {{ product.stock }}
                                     </td>
-                                    <td class="px-3 py-3 text-center text-sm">
-                                        <template v-if="product.availability">
-                                            <button class="w-10/12 px-3 py-1 bg-green-600 text-white rounded cursor-auto">
-                                                Habilitado
-                                            </button>
-                                        </template>
-                                        <template v-else>
-                                            <button class="w-10/12 px-3 py-1 bg-red-600 text-white rounded cursor-auto">
-                                                Inhabilitado
-                                            </button>
-                                        </template>
+                                    <td class="px-3 py-3">
+                                        <svg v-if="product.availability" class="w-8 h-8 text-green-600 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
+                                        </svg>
+                                        <svg v-else class="w-8 h-8 text-red-600 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                                        </svg>
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white flex justify-center items-center gap-2">
                                         <button @click="showProduct(product.slug)" class="bg-blue-600 rounded-md text-white p-1">
@@ -188,7 +184,7 @@ const deleteProduct = () => {
                                     Stock
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Estado
+                                    Habilitado
                                 </th>
                                 <th class="rounded-br-lg py-3 text-black dark:text-white text-lg font-bold text-center">
                                     Acciones
