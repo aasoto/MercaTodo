@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers\Admin\User;
 
 use App\Models\City;
 use App\Models\User;
@@ -173,6 +173,6 @@ class UserTest extends TestCase
 
         $response
             -> assertSessionHasNoErrors()
-            -> assertRedirect(route('user.index', $role[0]['id']));
+            -> assertRedirect(route('user.index', $role[0]['name']));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Controllers\Dashboard;
+namespace Tests\Feature\Http\Controllers\Admin;
 
 use App\Models\City;
 use App\Models\State;
@@ -24,7 +24,7 @@ class DashboardTest extends TestCase
         $user = User::factory()->create()->assignRole('admin');
 
         $response = $this->actingAs($user)
-            ->get(route('dashboard'));
+            ->get(route('dashboard.index'));
 
         $response->assertStatus(200)
             ->assertInertia(fn (Assert $page) => $page

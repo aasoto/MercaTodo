@@ -18,13 +18,13 @@ class EmailVerificationPromptTest extends TestCase
         $this->seed();
     }
 
-    public function test_if_email_is_verfied_direct_dashboard(): void
+    public function test_if_email_is_verfied_direct_start(): void
     {
         $user = User::first();
 
         $response = $this->actingAs($user)->get(route('verification.notice'));
 
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect('/start');
 
     }
 

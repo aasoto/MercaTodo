@@ -17,13 +17,13 @@ class EmailVerificationNotificationTest extends TestCase
         $this->seed();
     }
 
-    public function test_when_user_email_is_verified_show_dashboard(): void
+    public function test_when_user_email_is_verified_redirect_start(): void
     {
         $user = User::first();
 
         $response = $this->actingAs($user)->post(route('verification.send', $user));
 
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect('/start');
     }
 
     public function test_when_user_email_is_not_verified_send_notification(): void
