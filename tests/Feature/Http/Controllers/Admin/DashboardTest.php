@@ -2,15 +2,13 @@
 
 namespace Tests\Feature\Http\Controllers\Admin;
 
-use App\Models\City;
-use App\Models\State;
-use App\Models\TypeDocument;
 use App\Models\User;
+use Database\Seeders\CitySeeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\StateSeeder;
+use Database\Seeders\TypeDocumentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia as Assert;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class DashboardTest extends TestCase
@@ -19,7 +17,12 @@ class DashboardTest extends TestCase
 
     public function test_shows_dashboard_page(): void
     {
-        $this->seed();
+        $this->seed([
+            StateSeeder::class,
+            CitySeeder::class,
+            RoleSeeder::class,
+            TypeDocumentSeeder::class,
+        ]);
 
         $user = User::factory()->create()->assignRole('admin');
 

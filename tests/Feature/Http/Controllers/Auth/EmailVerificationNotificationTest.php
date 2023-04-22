@@ -3,6 +3,11 @@
 namespace Tests\Feature\Controllers\Auth;
 
 use App\Models\User;
+use Database\Seeders\CitySeeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\StateSeeder;
+use Database\Seeders\TypeDocumentSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -14,7 +19,14 @@ class EmailVerificationNotificationTest extends TestCase
     public function setUp (): void
     {
         parent::setUp();
-        $this->seed();
+
+        $this->seed([
+            StateSeeder::class,
+            CitySeeder::class,
+            RoleSeeder::class,
+            TypeDocumentSeeder::class,
+            UserSeeder::class,
+        ]);
     }
 
     public function test_when_user_email_is_verified_redirect_start(): void

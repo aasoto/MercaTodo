@@ -5,6 +5,10 @@ namespace Tests\Feature\Http\Controllers\Admin\User;
 use App\Models\City;
 use App\Models\User;
 use App\Traits\useCache;
+use Database\Seeders\CitySeeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\StateSeeder;
+use Database\Seeders\TypeDocumentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -19,7 +23,12 @@ class UserTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed();
+        $this->seed([
+            StateSeeder::class,
+            CitySeeder::class,
+            RoleSeeder::class,
+            TypeDocumentSeeder::class,
+        ]);
 
         $this->user = User::factory()->create()->assignRole('admin');
     }

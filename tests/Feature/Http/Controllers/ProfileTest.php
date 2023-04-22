@@ -4,6 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\TypeDocument;
 use App\Models\User;
+use Database\Seeders\CitySeeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\StateSeeder;
+use Database\Seeders\TypeDocumentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,7 +22,12 @@ class ProfileTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed();
+        $this->seed([
+            StateSeeder::class,
+            CitySeeder::class,
+            RoleSeeder::class,
+            TypeDocumentSeeder::class,
+        ]);
 
         $this->user = User::factory()->create();
         $this->type = TypeDocument::select('code')->inRandomOrder()->first();

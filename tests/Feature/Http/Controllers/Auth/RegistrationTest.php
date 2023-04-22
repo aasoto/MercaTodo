@@ -3,12 +3,13 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\City;
-use App\Models\State;
-use App\Models\TypeDocument;
 use App\Providers\RouteServiceProvider;
 use App\Traits\useCache;
+use Database\Seeders\CitySeeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\StateSeeder;
+use Database\Seeders\TypeDocumentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -24,7 +25,12 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
-        $this->seed();
+        $this->seed([
+            StateSeeder::class,
+            CitySeeder::class,
+            RoleSeeder::class,
+            TypeDocumentSeeder::class,
+        ]);
 
         $state = $this->getStates();
         $city = City::select('id')->where('state_id', $state[0]["id"])->inRandomOrder()->first();
