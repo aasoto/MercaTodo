@@ -8,6 +8,7 @@ use App\Models\Unit;
 use App\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\ProductCategorySeeder;
+use Database\Seeders\ProductSeeder;
 use Database\Seeders\StateSeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\TypeDocumentSeeder;
@@ -17,11 +18,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Inertia\Testing\AssertableInertia as Assert;
+use Tests\Feature\Traits\refreshStorage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, refreshStorage;
 
     private Product $product;
     private User $user;
@@ -38,10 +40,13 @@ class ProductTest extends TestCase
             UserSeeder::class,
             ProductCategorySeeder::class,
             UnitSeeder::class,
+            ProductSeeder::class,
         ]);
 
         $this->product = Product::factory()->create();
         $this->user = User::factory()->create()->assignRole('admin');
+        $this->cleanProductsImages();
+
     }
 
     public function test_can_show_page_of_products(): void
@@ -99,6 +104,8 @@ class ProductTest extends TestCase
         ]);
 
         $response->assertRedirect(route('products.index'));
+
+        $this->cleanProductImage();
     }
 
     public function test_can_show_product_information(): void
@@ -165,6 +172,7 @@ class ProductTest extends TestCase
             'price' => $this->product->price,
             'unit' => $this->product->unit,
             'stock' => $this->product->stock,
+            'availability' => true,
         ]);
 
         $response->assertFound();

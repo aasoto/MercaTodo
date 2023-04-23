@@ -14,11 +14,12 @@ use Database\Seeders\UnitSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia as Assert;
+use Tests\Feature\Traits\refreshStorage;
 use Tests\TestCase;
 
 class ShowcaseTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, refreshStorage;
 
     private User $user;
 
@@ -37,6 +38,8 @@ class ShowcaseTest extends TestCase
         ]);
 
         $this->user = User::factory()->create()->assignRole('client');
+
+        $this->cleanProductsImages();
     }
 
     public function test_can_show_showcase_of_products(): void
