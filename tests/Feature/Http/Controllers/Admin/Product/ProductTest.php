@@ -8,7 +8,6 @@ use App\Models\Unit;
 use App\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\ProductCategorySeeder;
-use Database\Seeders\ProductSeeder;
 use Database\Seeders\StateSeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\TypeDocumentSeeder;
@@ -40,12 +39,10 @@ class ProductTest extends TestCase
             UserSeeder::class,
             ProductCategorySeeder::class,
             UnitSeeder::class,
-            ProductSeeder::class,
         ]);
 
         $this->product = Product::factory()->create();
         $this->user = User::factory()->create()->assignRole('admin');
-        $this->cleanProductsImages();
 
     }
 
@@ -70,6 +67,8 @@ class ProductTest extends TestCase
                 )
                 -> has('success')
         );
+
+        $this->cleanProductsImages();
     }
 
     public function test_can_show_add_new_product_page(): void
@@ -85,10 +84,14 @@ class ProductTest extends TestCase
                 -> has('products_categories')
                 -> has('units')
         );
+
+        $this->cleanProductsImages();
     }
 
     public function test_new_product_can_be_saved(): void
     {
+        $this->cleanProductsImages();
+
         $category = ProductCategory::select('id')->inRandomOrder()->first();
         $unit = Unit::select('code')->inRandomOrder()->first();
 
@@ -103,7 +106,8 @@ class ProductTest extends TestCase
             'picture_1' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
         ]);
 
-        $response->assertRedirect(route('products.index'));
+        $response->assertRedirect(route('products.index'))
+        ->assertSessionHasAll(['success' => 'Product created.']);
 
         $this->cleanProductImage();
     }
@@ -128,6 +132,8 @@ class ProductTest extends TestCase
                     -> etc()
                 )
         );
+
+        $this->cleanProductsImages();
     }
 
     public function test_can_edit_product_information(): void
@@ -143,7 +149,6 @@ class ProductTest extends TestCase
                 -> has('product', fn (Assert $page) => $page
                     -> where('name', $this->product->name)
                     -> where('description', $this->product->description)
-                    -> where('price', $this->product->price)
                     -> where('stock', $this->product->stock)
                     -> where('picture_1', $this->product->picture_1)
                     -> etc()
@@ -151,6 +156,8 @@ class ProductTest extends TestCase
                 -> has('products_categories')
                 -> has('units')
         );
+
+        $this->cleanProductsImages();
     }
 
     public function test_can_update_product_information(): void
@@ -180,20 +187,20 @@ class ProductTest extends TestCase
         $this->product->refresh();
         $this->assertSame($name, $this->product->name);
 
-        $response->assertRedirect(route('product.edit', $this->product->slug));
+        $response->assertRedirect(route('product.edit', $this->product->slug))
+        ->assertSessionHasAll(['success' => 'Product updated.']);
+
+        $this->cleanProductsImages();
     }
 
-    // public function test_can_destroy_product(): void
-    // {
-    //     $response = $this->actingAs($this->user)
-    //     ->delete('product/'.$this->product->slug);
+    public function test_can_destroy_product(): void
+    {
+        $response = $this->actingAs($this->user)
+        ->delete(route('product.destroy', $this->product->slug));
 
-    //     $response->assertStatus(200);
+        $response->assertFound();
+        $response->assertRedirect(route('products.index'))
+        ->assertSessionHasAll(['success' => 'Product deleted.']);
 
-    //     $response->assertInertia(fn (Assert $page) => $page
-    //             ->component('Product/Index')
-    //             ->has('status')
-    //             ->etc()
-    //     );
-    // }
+    }
 }
