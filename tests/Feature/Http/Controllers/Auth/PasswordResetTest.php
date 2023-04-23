@@ -3,6 +3,10 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use Database\Seeders\CitySeeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\StateSeeder;
+use Database\Seeders\TypeDocumentSeeder;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -18,7 +22,12 @@ class PasswordResetTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed();
+        $this->seed([
+            StateSeeder::class,
+            CitySeeder::class,
+            RoleSeeder::class,
+            TypeDocumentSeeder::class,
+        ]);
 
         $this->user = User::factory()->create();
     }

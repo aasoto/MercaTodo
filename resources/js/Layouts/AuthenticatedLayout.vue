@@ -16,7 +16,7 @@ const { role } = storeToRefs(useSignedRole);
 </script>
 
 <template>
-    <div>
+    <div class="relative">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
@@ -25,7 +25,7 @@ const { role } = storeToRefs(useSignedRole);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('dashboard.index')">
                                     <ApplicationLogo
                                         class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"
                                     />
@@ -33,16 +33,30 @@ const { role } = storeToRefs(useSignedRole);
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>
-                            </div>
-                            <div v-if="role == 'admin'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('user.index', 'admin')" :active="route().current('user.index')">
-                                    Usuarios
-                                </NavLink>
-                            </div>
+                            <template v-if="role == 'admin'">
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('dashboard.index')" :active="route().current('dashboard')">
+                                        Dashboard
+                                    </NavLink>
+                                </div>
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('user.index', 'admin')" :active="route().current('user.index')">
+                                        Usuarios
+                                    </NavLink>
+                                </div>
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('products.index')" :active="route().current('products.index')">
+                                        Productos
+                                    </NavLink>
+                                </div>
+                            </template>
+                            <template v-if="role == 'client'">
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('showcase.index')" :active="route().current('dashboard')">
+                                        Vitrina
+                                    </NavLink>
+                                </div>
+                            </template>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -121,17 +135,30 @@ const { role } = storeToRefs(useSignedRole);
                     :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
                     class="sm:hidden"
                 >
-                    <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
-                    <div v-if="role == 'admin'" class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('user.index', 'admin')" :active="route().current('user.index')">
-                            Usuarios
-                        </ResponsiveNavLink>
-                    </div>
-
+                    <template v-if="role == 'admin'">
+                        <div class="pt-2 pb-3 space-y-1">
+                            <ResponsiveNavLink :href="route('dashboard.index')" :active="route().current('dashboard')">
+                                Dashboard
+                            </ResponsiveNavLink>
+                        </div>
+                        <div class="pt-2 pb-3 space-y-1">
+                            <ResponsiveNavLink :href="route('user.index', 'admin')" :active="route().current('user.index')">
+                                Usuarios
+                            </ResponsiveNavLink>
+                        </div>
+                        <div class="pt-2 pb-3 space-y-1">
+                            <ResponsiveNavLink :href="route('products.index')" :active="route().current('products.index')">
+                                Productos
+                            </ResponsiveNavLink>
+                        </div>
+                    </template>
+                    <template v-if="role == 'client'">
+                        <div class="pt-2 pb-3 space-y-1">
+                            <ResponsiveNavLink :href="route('showcase.index')" :active="route().current('dashboard')">
+                                Vitrina
+                            </ResponsiveNavLink>
+                        </div>
+                    </template>
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                         <div class="px-4">

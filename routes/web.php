@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\User\UserController;
+use App\Http\Controllers\Client\Showcase\ShowcaseController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StartController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,8 +43,10 @@ Route::get('/405_method_not_allowed', function () {
 
 Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
 
+    Route::get('/start', [StartController::class, 'index'])->name('start');
+
     /** DASHBOARD */
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     /** PROFILE */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -57,6 +62,23 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::patch('/user/edit/{id}', [UserController::class, 'update'])->name('user.update');
     });
 
+    /** PRODUCTS */
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/product', [ProductController::class, 'create'])->name('product.create');
+        Route::post('/product', [ProductController::class, 'store'])->name('product.store');
+        Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+        Route::get('/product/edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
+        Route::patch('/product/edit/{id}/{files}', [ProductController::class, 'update'])->name('product.update');
+        Route::delete('/product/{slug}', [ProductController::class, 'destroy'])->name('product.destroy');
+    });
+
+    /** SHOWCASE */
+    Route::middleware(['role:client'])->group( function () {
+        Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase.index');
+        Route::get('/showcase/{slug}', [ShowcaseController::class, 'show'])->name('showcase.show');
+    });
 });
+
 
 require __DIR__.'/auth.php';

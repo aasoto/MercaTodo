@@ -2,8 +2,10 @@
 namespace App\Traits;
 
 use App\Models\City;
+use App\Models\ProductCategory;
 use App\Models\State;
 use App\Models\TypeDocument;
+use App\Models\Unit;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Collection as Collection;
 use Spatie\Permission\Models\Role;
@@ -21,6 +23,17 @@ trait useCache
             $cities = City::select('id', 'name', 'state_id')->get();
             Cache::put('cities', $cities);
             return $cities;
+        }
+    }
+
+    public function getProductsCategories(): Collection
+    {
+        if (Cache::has('products_categories')) {
+            return Cache::get('products_categories');
+        } else {
+            $products_categories = ProductCategory::select('id', 'name')->get();
+            Cache::put('products_categories', $products_categories);
+            return $products_categories;
         }
     }
 
@@ -54,6 +67,17 @@ trait useCache
             $type_documents = TypeDocument::select('id', 'code', 'name')->get();
             Cache::put('type_documents', $type_documents);
             return $type_documents;
+        }
+    }
+
+    public function getUnits(): Collection
+    {
+        if (Cache::has('units')) {
+            return Cache::get('units');
+        } else {
+            $units = Unit::select('id', 'code', 'name')->get();
+            Cache::put('units', $units);
+            return $units;
         }
     }
 }
