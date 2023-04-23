@@ -155,7 +155,7 @@ class ProductController extends Controller
             $data['picture_1'] = $filename = time().$counter.'.'.$data['picture_1']->extension();
             $request->picture_1->move(public_path('images/products'), $filename);
 
-            unlink('images/products/'.$files->picture_1);
+            unlink(public_path('images/products/'.$files->picture_1));
         } else {
             unset($data['picture_1']);
         }
@@ -166,7 +166,7 @@ class ProductController extends Controller
             $request->picture_2->move(public_path('images/products'), $filename);
 
             if (isset($files->picture_2)) {
-                unlink('images/products/'.$files->picture_2);
+                unlink(public_path('images/products/'.$files->picture_2));
             }
         } else {
             unset($data['picture_2']);
@@ -178,7 +178,7 @@ class ProductController extends Controller
             $request->picture_3->move(public_path('images/products'), $filename);
 
             if (isset($files->picture_3)) {
-                unlink('images/products/'.$files->picture_3);
+                unlink(public_path('images/products/'.$files->picture_3));
             }
         } else {
             unset($data['picture_3']);
@@ -197,15 +197,15 @@ class ProductController extends Controller
         $product = Product::where('slug', $slug)->get();
 
         if ($product[0]->picture_1) {
-            unlink('images/products/'.$product[0]->picture_1);
+            unlink(public_path('images/products/'.$product[0]->picture_1));
         }
 
         if ($product[0]->picture_2) {
-            unlink('images/products/'.$product[0]->picture_2);
+            unlink(public_path('images/products/'.$product[0]->picture_2));
         }
 
         if ($product[0]->picture_3) {
-            unlink('images/products/'.$product[0]->picture_3);
+            unlink(public_path('images/products/'.$product[0]->picture_3));
         }
 
         Product::where('slug', $slug)->delete();
