@@ -9,6 +9,7 @@ use App\Models\Spatie\ModelHasRole;
 use App\Models\User;
 use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
@@ -22,43 +23,53 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(string $role = "admin"): Response
+    public function index(Request $request, string $role = "admin"): Response
     {
-        $roles = $this->getRoles();
-        $role_id = 0;
-
-        foreach ($roles as $key => $value) {
-            if ($value['name'] === $role) {
-                $role_id = $value['id'];
-            }
-        }
-
-        $users = User::query()
-            -> select(
-                    'users.id',
-                    'users.number_document',
-                    'users.first_name',
-                    'users.second_name',
-                    'users.surname',
-                    'users.second_surname',
-                    'users.email',
-                    'users.email_verified_at',
-                    'users.enabled',
-                    'states.name as state_name',
-                    'cities.name as city_name',
-                    'model_has_roles.role_id'
-                )
-            -> join('states', 'users.state_id', 'states.id')
-            -> join('cities', 'users.city_id', 'cities.id')
-            -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
-            -> where('model_has_roles.role_id', $role_id)
-            -> paginate(10);
-
         return Inertia::render('User/Index', [
+            'filters' => $request->only(['search', 'enabled']),
             'roleSearch' => $role,
-            'roles' => $roles,
+            'roles' => $this->getRoles(),
             'success' => session('success'),
-            'users' => $users,
+            'users' => User::query()
+                -> when($request->input('search'), function ($query, $search) {
+                    $query->where('users.email', 'like', '%'.$search.'%')
+                    ->orWhere('users.number_document', 'like', '%'.$search.'%')
+                    ->orWhere('users.first_name', 'like', '%'.$search.'%')
+                    ->orWhere('users.second_name', 'like', '%'.$search.'%')
+                    ->orWhere('users.surname', 'like', '%'.$search.'%')
+                    ->orWhere('users.second_surname', 'like', '%'.$search.'%')
+                    ->orWhere('cities.name', 'like', '%'.$search.'%')
+                    ->orWhere('states.name', 'like', '%'.$search.'%');
+                })
+                -> when($request->input('enabled'), function ($query, $search) {
+                    if ($search == 'true') {
+                        $query->where('users.enabled', '1');
+                    }
+                    if ($search == 'false') {
+                        $query->where('users.enabled', '0');
+                    }
+                })
+                -> select(
+                        'users.id',
+                        'users.number_document',
+                        'users.first_name',
+                        'users.second_name',
+                        'users.surname',
+                        'users.second_surname',
+                        'users.email',
+                        'users.email_verified_at',
+                        'users.enabled',
+                        'states.name as state_name',
+                        'cities.name as city_name',
+                        'model_has_roles.role_id'
+                    )
+                -> join('states', 'users.state_id', 'states.id')
+                -> join('cities', 'users.city_id', 'cities.id')
+                -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+                -> orderBy('users.id')
+                -> role($role)
+                -> paginate(10)
+                -> withQueryString(),
         ]);
     }
 
