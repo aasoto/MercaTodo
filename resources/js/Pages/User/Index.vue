@@ -5,13 +5,14 @@ import { Head, Link } from '@inertiajs/vue3';
 import Pagination from '@/Components/Pagination.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import { reactive } from 'vue';
+import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 
 const props = defineProps({
     roleSearch: String,
     roles: Array,
+    success: String,
     users: Object,
 });
-console.log(props.users);
 
 </script>
 <template>
@@ -151,5 +152,12 @@ console.log(props.users);
                 </div>
             </div>
         </div>
+        <AlertSuccess
+            v-if="success === 'User created.'"
+            title="¡Bien Hecho!"
+            text="Usuario guardado satisfactoriamente."
+            :close="false"
+            :btn-close="true"
+        />
     </AuthenticatedLayout>
 </template>

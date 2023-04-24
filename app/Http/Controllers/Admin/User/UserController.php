@@ -57,6 +57,7 @@ class UserController extends Controller
         return Inertia::render('User/Index', [
             'roleSearch' => $role,
             'roles' => $roles,
+            'success' => session('success'),
             'users' => $users,
         ]);
     }
@@ -105,7 +106,8 @@ class UserController extends Controller
             -> assignRole($role["name"])
             -> sendEmailVerificationNotification();
 
-        return Redirect::route('user.index', $role["name"]);
+        return Redirect::route('user.index', $role["name"])
+            -> with('success', 'User created.');
     }
 
     /**
@@ -152,6 +154,7 @@ class UserController extends Controller
             'cities' => $cities,
             'roles' => $roles,
             'states' => $states,
+            'success' => session('success'),
             'typeDocuments' => $type_documents,
             'user' => $user,
         ]);
@@ -168,7 +171,8 @@ class UserController extends Controller
         unset($data['role_id']);
         User::where('id', $id)->update($data);
 
-        return Redirect::route('user.edit', $id);
+        return Redirect::route('user.edit', $id)
+            -> with('success', 'User updated.');
 
     }
 
