@@ -17,10 +17,13 @@ class ShowcaseController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Showcase/Index', [
-            'filters' => $request->only('search'),
+            'filters' => $request->only(['search', 'category']),
             'products' => Product::query()
                 -> when($request->input('search'), function ($query, $search) {
                     $query->where('products.name', 'like', '%'.$search.'%');
+                })
+                -> when($request->input('category'), function ($query, $category) {
+                    $query->where('products_categories.name', $category);
                 })
                 -> select(
                         'products.name',
@@ -36,6 +39,7 @@ class ShowcaseController extends Controller
                 -> where('availability', 1)
                 -> paginate(12)
                 -> withQueryString(),
+            'products_categories' => $this->getProductsCategories(),
             'userRole' => session('user_role') ? session('user_role') : $this->authHasRole($this->getRoles()),
         ]);
     }
