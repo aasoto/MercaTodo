@@ -254,7 +254,13 @@ const validateAttachPicture3 = () => {
                                     >
 
                                     <InputError class="mt-2" :message="form.errors.picture_1" />
-                                    <img v-show="picture1Charged" id="show_picture_1" class="mt-2 mx-auto" src="" alt="">
+                                    <img
+                                        v-show="picture1Charged"
+                                        id="show_picture_1"
+                                        class="mt-2 mx-auto w-48 h-48 object-cover object-center"
+                                        src=""
+                                        alt="product_image_1"
+                                    >
                                     <div v-show="picture1Error" class="w-full mt-2 bg-red-600 px-6 py-3 text-white rounded-md">
                                         <h2 class="text-xl font-bold">Formato de archivo no permitido</h2>
                                         <p>Solo pueden ser adjuntadas imagenes tipo JPG, JPEG y PNG.</p>
@@ -279,7 +285,13 @@ const validateAttachPicture3 = () => {
                                     >
 
                                     <InputError class="mt-2" :message="form.errors.picture_2" />
-                                    <img v-show="picture2Charged" id="show_picture_2" class="mt-2 mx-auto" src="" alt="">
+                                    <img
+                                        v-show="picture2Charged"
+                                        id="show_picture_2"
+                                        class="mt-2 mx-auto w-48 h-48 object-cover object-center"
+                                        src=""
+                                        alt="product_image_2"
+                                    >
                                     <div v-show="picture2Error" class="w-full mt-2 bg-red-600 px-6 py-3 text-white rounded-md">
                                         <h2 class="text-xl font-bold">Formato de archivo no permitido</h2>
                                         <p>Solo pueden ser adjuntadas imagenes tipo JPG, JPEG y PNG.</p>
@@ -304,7 +316,13 @@ const validateAttachPicture3 = () => {
                                     >
 
                                     <InputError class="mt-2" :message="form.errors.picture_3" />
-                                    <img v-show="picture3Charged" id="show_picture_3" class="mt-2 mx-auto" src="" alt="">
+                                    <img
+                                        v-show="picture3Charged"
+                                        id="show_picture_3"
+                                        class="mt-2 mx-auto w-48 h-48 object-cover object-center"
+                                        src=""
+                                        alt="product_image_3"
+                                    >
                                     <div v-show="picture3Error" class="w-full mt-2 bg-red-600 px-6 py-3 text-white rounded-md">
                                         <h2 class="text-xl font-bold">Formato de archivo no permitido</h2>
                                         <p>Solo pueden ser adjuntadas imagenes tipo JPG, JPEG y PNG.</p>
