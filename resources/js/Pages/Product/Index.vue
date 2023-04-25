@@ -161,7 +161,7 @@ const setAvailability = (value) => {
                                 </div>
                             </div>
                         </div>
-                        <table class="w-full m-5 rounded-lg">
+                        <table v-if="products.data.length > 0" class="w-full m-5 rounded-lg">
                             <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
                                 <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
                                     Articulo
@@ -258,6 +258,9 @@ const setAvailability = (value) => {
                                 </th>
                             </tfoot>
                         </table>
+                        <div v-else class="w-full m-5 px-10 py-5 border border-red-600 bg-red-300 rounded-lg text-red-700 text-center">
+                            No se encontraron resultados con el criterio de busqueda dado.
+                        </div>
                         <Pagination class="my-6" :links="products.links" />
                     </div>
                 </div>
