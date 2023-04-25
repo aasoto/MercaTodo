@@ -12,19 +12,33 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
-use function PHPUnit\Framework\isEmpty;
-
 class ProductController extends Controller
 {
     use useCache;
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
 
         return Inertia::render('Product/Index', [
+            'filters' => $request->only(['search', 'category', 'availability']),
+            'products_categories' => $this->getProductsCategories(),
             'products' => Product::query()
+                -> when($request->input('search'), function ($query, $search) {
+                    $query -> where('products.name', 'like', '%'.$search.'%');
+                })
+                -> when($request->input('category'), function ($query, $category) {
+                    $query -> where('products_categories.name', $category);
+                })
+                -> when($request->input('availability'), function ($query, $availability) {
+                    if ($availability == 'true') {
+                        $query -> where('products.availability', '1');
+                    }
+                    if ($availability == 'false') {
+                        $query -> where('products.availability', '0');
+                    }
+                })
                 -> select(
                         'products.name',
                         'products.slug',
@@ -37,7 +51,8 @@ class ProductController extends Controller
                 -> join('products_categories', 'products.products_category_id', 'products_categories.id')
                 -> join('units', 'products.unit', 'units.code')
                 -> orderBy('products.id')
-                -> paginate(10),
+                -> paginate(10)
+                -> withQueryString(),
             'success' => session('success'),
         ]);
     }

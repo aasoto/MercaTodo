@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
@@ -12,7 +12,9 @@ import AlertQuestion from '@/Components/Alerts/AlertQuestion.vue';
 import LoadingModal from '@/Components/LoadingModal.vue';
 
 const props = defineProps({
+    filters: Object,
     products: Object,
+    products_categories: Object,
     success: String,
 });
 
@@ -42,6 +44,44 @@ const deleteProduct = () => {
     form.delete(route('product.destroy', form.slug));
 }
 
+const search = ref(props.filters.search);
+
+watch(search, value => {
+    router.get('/products', {search: value}, {
+        preserveState: true,
+        replace: true,
+    });
+});
+
+const category = ref(props.filters.category);
+
+watch(category, value => {
+    router.get('/products', {category: value}, {
+        preserveState: true,
+        replace: true,
+    });
+});
+
+const setCategory = (productCategory) => {
+    category.value = productCategory;
+}
+
+const availability = ref(props.filters.availability);
+
+watch(availability, value => {
+    router.get('/products', {availability: value}, {
+        preserveState: true,
+        replace: true,
+    });
+});
+
+const setAvailability = (value) => {
+    if (value) {
+        availability.value = true;
+    } else {
+        availability.value = false;
+    }
+}
 </script>
 
 <template>
@@ -57,18 +97,49 @@ const deleteProduct = () => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-10">
                     <div class="flex flex-col justify-center items-center">
-                        <div class="w-full mt-5 flex justify-between">
-                            <Link :href="route('product.create')">
-                                <SuccessButton>Agregar productos</SuccessButton>
+                        <div class="w-full mt-5 grid grid-cols-12 gap-4">
+                            <Link :href="route('product.create')" class="col-span-3">
+                                <SuccessButton class="w-full">Agregar productos</SuccessButton>
                             </Link>
-                            <div class="relative group">
+                            <div class="col-span-5">
+                                <input
+                                    v-model="search"
+                                    type="text"
+                                    class="w-full px-5 py-[10px] border border-gray-400 rounded-md placeholder:italic"
+                                    placeholder="Buscar..."
+                                >
+                            </div>
+                            <div class="relative group col-span-2">
 
                                 <button
                                     id="dropdownDefaultButton"
                                     class="text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex items-center shadow-none group-hover:shadow transition duration-200"
                                     type="button"
                                 >
-                                    Más opciones
+                                    Categorías
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <!-- Dropdown menu -->
+                                <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
+                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                        <li v-for="product_category in products_categories">
+                                            <span @click="setCategory(product_category.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                {{ product_category.name }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="relative group col-span-2">
+
+                                <button
+                                    id="dropdownDefaultButton"
+                                    class="text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex items-center shadow-none group-hover:shadow transition duration-200"
+                                    type="button"
+                                >
+                                    Disponibilidad
                                     <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
@@ -77,18 +148,14 @@ const deleteProduct = () => {
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                                         <li>
-                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                Gestión de unidades
-                                            </a>
+                                            <span @click="setAvailability(true)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                Habilitado
+                                            </span>
                                         </li>
                                         <li>
-                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
+                                            <span @click="setAvailability(false)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                Inhabilitado
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>
