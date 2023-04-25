@@ -1,4 +1,5 @@
 <script setup>
+import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -11,11 +12,11 @@ const props = defineProps({
     cities: Array,
     roles: Array,
     states: Array,
+    success: String,
     typeDocuments: Object,
     user: Object,
 });
 
-console.log(props.user);
 const form = useForm({
     type_document: props.user.type_document,
     number_document: props.user.number_document,
@@ -371,6 +372,12 @@ const show_cities = (stateId) => {
                 </div>
             </div>
         </div>
-
+        <AlertSuccess
+            v-if="success === 'User updated.'"
+            title="¡Bien Hecho!"
+            text="Usuario actualizado satisfactoriamente."
+            :close="false"
+            :btn-close="true"
+        />
     </AuthenticatedLayout>
 </template>
