@@ -2,14 +2,17 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useSignedRoleStore } from '@/Store/SignedRole';
 import { Head } from '@inertiajs/vue3';
+import Showcase from './Showcase/Index.vue';
 
 const props = defineProps({
+    products: Object,
     userRole: String,
 });
 
 const useSignedRole = useSignedRoleStore();
-const { assignRole } = useSignedRole;
+const { assignRole} = useSignedRole;
 assignRole(props.userRole);
+
 </script>
 
 <template>
