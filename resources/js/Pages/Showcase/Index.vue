@@ -8,11 +8,12 @@ import { ref, watch } from 'vue';
 const props = defineProps({
     filters: Object,
     products: Object,
+    products_categories: Object,
     userRole: String,
 });
 
 const useSignedRole = useSignedRoleStore();
-const { assignRole} = useSignedRole;
+const { assignRole } = useSignedRole;
 assignRole(props.userRole);
 
 const search = ref(props.filters.search);
@@ -24,22 +25,61 @@ watch(search, value => {
     });
 });
 
+const category = ref(props.filters.category);
+
+watch(category, value => {
+    router.get('/showcase', {category: value}, {
+        preserveState: true,
+        replace: true,
+    });
+});
+
+const setCategory = (productCategory) => {
+    category.value = productCategory;
+}
+
 </script>
 <template>
     <Head title="Vitrina de productos" />
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Vitrina de productos
-                </h2>
-                <input
-                    v-model="search"
-                    type="text"
-                    class="px-5 py-2 border border-gray-400 rounded-md"
-                    placeholder="Buscar"
-                >
+            <div class="grid grid-cols-4 gap-4">
+                <div class="col-span-1 flex justify-center items-center">
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        Vitrina de productos
+                    </h2>
+                </div>
+                <div class="col-span-2">
+                    <input
+                        v-model="search"
+                        type="text"
+                        class="w-full px-5 py-[10px] border border-gray-400 rounded-md placeholder:italic"
+                        placeholder="Buscar..."
+                    >
+                </div>
+                <div class="col-span-1 relative group">
+                    <button
+                        id="dropdownDefaultButton"
+                        class="w-full text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
+                        type="button"
+                    >
+                        Categorías
+                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <!-- Dropdown menu -->
+                    <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                            <li v-for="product_category in products_categories">
+                                <span @click="setCategory(product_category.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                    {{ product_category.name }}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </template>
         <div class="p-6 text-gray-900 dark:text-gray-100">
