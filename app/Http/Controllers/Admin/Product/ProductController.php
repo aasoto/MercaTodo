@@ -21,41 +21,13 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): Response
+    public function index(Request $request, Action $product): Response
     {
 
         return Inertia::render('Product/Index', [
             'filters' => $request->only(['search', 'category', 'availability']),
             'products_categories' => $this->getProductsCategories(),
-            'products' => Product::query()
-                -> when($request->input('search'), function ($query, $search) {
-                    $query -> where('products.name', 'like', '%'.$search.'%');
-                })
-                -> when($request->input('category'), function ($query, $category) {
-                    $query -> where('products_categories.name', $category);
-                })
-                -> when($request->input('availability'), function ($query, $availability) {
-                    if ($availability == 'true') {
-                        $query -> where('products.availability', '1');
-                    }
-                    if ($availability == 'false') {
-                        $query -> where('products.availability', '0');
-                    }
-                })
-                -> select(
-                        'products.name',
-                        'products.slug',
-                        'products_categories.name as category',
-                        'products.price',
-                        'units.name as unit',
-                        'products.stock',
-                        'products.availability',
-                    )
-                -> join('products_categories', 'products.products_category_id', 'products_categories.id')
-                -> join('units', 'products.unit', 'units.code')
-                -> orderBy('products.id')
-                -> paginate(10)
-                -> withQueryString(),
+            'products' => $product->index($request),
             'success' => session('success'),
         ]);
     }
@@ -74,9 +46,9 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, Images $images, Action $action): RedirectResponse
+    public function store(StoreRequest $request, Images $images, Action $product): RedirectResponse
     {
-        $action->create($images->save($request->validated()));
+        $product->create($images->save($request->validated()));
 
         return Redirect::route('products.index')->with('success', 'Product created.');
     }
@@ -84,50 +56,20 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug): Response
+    public function show(Action $product, string $slug): Response
     {
         return Inertia::render('Product/Show', [
-            'product' => Product::select(
-                    'products.name',
-                    'products.slug',
-                    'products_categories.name as category',
-                    'products.description',
-                    'products.price',
-                    'units.name as unit',
-                    'products.stock',
-                    'products.picture_1',
-                    'products.picture_2',
-                    'products.picture_3'
-                )
-                -> join('products_categories', 'products.products_category_id', 'products_categories.id')
-                -> join('units', 'products.unit', 'units.code')
-                -> where('slug', $slug)
-                -> first(),
-            ]);
+            'product' => $product->show($slug),
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $slug): Response
+    public function edit(Action $product, string $slug): Response
     {
         return Inertia::render('Product/Edit', [
-            'product' => Product::select(
-                    'products.id',
-                    'products.name',
-                    'products.products_category_id',
-                    'products.barcode',
-                    'products.description',
-                    'products.price',
-                    'products.unit',
-                    'products.stock',
-                    'products.picture_1',
-                    'products.picture_2',
-                    'products.picture_3',
-                    'products.availability'
-                )
-                -> where('slug', $slug)
-                -> first(),
+            'product' => $product->edit($slug),
             'products_categories' => $this->getProductsCategories(),
             'units' => $this->getUnits(),
             'success' => session('success'),
@@ -140,14 +82,14 @@ class ProductController extends Controller
     public function update(
         UpdateRequest $request,
         Images $images,
-        Action $action,
+        Action $product,
         string $id,
         string $files): RedirectResponse
     {
 
         $data = $images->Update($request->validated(), $files);
 
-        $action->update($id, $data);
+        $product->update($id, $data);
 
         return Redirect::route('product.edit', $data['slug'])->with('success', 'Product updated.');
     }
@@ -155,13 +97,13 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Images $images, Action $action, string $slug): RedirectResponse
+    public function destroy(Images $images, Action $product, string $slug): RedirectResponse
     {
-        $product = $action->show($slug);
+        $query = $product->show($slug);
 
-        $images->Delete($product->toArray());
+        $images->Delete($query->toArray());
 
-        $action->delete($slug);
+        $product->delete($slug);
 
         return Redirect::route('products.index')->with('success', 'Product deleted.');
     }
