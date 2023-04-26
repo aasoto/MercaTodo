@@ -4,6 +4,8 @@ namespace App\Classes\Product;
 
 use App\Traits\StorageFiles;
 
+use function PHPUnit\Framework\isNull;
+
 class Images
 {
     use StorageFiles;
@@ -40,22 +42,26 @@ class Images
     {
         $data = $this->Save($data);
 
-        $this->Delete(json_decode($files, true));
+        $this->Delete(json_decode($files, true), true, $data);
 
         return $data;
     }
 
-    public function Delete(array $files): void
+    public function Delete(array $files, bool $updating = false, array $data = null): void
     {
-        if (isset($files['picture_1'])) {
+        if (!$updating) {
+            $data = $files;
+        }
+
+        if (isset($data['picture_1']) && isset($files['picture_1'])) {
             $this->remove('images/products/', $files['picture_1']);
         }
 
-        if (isset($files['picture_2'])) {
+        if (isset($data['picture_2']) && isset($files['picture_2'])) {
             $this->remove('images/products/', $files['picture_2']);
         }
 
-        if (isset($files['picture_3'])) {
+        if (isset($data['picture_3']) && isset($files['picture_3'])) {
             $this->remove('images/products/', $files['picture_3']);
         }
     }
