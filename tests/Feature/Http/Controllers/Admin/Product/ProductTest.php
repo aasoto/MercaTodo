@@ -94,16 +94,21 @@ class ProductTest extends TestCase
 
         $category = ProductCategory::select('id')->inRandomOrder()->first();
         $unit = Unit::select('code')->inRandomOrder()->first();
+        $name = fake()->words(4, true);
 
         $response = $this->actingAs($this->user)
         -> post(route('product.store'), [
-            'name' => fake()->words(4, true),
+            'name' => $name,
             'products_category_id' => $category['id'],
             'barcode' => fake()->randomNumber(5, true).fake()->randomNumber(5, true),
             'price' => fake()->randomFloat(2, 10000, 1000000),
             'unit' => $unit['code'],
             'stock' => fake()->randomNumber(2, true),
             'picture_1' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
+        ]);
+
+        $this->assertDatabaseHas('products', [
+            'name' => $name,
         ]);
 
         $response->assertRedirect(route('products.index'))
@@ -186,6 +191,9 @@ class ProductTest extends TestCase
 
         $this->product->refresh();
         $this->assertSame($name, $this->product->name);
+        $this->assertDatabaseHas('products', [
+            'name' => $name,
+        ]);
 
         $response->assertRedirect(route('product.edit', $this->product->slug))
         ->assertSessionHasAll(['success' => 'Product updated.']);
@@ -195,8 +203,14 @@ class ProductTest extends TestCase
 
     public function test_can_destroy_product(): void
     {
+        $name = $this->product->name;
+
         $response = $this->actingAs($this->user)
         ->delete(route('product.destroy', $this->product->slug));
+
+        $this->assertDatabaseMissing('products', [
+            'name' => $name,
+        ]);
 
         $response->assertFound();
         $response->assertRedirect(route('products.index'))
