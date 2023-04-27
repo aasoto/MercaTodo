@@ -74,6 +74,26 @@ class Action
             -> sendEmailVerificationNotification();
     }
 
+    public function register(array $data): User
+    {
+        return User::create([
+            'type_document' => $data['typeDocument'],
+            'number_document' => $data['numberDocument'],
+            'first_name' => $data['firstName'],
+            'second_name' => $data['secondName'],
+            'surname' => $data['surname'],
+            'second_surname' => $data['secondSurname'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'birthdate' => $data['birthdate'],
+            'gender' => $data['gender'],
+            'phone' => $data['phone'],
+            'address' => $data['address'],
+            'state_id' => $data['state'],
+            'city_id' => $data['city']
+        ])->assignRole('client');
+    }
+
     public function edit(string $id): User
     {
         return User::select(
