@@ -13,13 +13,14 @@ use Database\Seeders\TypeDocumentSeeder;
 use Database\Seeders\UnitSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\Feature\Traits\refreshStorage;
 use Tests\TestCase;
 
 class ShowcaseTest extends TestCase
 {
-    use RefreshDatabase, refreshStorage;
+    use RefreshDatabase;
 
     private User $user;
 
@@ -39,11 +40,13 @@ class ShowcaseTest extends TestCase
 
         $this->user = User::factory()->create()->assignRole('client');
 
-        $this->cleanProductsImages();
+        // $this->cleanProductsImages();
     }
 
     public function test_can_show_showcase_of_products(): void
     {
+        Storage::fake();
+
         $response = $this->actingAs($this->user)
         ->get(route('showcase.index'));
 
@@ -69,6 +72,7 @@ class ShowcaseTest extends TestCase
 
     public function test_show_description_of_product_from_the_showcase(): void
     {
+        Storage::fake();
         $product = Product::select('slug')->inRandomOrder()->first();
 
         $response = $this->actingAs($this->user)
