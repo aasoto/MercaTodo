@@ -28,6 +28,8 @@ class ShowcaseTest extends TestCase
     {
         parent::setUp();
 
+        Storage::fake();
+
         $this->seed([
             StateSeeder::class,
             CitySeeder::class,
@@ -45,7 +47,6 @@ class ShowcaseTest extends TestCase
 
     public function test_can_show_showcase_of_products(): void
     {
-        Storage::fake();
 
         $response = $this->actingAs($this->user)
         ->get(route('showcase.index'));
@@ -72,7 +73,6 @@ class ShowcaseTest extends TestCase
 
     public function test_show_description_of_product_from_the_showcase(): void
     {
-        Storage::fake();
         $product = Product::select('slug')->inRandomOrder()->first();
 
         $response = $this->actingAs($this->user)
