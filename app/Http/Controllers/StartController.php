@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\StartFactory;
 use App\Traits\AuthHasRole;
 use App\Traits\useCache;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
 
 class StartController extends Controller
 {
@@ -15,13 +14,7 @@ class StartController extends Controller
     public function index(): RedirectResponse
     {
         $user_role = $this->authHasRole($this->getRoles());
-
-        if ($user_role == 'admin') {
-            return Redirect::route('dashboard.index')->with('user_role', $user_role);
-        }
-
-        if ($user_role == 'client') {
-            return Redirect::route('showcase.index')->with('user_role', $user_role);
-        }
+        $start_factory = (new StartFactory())->initialize($user_role);
+        return $start_factory->redirecting($user_role);
     }
 }
