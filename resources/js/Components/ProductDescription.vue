@@ -34,7 +34,7 @@ const watchOtherPicture = (image) => {
                         <div class="col-span-5">
                             <img
                                 class="w-full"
-                                :src="`../images/products/${mainPicture}`"
+                                :src="`../storage/images/products/${mainPicture}`"
                                 alt="product_photo_1"
                             >
                         </div>
@@ -42,13 +42,13 @@ const watchOtherPicture = (image) => {
                             <img
                                 v-show="alternativePicture1"
                                 @click="watchOtherPicture(alternativePicture1)"
-                                :src="`../images/products/${alternativePicture1}`"
+                                :src="`../storage/images/products/${alternativePicture1}`"
                                 alt="product_photo_2"
                             >
                             <img
                                 v-show="alternativePicture2"
                                 @click="watchOtherPicture(alternativePicture2)"
-                                :src="`../images/products/${alternativePicture2}`"
+                                :src="`../storage/images/products/${alternativePicture2}`"
                                 alt="product_photo_3"
                             >
                         </div>

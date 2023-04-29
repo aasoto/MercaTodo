@@ -161,6 +161,7 @@ class UserTest extends TestCase
         $city = City::select('id')->where('state_id', $state[0]["id"])->inRandomOrder()->first();
         $role = $this->getRoles();
         $type = $this->getTypeDocument();
+        $email = fake()->safeEmail();
 
         $response = $this->actingAs($this->user)
         ->post(route('user.store'), [
@@ -170,7 +171,7 @@ class UserTest extends TestCase
             'second_name' => fake()->firstName($gender = 'male'|'female'),
             'surname' => fake()->lastName(),
             'second_Surname' => fake()->lastName(),
-            'email' => fake()->safeEmail(),
+            'email' => $email,
             'birthdate' => '1989-12-04',
             'gender' => fake()->randomElement(['m', 'f', 'o']),
             'phone' => fake()->phoneNumber(),
@@ -179,6 +180,8 @@ class UserTest extends TestCase
             'city_id' => $city["id"],
             'role_id' => $role[0]["id"]
         ]);
+
+        $this->assertDatabaseHas('users', ['email' => $email]);
 
         $response
             -> assertSessionHasNoErrors()

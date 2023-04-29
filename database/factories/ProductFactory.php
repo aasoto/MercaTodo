@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\ProductCategory;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Http\UploadedFile;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
@@ -28,9 +29,12 @@ class ProductFactory extends Factory
             'unit' => $this->get_code_unit(),
             'stock' => fake()->randomNumber(2, true),
             // vendor\fakerphp\faker\src\Faker\Provider\Image.php
-            'picture_1' => fake()->image(public_path('images/products'), 500, 500, null, false),
-            'picture_2' => fake()->image(public_path('images/products'), 500, 500, null, false),
-            'picture_3' => fake()->image(public_path('images/products'), 500, 500, null, false),
+            // 'picture_1' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
+            // 'picture_2' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
+            // 'picture_3' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
+            'picture_1' => $this->upload_image(),
+            'picture_2' => $this->upload_image(),
+            'picture_3' => $this->upload_image(),
         ];
     }
 
@@ -38,5 +42,12 @@ class ProductFactory extends Factory
     {
         $unit = Unit::select('code')->inRandomOrder()->first();
         return $unit['code'];
+    }
+
+    public function upload_image(): string
+    {
+        $filename = fake()->numerify('##########').'.jpg';
+        UploadedFile::fake()->image('image.jpg', 500, 500)->storeAs('images/products', $filename, 'public');
+        return $filename;
     }
 }

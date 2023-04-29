@@ -35,6 +35,7 @@ class RegistrationTest extends TestCase
         $state = $this->getStates();
         $city = City::select('id')->where('state_id', $state[0]["id"])->inRandomOrder()->first();
         $type = $this->getTypeDocument();
+        $email = fake()->safeEmail();
 
         $response = $this->post('/register', [
             'typeDocument' => $type[0]['code'],
@@ -43,7 +44,7 @@ class RegistrationTest extends TestCase
             'secondName' => fake()->firstName($gender = 'male'|'female'),
             'surname' => fake()->lastName(),
             'secondSurname' => fake()->lastName(),
-            'email' => fake()->safeEmail(),
+            'email' => $email,
             'password' => 'password',
             'password_confirmation' => 'password',
             'birthdate' => '1989-12-04',
@@ -54,6 +55,9 @@ class RegistrationTest extends TestCase
             'city' => $city["id"],
         ]);
 
+        $this->assertDatabaseHas('users', [
+            'email' => $email,
+        ]);
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
     }
