@@ -54,15 +54,15 @@ class Images
         }
 
         if (isset($data['picture_1']) && isset($files['picture_1'])) {
-            $this->remove('images/products/', $files['picture_1']);
+            $this->remove('images/products', $files['picture_1']);
         }
 
         if (isset($data['picture_2']) && isset($files['picture_2'])) {
-            $this->remove('images/products/', $files['picture_2']);
+            $this->remove('images/products', $files['picture_2']);
         }
 
         if (isset($data['picture_3']) && isset($files['picture_3'])) {
-            $this->remove('images/products/', $files['picture_3']);
+            $this->remove('images/products', $files['picture_3']);
         }
     }
 }
