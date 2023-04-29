@@ -16,13 +16,14 @@ use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\Feature\Traits\refreshStorage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-    use RefreshDatabase, refreshStorage;
+    use RefreshDatabase;
 
     private Product $product;
     private User $user;
@@ -30,6 +31,8 @@ class ProductTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        Storage::fake('public');
 
         $this->seed([
             StateSeeder::class,
@@ -67,8 +70,6 @@ class ProductTest extends TestCase
                 )
                 -> has('success')
         );
-
-        $this->cleanProductsImages();
     }
 
     public function test_can_show_add_new_product_page(): void
@@ -84,14 +85,10 @@ class ProductTest extends TestCase
                 -> has('products_categories')
                 -> has('units')
         );
-
-        $this->cleanProductsImages();
     }
 
     public function test_new_product_can_be_saved(): void
     {
-        $this->cleanProductsImages();
-
         $category = ProductCategory::select('id')->inRandomOrder()->first();
         $unit = Unit::select('code')->inRandomOrder()->first();
         $name = fake()->words(4, true);
@@ -113,8 +110,6 @@ class ProductTest extends TestCase
 
         $response->assertRedirect(route('products.index'))
         ->assertSessionHasAll(['success' => 'Product created.']);
-
-        $this->cleanProductImage();
     }
 
     public function test_can_show_product_information(): void
@@ -137,8 +132,6 @@ class ProductTest extends TestCase
                     -> etc()
                 )
         );
-
-        $this->cleanProductsImages();
     }
 
     public function test_can_edit_product_information(): void
@@ -161,8 +154,6 @@ class ProductTest extends TestCase
                 -> has('products_categories')
                 -> has('units')
         );
-
-        $this->cleanProductsImages();
     }
 
     public function test_can_update_product_information(): void
@@ -198,7 +189,6 @@ class ProductTest extends TestCase
         $response->assertRedirect(route('product.edit', $this->product->slug))
         ->assertSessionHasAll(['success' => 'Product updated.']);
 
-        $this->cleanProductsImages();
     }
 
     public function test_can_destroy_product(): void
