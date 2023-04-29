@@ -292,7 +292,7 @@ const submit = () => {
                                     <img
                                         id="show_picture_1"
                                         class="mt-2 mx-auto w-48 h-48 object-cover object-center"
-                                        :src="`../../images/products/${currentFiles.picture_1}`"
+                                        :src="`../../storage/images/products/${currentFiles.picture_1}`"
                                         alt="product_photo_1"
                                     >
                                 </div>
@@ -320,7 +320,7 @@ const submit = () => {
                                         v-show="currentFiles.picture_2 || picture2Charged"
                                         id="show_picture_2"
                                         class="mt-2 mx-auto w-48 h-48 object-cover object-center"
-                                        :src="currentFiles.picture_2 && `../../images/products/${currentFiles.picture_2}`"
+                                        :src="currentFiles.picture_2 && `../../storage/images/products/${currentFiles.picture_2}`"
                                         alt="product_photo_2"
                                     >
                                 </div>
@@ -348,7 +348,7 @@ const submit = () => {
                                         v-show="currentFiles.picture_3 || picture3Charged"
                                         id="show_picture_3"
                                         class="mt-2 mx-auto w-48 h-48 object-cover object-center"
-                                        :src="currentFiles.picture_3 && `../../images/products/${currentFiles.picture_3}`"
+                                        :src="currentFiles.picture_3 && `../../storage/images/products/${currentFiles.picture_3}`"
                                         alt="product_photo_3"
                                     >
                                 </div>
