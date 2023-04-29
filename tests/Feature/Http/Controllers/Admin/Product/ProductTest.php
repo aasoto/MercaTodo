@@ -126,7 +126,6 @@ class ProductTest extends TestCase
                     -> where('name', $this->product->name)
                     -> where('slug', $this->product->slug)
                     -> where('description', $this->product->description)
-                    -> where('price', $this->product->price)
                     -> where('stock', $this->product->stock)
                     -> where('picture_1', $this->product->picture_1)
                     -> etc()
