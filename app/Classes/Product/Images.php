@@ -4,12 +4,14 @@ namespace App\Classes\Product;
 
 use App\Traits\StorageFiles;
 
-use function PHPUnit\Framework\isNull;
-
 class Images
 {
     use StorageFiles;
 
+    /**
+     * @param array<mixed> $data
+     * @return array<mixed> $data
+     */
     public function Save(array $data): array
     {
         $counter = 0;
@@ -38,6 +40,10 @@ class Images
         return $data;
     }
 
+    /**
+     * @param array<mixed> $data
+     * @return array<mixed> $data
+     */
     public function Update(array $data, string $files): array
     {
         $data = $this->Save($data);
@@ -47,6 +53,10 @@ class Images
         return $data;
     }
 
+    /**
+     * @param array<mixed> $files
+     * @param array<mixed> $data
+     */
     public function Delete(array $files, bool $updating = false, array $data = null): void
     {
         if (!$updating) {

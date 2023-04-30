@@ -2,14 +2,15 @@
 
 namespace App\Traits;
 
-use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  *
  */
 trait AuthHasRole
 {
-    public function authHasRole($roles): string
+
+    public function authHasRole(Collection $roles): string
     {
         foreach ($roles as $key => $value) {
             if (auth()->user()->hasRole($value['name'])) {

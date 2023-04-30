@@ -41,6 +41,9 @@ class Action
                 -> withQueryString();
     }
 
+    /**
+     * @param array<mixed> $data
+     */
     public function create(array $data): void
     {
         Product::create($data);
@@ -86,7 +89,10 @@ class Action
         -> first();
     }
 
-    public function update(int $id, array $data): void
+    /**
+     * @param array<mixed> $data
+     */
+    public function update(string $id, array $data): void
     {
         Product::where('id', $id)->update($data);
     }
