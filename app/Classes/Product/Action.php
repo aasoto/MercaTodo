@@ -49,7 +49,7 @@ class Action
         Product::create($data);
     }
 
-    public function show(string $slug): Product
+    public function show(string $slug): Product|null
     {
         return Product::select(
             'products.name',
@@ -69,7 +69,7 @@ class Action
         -> first();
     }
 
-    public function edit(string $slug): Product
+    public function edit(string $slug): Product|null
     {
         return Product::select(
             'products.id',

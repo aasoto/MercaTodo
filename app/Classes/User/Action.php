@@ -100,7 +100,7 @@ class Action
         ])->assignRole('client');
     }
 
-    public function edit(string $id): User
+    public function edit(string $id): User|null
     {
         return User::select(
             'users.id',

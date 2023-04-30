@@ -17,15 +17,15 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'type_document'     => ['required', 'string', 'max:3'],
-            'number_document'   => ['required', 'regex:/^[0-9A-Z]+$/i', 'max:100', Rule::unique(User::class)->ignore($this->user()->id)],
+            'number_document'   => ['required', 'regex:/^[0-9A-Z]+$/i', 'max:100', Rule::unique(User::class)->ignore($this->user()?->id)],
             'first_name'        => ['required', 'string', 'max:100'],
             'second_name'       => ['nullable', 'string', 'max:100'],
             'surname'           => ['required', 'string', 'max:100'],
             'second_surname'    => ['nullable', 'string', 'max:100'],
-            'email'             => ['required', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+            'email'             => ['required', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()?->id)],
             'birthdate'         => ['required', 'date', 'before:18 years'],
             'gender'            => ['required', 'regex:/^[fmo]+$/i', 'max:1'],
-            'phone'             => ['required', 'regex:/^[+\\-\\(\\)\\0-9x ]+$/i', 'max:100', Rule::unique(User::class)->ignore($this->user()->id)],
+            'phone'             => ['required', 'regex:/^[+\\-\\(\\)\\0-9x ]+$/i', 'max:100', Rule::unique(User::class)->ignore($this->user()?->id)],
             'address'           => ['required', 'string', 'max:1000'],
             'state_id'          => ['required', 'integer'],
             'city_id'           => ['required', 'integer'],

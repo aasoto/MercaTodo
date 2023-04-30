@@ -15,7 +15,7 @@ class UserIsEnabled
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->enabled) {
+        if (auth()->user()?->enabled) {
             return $next($request);
         } else {
             return redirect(route('user-disabled'));

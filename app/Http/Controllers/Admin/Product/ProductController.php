@@ -101,7 +101,7 @@ class ProductController extends Controller
     {
         $query = $product->show($slug);
 
-        $images->Delete($query->toArray());
+        $images->Delete($query ? $query->toArray() : []);
 
         $product->delete($slug);
 

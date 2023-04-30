@@ -56,9 +56,9 @@ class UserController extends Controller
     {
         $data = $request->validated();
         $role = $roles->get($data["role_id"]);
-        $user->create($data, $role['name']);
+        $user->create($data, $role ? $role['name'] : '');
 
-        return Redirect::route('user.index', $role["name"])
+        return Redirect::route('user.index', $role ? $role["name"] : '')
             -> with('success', 'User created.');
     }
 

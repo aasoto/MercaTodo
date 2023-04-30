@@ -11,9 +11,9 @@ class UpdateRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize(): bool|null
     {
-        return auth()->user()->hasRole('admin');
+        return auth()->user()?->hasRole('admin');
     }
 
     /**
@@ -37,7 +37,7 @@ class UpdateRequest extends FormRequest
             'state_id'          => ['required', 'integer'],
             'city_id'           => ['required', 'integer'],
             'role_id'           => ['required', 'integer'],
-            'enabled'           => ['required', 'boolean', Rule::prohibitedIf((intval($this->route('id')) == auth()->user()->id) && ($this->request->get('enabled') == false))]
+            'enabled'           => ['required', 'boolean', Rule::prohibitedIf((intval($this->route('id')) == auth()->user()?->id) && ($this->request->get('enabled') == false))]
         ];
     }
 }
