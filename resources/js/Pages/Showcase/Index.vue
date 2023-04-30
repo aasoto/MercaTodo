@@ -91,7 +91,7 @@ const setCategory = (productCategory) => {
                     <Link :href="route('showcase.show', product.slug)">
                         <img
                             class="w-full h-1/2 rounded object-cover object-center cursor-pointer"
-                            :src="`../images/products/${product.picture_1}`"
+                            :src="`../storage/images/products/${product.picture_1}`"
                             alt="product_image_1"
                         >
                         <h2 class="text-lg truncate font-medium hover:font-bold no-underline hover:underline cursor-pointer capitalize">

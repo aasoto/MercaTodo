@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin\Product;
 
+use App\Classes\Product\Action;
+use App\Classes\Product\Images;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Http\Requests\Admin\Product\UpdateRequest;
 use App\Models\Product;
 use App\Traits\useCache;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -18,41 +21,13 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): Response
+    public function index(Request $request, Action $product): Response
     {
 
         return Inertia::render('Product/Index', [
             'filters' => $request->only(['search', 'category', 'availability']),
             'products_categories' => $this->getProductsCategories(),
-            'products' => Product::query()
-                -> when($request->input('search'), function ($query, $search) {
-                    $query -> where('products.name', 'like', '%'.$search.'%');
-                })
-                -> when($request->input('category'), function ($query, $category) {
-                    $query -> where('products_categories.name', $category);
-                })
-                -> when($request->input('availability'), function ($query, $availability) {
-                    if ($availability == 'true') {
-                        $query -> where('products.availability', '1');
-                    }
-                    if ($availability == 'false') {
-                        $query -> where('products.availability', '0');
-                    }
-                })
-                -> select(
-                        'products.name',
-                        'products.slug',
-                        'products_categories.name as category',
-                        'products.price',
-                        'units.name as unit',
-                        'products.stock',
-                        'products.availability',
-                    )
-                -> join('products_categories', 'products.products_category_id', 'products_categories.id')
-                -> join('units', 'products.unit', 'units.code')
-                -> orderBy('products.id')
-                -> paginate(10)
-                -> withQueryString(),
+            'products' => $product->index($request),
             'success' => session('success'),
         ]);
     }
@@ -60,7 +35,7 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Product/Create', [
             'products_categories' => $this->getProductsCategories(),
@@ -71,85 +46,30 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, Images $images, Action $product): RedirectResponse
     {
-        $data = $request->validated();
-
-        $counter = 0;
-        if (isset($data['picture_1'])) {
-            $counter++;
-            $data['picture_1'] = $filename = time().$counter.'.'.$data['picture_1']->extension();
-            $request->picture_1->move(public_path('images/products'), $filename);
-            // $request->picture_1->storeAs('images/products', $filename, 'public');
-        }
-
-        if (isset($data['picture_2'])) {
-            $counter++;
-            $data['picture_2'] = $filename = time().$counter.'.'.$data['picture_2']->extension();
-            $request->picture_2->move(public_path('images/products'), $filename);
-            // $request->picture_2->storeAs('images/products', $filename, 'public');
-        }
-
-        if (isset($data['picture_3'])) {
-            $counter++;
-            $data['picture_3'] = $filename = time().$counter.'.'.$data['picture_3']->extension();
-            $request->picture_3->move(public_path('images/products'), $filename);
-            // $request->picture_3->storeAs('images/products', $filename, 'public');
-        }
-
-        Product::create($data);
+        $product->create($images->save($request->validated()));
 
         return Redirect::route('products.index')->with('success', 'Product created.');
-
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $slug)
+    public function show(Action $product, string $slug): Response
     {
         return Inertia::render('Product/Show', [
-            'product' => Product::select(
-                    'products.name',
-                    'products.slug',
-                    'products_categories.name as category',
-                    'products.description',
-                    'products.price',
-                    'units.name as unit',
-                    'products.stock',
-                    'products.picture_1',
-                    'products.picture_2',
-                    'products.picture_3'
-                )
-                -> join('products_categories', 'products.products_category_id', 'products_categories.id')
-                -> join('units', 'products.unit', 'units.code')
-                -> where('slug', $slug)
-                -> first(),
-            ]);
+            'product' => $product->show($slug),
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $slug)
+    public function edit(Action $product, string $slug): Response
     {
         return Inertia::render('Product/Edit', [
-            'product' => Product::select(
-                    'products.id',
-                    'products.name',
-                    'products.products_category_id',
-                    'products.barcode',
-                    'products.description',
-                    'products.price',
-                    'products.unit',
-                    'products.stock',
-                    'products.picture_1',
-                    'products.picture_2',
-                    'products.picture_3',
-                    'products.availability'
-                )
-                -> where('slug', $slug)
-                -> first(),
+            'product' => $product->edit($slug),
             'products_categories' => $this->getProductsCategories(),
             'units' => $this->getUnits(),
             'success' => session('success'),
@@ -159,47 +79,17 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, string $id, string $files)
+    public function update(
+        UpdateRequest $request,
+        Images $images,
+        Action $product,
+        string $id,
+        string $files): RedirectResponse
     {
-        $data = $request->validated();
-        $files = json_decode($files);
-        $counter = 0;
 
-        if (isset($data['picture_1'])) {
-            $counter++;
-            $data['picture_1'] = $filename = time().$counter.'.'.$data['picture_1']->extension();
-            $request->picture_1->move(public_path('images/products'), $filename);
+        $data = $images->Update($request->validated(), $files);
 
-            unlink(public_path('images/products/'.$files->picture_1));
-        } else {
-            unset($data['picture_1']);
-        }
-
-        if (isset($data['picture_2'])) {
-            $counter++;
-            $data['picture_2'] = $filename = time().$counter.'.'.$data['picture_2']->extension();
-            $request->picture_2->move(public_path('images/products'), $filename);
-
-            if (isset($files->picture_2)) {
-                unlink(public_path('images/products/'.$files->picture_2));
-            }
-        } else {
-            unset($data['picture_2']);
-        }
-
-        if (isset($data['picture_3'])) {
-            $counter++;
-            $data['picture_3'] = $filename = time().$counter.'.'.$data['picture_3']->extension();
-            $request->picture_3->move(public_path('images/products'), $filename);
-
-            if (isset($files->picture_3)) {
-                unlink(public_path('images/products/'.$files->picture_3));
-            }
-        } else {
-            unset($data['picture_3']);
-        }
-
-        Product::where('id', $id)->update($data);
+        $product->update($id, $data);
 
         return Redirect::route('product.edit', $data['slug'])->with('success', 'Product updated.');
     }
@@ -207,23 +97,13 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $slug)
+    public function destroy(Images $images, Action $product, string $slug): RedirectResponse
     {
-        $product = Product::where('slug', $slug)->get();
+        $query = $product->show($slug);
 
-        if ($product[0]->picture_1) {
-            unlink(public_path('images/products/'.$product[0]->picture_1));
-        }
+        $images->Delete($query->toArray());
 
-        if ($product[0]->picture_2) {
-            unlink(public_path('images/products/'.$product[0]->picture_2));
-        }
-
-        if ($product[0]->picture_3) {
-            unlink(public_path('images/products/'.$product[0]->picture_3));
-        }
-
-        Product::where('slug', $slug)->delete();
+        $product->delete($slug);
 
         return Redirect::route('products.index')->with('success', 'Product deleted.');
     }

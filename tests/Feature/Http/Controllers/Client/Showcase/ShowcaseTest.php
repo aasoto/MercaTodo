@@ -13,19 +13,23 @@ use Database\Seeders\TypeDocumentSeeder;
 use Database\Seeders\UnitSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\Feature\Traits\refreshStorage;
 use Tests\TestCase;
 
 class ShowcaseTest extends TestCase
 {
-    use RefreshDatabase, refreshStorage;
+    use RefreshDatabase;
 
     private User $user;
 
     public function setUp(): void
     {
         parent::setUp();
+
+        Storage::fake('public');
 
         $this->seed([
             StateSeeder::class,
@@ -39,11 +43,11 @@ class ShowcaseTest extends TestCase
 
         $this->user = User::factory()->create()->assignRole('client');
 
-        $this->cleanProductsImages();
     }
 
     public function test_can_show_showcase_of_products(): void
     {
+
         $response = $this->actingAs($this->user)
         ->get(route('showcase.index'));
 
