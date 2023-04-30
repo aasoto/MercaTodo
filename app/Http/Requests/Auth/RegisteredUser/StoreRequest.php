@@ -5,6 +5,7 @@ namespace App\Http\Requests\Auth\RegisteredUser;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
 
 class StoreRequest extends FormRequest
 {
@@ -19,7 +20,7 @@ class StoreRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<mixed>>
+     * @return array<string, array<int, Password|string|null>|string>
      */
     public function rules(): array
     {
