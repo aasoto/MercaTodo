@@ -5,10 +5,11 @@ namespace App\Services;
 use App\Classes\Start\AdminMode;
 use App\Classes\Start\ClientMode;
 use App\Contracts\StartInterface;
+use Exception;
 
 class StartFactory
 {
-    public function initialize($user_role): StartInterface
+    public function initialize(string $user_role): StartInterface
     {
         if ($user_role == 'admin') {
             return new AdminMode();

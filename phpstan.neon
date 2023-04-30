@@ -1,6 +1,20 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
 parameters:
-	ignoreErrors:
-		- '#Call to an undefined static method [a-zA-Z0-9\\_]+::select\(\)#'
-		- '#Call to an undefined static method [a-zA-Z0-9\\_]+::create\(\)#'
-		- '#Call to an undefined static method [a-zA-Z0-9\\_]+::where\(\)#'
-		- '#Call to an undefined method [a-zA-Z0-9\\_]+::assertInertia\(\)#'
+
+    paths:
+        - app/
+
+    # Level 9 is the highest level
+    level: 1
+    checkGenericClassInNonGenericObjectType: false
+
+#    ignoreErrors:
+#        - '#PHPDoc tag @var#'
+#
+#    excludePaths:
+#        - ./*/*/FileToBeExcluded.php
+#
+#    checkMissingIterableValueType: false
+#    checkGenericClassInNonGenericObjectType: false

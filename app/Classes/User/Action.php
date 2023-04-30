@@ -53,6 +53,9 @@ class Action
         -> withQueryString();
     }
 
+    /**
+     * @param array<mixed> $data
+     */
     public function create(array $data, string $role): void
     {
         User::create([
@@ -74,6 +77,9 @@ class Action
             -> sendEmailVerificationNotification();
     }
 
+    /**
+     * @param array<mixed> $data
+     */
     public function register(array $data): User
     {
         return User::create([
@@ -94,7 +100,7 @@ class Action
         ])->assignRole('client');
     }
 
-    public function edit(string $id): User
+    public function edit(string $id): User|null
     {
         return User::select(
             'users.id',
@@ -119,6 +125,9 @@ class Action
         -> first();
     }
 
+    /**
+     * @param array<mixed> $data
+     */
     public function update(string $id, array $data): void
     {
         User::where('id', $id)->update($data);

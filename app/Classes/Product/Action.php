@@ -41,12 +41,15 @@ class Action
                 -> withQueryString();
     }
 
+    /**
+     * @param array<mixed> $data
+     */
     public function create(array $data): void
     {
         Product::create($data);
     }
 
-    public function show(string $slug): Product
+    public function show(string $slug): Product|null
     {
         return Product::select(
             'products.name',
@@ -66,7 +69,7 @@ class Action
         -> first();
     }
 
-    public function edit(string $slug): Product
+    public function edit(string $slug): Product|null
     {
         return Product::select(
             'products.id',
@@ -86,7 +89,10 @@ class Action
         -> first();
     }
 
-    public function update(int $id, array $data): void
+    /**
+     * @param array<mixed> $data
+     */
+    public function update(string $id, array $data): void
     {
         Product::where('id', $id)->update($data);
     }

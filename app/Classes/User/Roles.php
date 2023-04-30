@@ -7,7 +7,7 @@ use Spatie\Permission\Models\Role;
 
 class Roles
 {
-    public function get(int $id): Role
+    public function get(int $id): Role|null
     {
         return Role::select('name')->where('id', $id)->first();
     }
