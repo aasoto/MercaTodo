@@ -29,8 +29,8 @@ const watchOtherPicture = (image) => {
                     {{ product.name }}
                 </h2>
 
-                <div class="grid grid-cols-3 gap-4 my-4">
-                    <div class="col-span-2 grid grid-cols-7 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+                    <div class="col-span-1 md:col-span-2 grid grid-cols-7 gap-4">
                         <div class="col-span-5">
                             <img
                                 class="w-full"
