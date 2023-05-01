@@ -61,14 +61,14 @@ const setEnabled = (value) => {
                                 <input
                                     v-model="search"
                                     type="text"
-                                    class="w-full px-5 py-[10px] border border-gray-400 rounded-md placeholder:italic"
+                                    class="w-full px-5 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
                                     placeholder="Buscar..."
                                 >
                             </div>
                             <div class="col-span-2 relative group">
                                 <button
                                     id="dropdownDefaultButton"
-                                    class="text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-md group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
+                                    class="text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-md group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
                                     type="button"
                                 >
                                     <span>
@@ -97,7 +97,7 @@ const setEnabled = (value) => {
                             <div class="col-span-2 relative group">
                                 <button
                                     id="dropdownDefaultButton"
-                                    class="text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-md group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
+                                    class="text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-md group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
                                     type="button"
                                 >
                                     <span>
