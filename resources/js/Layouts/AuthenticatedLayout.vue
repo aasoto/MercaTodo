@@ -1,13 +1,16 @@
 <script setup>
 import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import { storeToRefs } from 'pinia';
+
 import { Link } from '@inertiajs/vue3';
 import { useSignedRoleStore } from '@/Store/SignedRole';
-import { storeToRefs } from 'pinia';
+
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import MercaTodoLogoGray from "@/Components/Images/MercaTodoLogoGray.vue";
+import MercaTodoLogoWhite from "@/Components/Images/MercaTodoLogoWhite.vue";
+import NavLink from '@/Components/NavLink.vue';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
 const showingNavigationDropdown = ref(false);
 
@@ -26,9 +29,8 @@ const { role } = storeToRefs(useSignedRole);
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('start')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"
-                                    />
+                                    <MercaTodoLogoGray class="block dark:hidden h-9 w-auto"/>
+                                    <MercaTodoLogoWhite class="hidden dark:block h-9 w-auto"/>
                                 </Link>
                             </div>
 
