@@ -9,7 +9,6 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { reactive, ref } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
-import { useShowImage } from "@/Composables/showImage";
 
 const editor = ClassicEditor;
 
