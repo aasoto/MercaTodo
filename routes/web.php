@@ -3,6 +3,7 @@
 use App\Http\Controllers\Client\Showcase\ShowcaseController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Admin\User\TypeDocumentController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StartController;
@@ -60,6 +61,14 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
         Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
         Route::patch('/user/edit/{id}', [UserController::class, 'update'])->name('user.update');
+    });
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/type_documents', [TypeDocumentController::class, 'index'])->name('type_document.index');
+        Route::get('/type_document', [TypeDocumentController::class, 'create'])->name('type_document.create');
+        Route::post('/type_document/store', [TypeDocumentController::class, 'store'])->name('type_document.store');
+        Route::get('/type_document/edit/{id}', [TypeDocumentController::class, 'edit'])->name('type_document.edit');
+        Route::patch('/type_document/edit/{id}', [TypeDocumentController::class, 'update'])->name('type_document.update');
     });
 
     /** PRODUCTS */
