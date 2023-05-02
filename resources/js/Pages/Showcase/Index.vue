@@ -44,7 +44,7 @@ const setCategory = (productCategory) => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="grid grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <div class="col-span-1 flex justify-center items-center">
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                         Vitrina de productos
@@ -54,14 +54,14 @@ const setCategory = (productCategory) => {
                     <input
                         v-model="search"
                         type="text"
-                        class="w-full px-5 py-[10px] border border-gray-400 rounded-md placeholder:italic"
+                        class="w-full px-5 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
                         placeholder="Buscar..."
                     >
                 </div>
                 <div class="col-span-1 relative group">
                     <button
                         id="dropdownDefaultButton"
-                        class="w-full text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
+                        class="w-full text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
                         type="button"
                     >
                         Categorías
@@ -83,22 +83,22 @@ const setCategory = (productCategory) => {
             </div>
         </template>
         <div class="p-6 text-gray-900 dark:text-gray-100">
-            <div class="grid grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 <div
                     v-for="product in products.data"
-                    class="bg-white rounded-md p-4 shadow-md hover:shadow-lg scale-100 hover:scale-105 transition duration-200 flex flex-col gap-4"
+                    class="bg-white dark:bg-gray-800 rounded-md p-4 shadow-md hover:shadow-lg scale-100 hover:scale-105 transition duration-200 flex flex-col gap-4"
                 >
                     <Link :href="route('showcase.show', product.slug)">
                         <img
-                            class="w-full h-1/2 rounded object-cover object-center cursor-pointer"
+                            class="w-full h-56 rounded object-cover object-center cursor-pointer"
                             :src="`../storage/images/products/${product.picture_1}`"
                             alt="product_image_1"
                         >
                         <h2 class="text-lg truncate font-medium hover:font-bold no-underline hover:underline cursor-pointer capitalize">
                             {{ product.name }}
                         </h2>
-                        <div class="px-3 py-1 border border-gray-600 rounded-full w-max shadow-none hover:shadow scale-100 hover:scale-105 transition duration-200 cursor-pointer">
-                            <h5 class="text-gray-600 text-sm font-light capitalize">
+                        <div class="px-3 py-1 border border-gray-600 dark:border-gray-500 rounded-full w-max shadow-none hover:shadow scale-100 hover:scale-105 transition duration-200 cursor-pointer">
+                            <h5 class="text-gray-600 dark:text-gray-500 text-sm font-light capitalize">
                                 {{ product.category }}
                             </h5>
                         </div>

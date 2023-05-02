@@ -29,8 +29,8 @@ const watchOtherPicture = (image) => {
                     {{ product.name }}
                 </h2>
 
-                <div class="grid grid-cols-3 gap-4 my-4">
-                    <div class="col-span-2 grid grid-cols-7 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+                    <div class="col-span-1 md:col-span-2 grid grid-cols-7 gap-4">
                         <div class="col-span-5">
                             <img
                                 class="w-full"
@@ -54,12 +54,12 @@ const watchOtherPicture = (image) => {
                         </div>
                     </div>
                     <div class="col-span-1 flex flex-col gap-4">
-                        <div class="px-6 py-2 border border-gray-600 rounded-full w-max mx-auto shadow-none hover:shadow scale-100 hover:scale-105 transition duration-200 cursor-pointer">
-                            <h5 class="text-gray-600 text-xl font-light capitalize">
+                        <div class="px-6 py-2 border border-gray-600 dark:border-gray-500 rounded-full w-max mx-auto shadow-none hover:shadow scale-100 hover:scale-105 transition duration-200 cursor-pointer">
+                            <h5 class="text-gray-600 dark:text-gray-500 text-xl font-light capitalize">
                                 {{ product.category }}
                             </h5>
                         </div>
-                        <div class="text-right">
+                        <div class="text-right text-black dark:text-white">
                             <h3 class="text-4xl font-bold">
                                 {{ product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                             </h3>
@@ -68,7 +68,7 @@ const watchOtherPicture = (image) => {
                             </h6>
                         </div>
                         <div
-                            class="text-lg"
+                            class="text-lg text-black dark:text-white"
                             v-html="product.description"
                         ></div>
                     </div>
