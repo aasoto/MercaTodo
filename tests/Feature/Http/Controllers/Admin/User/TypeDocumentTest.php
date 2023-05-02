@@ -102,7 +102,6 @@ class TypeDocumentTest extends TestCase
 
         $response = $this->actingAs($this->user)
         ->patch(route('type_document.update', $this->type_document->id), [
-            'code' => $this->type_document->code,
             'name' => $name,
         ]);
 
