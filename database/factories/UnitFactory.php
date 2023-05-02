@@ -17,7 +17,8 @@ class UnitFactory extends Factory
     public function definition(): array
     {
         return [
-            //['unit', 'pair', 'dozen', 'box']
+            'code' => fake()->lexify('????'),
+            'name' => fake()->words(4, true),
         ];
     }
 }
