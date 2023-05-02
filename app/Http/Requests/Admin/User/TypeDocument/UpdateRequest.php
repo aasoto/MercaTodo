@@ -24,7 +24,6 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => ['required', 'string', 'max:3', Rule::unique(TypeDocument::class)->ignore($this->route('id'))],
             'name' => ['required', 'string', 'max:50', Rule::unique(TypeDocument::class)->ignore($this->route('id'))],
         ];
     }
