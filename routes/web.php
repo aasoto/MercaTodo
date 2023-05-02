@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Product\ProductController;
 use App\Http\Controllers\Admin\User\TypeDocumentController;
 use App\Http\Controllers\Admin\User\UserController;
+use App\Http\Controllers\Admin\Product\UnitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StartController;
 use Illuminate\Foundation\Application;
@@ -80,6 +81,14 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::get('/product/edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
         Route::patch('/product/edit/{id}/{files}', [ProductController::class, 'update'])->name('product.update');
         Route::delete('/product/{slug}', [ProductController::class, 'destroy'])->name('product.destroy');
+    });
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/units', [UnitController::class, 'index'])->name('unit.index');
+        Route::get('/unit', [UnitController::class, 'create'])->name('unit.create');
+        Route::post('/unit/store', [UnitController::class, 'store'])->name('unit.store');
+        Route::get('/unit/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
+        Route::patch('/unit/edit/{id}', [UnitController::class, 'update'])->name('unit.update');
     });
 
     /** SHOWCASE */
