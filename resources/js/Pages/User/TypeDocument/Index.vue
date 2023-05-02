@@ -6,6 +6,7 @@ import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 
 defineProps({
     typeDocuments: Object,
+    success: String,
 });
 
 </script>
@@ -85,6 +86,13 @@ defineProps({
                 </div>
             </div>
         </div>
+        <AlertSuccess
+            v-if="success === 'Type document created.'"
+            title="¡Bien Hecho!"
+            text="Tipo de documento guardado satisfactoriamente."
+            :close="false"
+            :btn-close="true"
+        />
         <AlertSuccess
             v-if="success === 'Type document updated.'"
             title="¡Bien Hecho!"

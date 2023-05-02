@@ -23,6 +23,7 @@ class TypeDocumentController extends Controller
     {
         return Inertia::render('User/TypeDocument/Index', [
             'typeDocuments' => $this->getTypeDocument(),
+            'success' => session('success'),
         ]);
     }
 
