@@ -135,7 +135,7 @@ const validateAttachPicture3 = () => {
                                     </InputLabel>
 
                                     <select
-                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize"
                                         name="products_category_id"
                                         id="products_category_id"
                                         v-model="form.products_category_id"
@@ -143,6 +143,7 @@ const validateAttachPicture3 = () => {
                                     >
                                         <option value="">Seleccionar...</option>
                                         <option
+                                            class="capitalize"
                                             v-for="products_category in products_categories"
                                             :value="products_category.id"
                                             :key="products_category.id"
@@ -173,12 +174,14 @@ const validateAttachPicture3 = () => {
                                 </div>
                                 <div class="col-span-1">
                                     <InputLabel for="price">
-                                        Precio<span class="text-red-600"> *</span>
+                                        Precio
+                                        <span class="font-bold italic">(para valores decimales usar solo puntos(.) abstengase de usar comas(,))</span>
+                                        <span class="text-red-600"> *</span>
                                     </InputLabel>
 
                                     <TextInput
                                         id="price"
-                                        type="number"
+                                        type="text"
                                         class="mt-1 block w-full"
                                         v-model="form.price"
                                         required
