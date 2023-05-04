@@ -252,7 +252,9 @@ const validateAttachPicture3 = () => {
                                         file:bg-transparent file:border-0
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
-                                        dark:file:bg-gray-700 dark:file:text-gray-400"
+                                        file:cursor-pointer
+                                        dark:file:bg-gray-700 dark:file:text-gray-400
+                                        cursor-pointer"
                                         required
                                     >
 
@@ -284,7 +286,9 @@ const validateAttachPicture3 = () => {
                                         file:bg-transparent file:border-0
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
-                                        dark:file:bg-gray-700 dark:file:text-gray-400"
+                                        file:cursor-pointer
+                                        dark:file:bg-gray-700 dark:file:text-gray-400
+                                        cursor-pointer"
                                     >
 
                                     <InputError class="mt-2" :message="form.errors.picture_2" />
@@ -315,7 +319,9 @@ const validateAttachPicture3 = () => {
                                         file:bg-transparent file:border-0
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
-                                        dark:file:bg-gray-700 dark:file:text-gray-400"
+                                        file:cursor-pointer
+                                        dark:file:bg-gray-700 dark:file:text-gray-400
+                                        cursor-pointer"
                                     >
 
                                     <InputError class="mt-2" :message="form.errors.picture_3" />

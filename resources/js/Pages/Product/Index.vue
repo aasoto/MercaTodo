@@ -10,6 +10,7 @@ import Pagination from '@/Components/Pagination.vue';
 import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 import AlertQuestion from '@/Components/Alerts/AlertQuestion.vue';
 import LoadingModal from '@/Components/LoadingModal.vue';
+import NotFoundMessage from '@/Components/NotFoundMessage.vue';
 
 const props = defineProps({
     filters: Object,
@@ -268,9 +269,7 @@ const setAvailability = (value) => {
                                 </th>
                             </tfoot>
                         </table>
-                        <div v-else class="w-full m-5 px-10 py-5 border border-red-600 bg-red-300 rounded-lg text-red-700 text-center">
-                            No se encontraron resultados con el criterio de busqueda dado.
-                        </div>
+                        <NotFoundMessage v-else class="m-5"/>
                         <Pagination class="my-6" :links="products.links" />
                     </div>
                 </div>

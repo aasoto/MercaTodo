@@ -53,6 +53,7 @@ const validateAttachPicture1 = () => {
     if (form.picture_1.type !== 'image/jpeg' && form.picture_1.type !== 'image/png') {
         form.picture_1 = '';
         document.getElementById('picture_1').value = '';
+        document.getElementById('show_picture_1').src = `../../storage/images/products/${currentFiles.value.picture_1}`;
         picture1Charged.value = false;
         picture1Error.value = true;
     } else {
@@ -75,6 +76,7 @@ const validateAttachPicture2 = () => {
     if (form.picture_2.type !== 'image/jpeg' && form.picture_2.type !== 'image/png') {
         form.picture_2 = '';
         document.getElementById('picture_2').value = '';
+        document.getElementById('show_picture_2').src = `../../storage/images/products/${currentFiles.value.picture_2}`;
         picture2Charged.value = false;
         picture2Error.value = true;
     } else {
@@ -97,6 +99,7 @@ const validateAttachPicture3 = () => {
     if (form.picture_3.type !== 'image/jpeg' && form.picture_3.type !== 'image/png') {
         form.picture_3 = '';
         document.getElementById('picture_3').value = '';
+        document.getElementById('show_picture_3').src = `../../storage/images/products/${currentFiles.value.picture_3}`;
         picture3Charged.value = false;
         picture3Error.value = true;
     } else {
@@ -167,7 +170,7 @@ const submit = () => {
                                     </InputLabel>
 
                                     <select
-                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize"
                                         name="products_category_id"
                                         id="products_category_id"
                                         v-model="form.products_category_id"
@@ -178,6 +181,7 @@ const submit = () => {
                                             v-for="products_category in products_categories"
                                             :value="products_category.id"
                                             :key="products_category.id"
+                                            class="capitalize"
                                         >
                                             {{ products_category.name }}
                                         </option>
@@ -205,7 +209,9 @@ const submit = () => {
                                 </div>
                                 <div class="col-span-1">
                                     <InputLabel for="price">
-                                        Precio<span class="text-red-600"> *</span>
+                                        Precio
+                                        <span class="font-bold italic">(para valores decimales usar solo puntos(.) abstengase de usar comas(,))</span>
+                                        <span class="text-red-600"> *</span>
                                     </InputLabel>
 
                                     <TextInput
@@ -300,7 +306,9 @@ const submit = () => {
                                         file:bg-transparent file:border-0
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
-                                        dark:file:bg-gray-700 dark:file:text-gray-400"
+                                        file:cursor-pointer
+                                        dark:file:bg-gray-700 dark:file:text-gray-400
+                                        cursor-pointer"
                                     >
 
                                     <InputError class="mt-2" :message="errors.picture_1" />
@@ -327,7 +335,9 @@ const submit = () => {
                                         file:bg-transparent file:border-0
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
-                                        dark:file:bg-gray-700 dark:file:text-gray-400"
+                                        file:cursor-pointer
+                                        dark:file:bg-gray-700 dark:file:text-gray-400
+                                        cursor-pointer"
                                     >
 
                                     <InputError class="mt-2" :message="errors.picture_2" />
@@ -355,7 +365,9 @@ const submit = () => {
                                         file:bg-transparent file:border-0
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
-                                        dark:file:bg-gray-700 dark:file:text-gray-400"
+                                        file:cursor-pointer
+                                        dark:file:bg-gray-700 dark:file:text-gray-400
+                                        cursor-pointer"
                                     >
 
                                     <InputError class="mt-2" :message="errors.picture_3" />
