@@ -14,7 +14,7 @@ class StoreUserAction
         $data = $request->validated();
         $role = $roles->get($data["role_id"]);
 
-        $user = User::create([
+        User::create([
             "type_document" => $data["type_document"],
             "number_document" => $data["number_document"],
             "first_name" => $data["first_name"],
@@ -29,9 +29,9 @@ class StoreUserAction
             "state_id" => $data["state_id"],
             "city_id" => $data["city_id"]
         ])
-            -> assignRole($role['name'])
+            -> assignRole($role ? $role['name'] : '')
             -> sendEmailVerificationNotification();
 
-        return $role['name'];
+        return $role ? $role['name'] : '';
     }
 }

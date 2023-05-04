@@ -8,7 +8,7 @@ use App\Models\User;
 
 class UpdateUserAction
 {
-    public function handle(UpdateRequest $request, Roles $roles, string $id): bool
+    public function handle(UpdateRequest $request, Roles $roles, string $id): int
     {
         $data = $request->validated();
         $roles->update($id, $data["role_id"]);
