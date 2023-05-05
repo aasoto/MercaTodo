@@ -35,6 +35,7 @@ class ProductFactory extends Factory
             'picture_1' => $this->upload_image(),
             'picture_2' => $this->upload_image(),
             'picture_3' => $this->upload_image(),
+            'availability' => true,
         ];
     }
 
