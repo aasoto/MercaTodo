@@ -135,7 +135,7 @@ const validateAttachPicture3 = () => {
                                     </InputLabel>
 
                                     <select
-                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize"
                                         name="products_category_id"
                                         id="products_category_id"
                                         v-model="form.products_category_id"
@@ -143,6 +143,7 @@ const validateAttachPicture3 = () => {
                                     >
                                         <option value="">Seleccionar...</option>
                                         <option
+                                            class="capitalize"
                                             v-for="products_category in products_categories"
                                             :value="products_category.id"
                                             :key="products_category.id"
@@ -173,12 +174,14 @@ const validateAttachPicture3 = () => {
                                 </div>
                                 <div class="col-span-1">
                                     <InputLabel for="price">
-                                        Precio<span class="text-red-600"> *</span>
+                                        Precio
+                                        <span class="font-bold italic">(para valores decimales usar solo puntos(.) abstengase de usar comas(,))</span>
+                                        <span class="text-red-600"> *</span>
                                     </InputLabel>
 
                                     <TextInput
                                         id="price"
-                                        type="number"
+                                        type="text"
                                         class="mt-1 block w-full"
                                         v-model="form.price"
                                         required
@@ -249,7 +252,9 @@ const validateAttachPicture3 = () => {
                                         file:bg-transparent file:border-0
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
-                                        dark:file:bg-gray-700 dark:file:text-gray-400"
+                                        file:cursor-pointer
+                                        dark:file:bg-gray-700 dark:file:text-gray-400
+                                        cursor-pointer"
                                         required
                                     >
 
@@ -281,7 +286,9 @@ const validateAttachPicture3 = () => {
                                         file:bg-transparent file:border-0
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
-                                        dark:file:bg-gray-700 dark:file:text-gray-400"
+                                        file:cursor-pointer
+                                        dark:file:bg-gray-700 dark:file:text-gray-400
+                                        cursor-pointer"
                                     >
 
                                     <InputError class="mt-2" :message="form.errors.picture_2" />
@@ -312,7 +319,9 @@ const validateAttachPicture3 = () => {
                                         file:bg-transparent file:border-0
                                         file:bg-gray-200 file:mr-4
                                         file:py-3 file:px-4
-                                        dark:file:bg-gray-700 dark:file:text-gray-400"
+                                        file:cursor-pointer
+                                        dark:file:bg-gray-700 dark:file:text-gray-400
+                                        cursor-pointer"
                                     >
 
                                     <InputError class="mt-2" :message="form.errors.picture_3" />

@@ -1,10 +1,13 @@
 <script setup>
-import Pagination from '@/Components/Pagination.vue';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useSignedRoleStore } from '@/Store/SignedRole';
-import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
+import { Head, Link, router } from '@inertiajs/vue3';
+
+import { useSignedRoleStore } from '@/Store/SignedRole';
+
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import Pagination from '@/Components/Pagination.vue';
+import NotFoundMessage from "@/Components/NotFoundMessage.vue";
 const props = defineProps({
     filters: Object,
     products: Object,
@@ -112,6 +115,10 @@ const setCategory = (productCategory) => {
                         </div>
                     </Link>
                 </div>
+                <NotFoundMessage
+                    v-if="products.data.length <= 0"
+                    class="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4"
+                />
             </div>
             <Pagination class="my-6" :links="products.links" />
         </div>

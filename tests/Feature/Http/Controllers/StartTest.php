@@ -53,4 +53,14 @@ class StartTest extends TestCase
         $response->assertRedirect(route('showcase.index'))
             ->assertSessionHasAll(['user_role' => 'client']);
     }
+
+    public function test_when_user_role_is_wrong_dispatch_error(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->get(route('start'));
+
+        $response->assertStatus(500);
+    }
 }

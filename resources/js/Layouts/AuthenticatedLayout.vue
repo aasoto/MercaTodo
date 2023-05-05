@@ -91,6 +91,13 @@ const { role } = storeToRefs(useSignedRole);
 
                                     <template #content>
                                         <DropdownLink :href="route('profile.edit')"> Perfil </DropdownLink>
+                                        <a
+                                            v-if="role == 'admin'"
+                                            href="/log-viewer"
+                                            class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out"
+                                        >
+                                            Logs
+                                        </a>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Cerrar sesión
                                         </DropdownLink>
@@ -172,6 +179,13 @@ const { role } = storeToRefs(useSignedRole);
 
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.edit')"> Perfil </ResponsiveNavLink>
+                            <a
+                                v-if="role == 'admin'"
+                                href="/log-viewer"
+                                class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out"
+                            >
+                                Logs
+                            </a>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                                 Cerrar sesión
                             </ResponsiveNavLink>
