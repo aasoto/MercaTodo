@@ -22,7 +22,11 @@ class DatabaseSeeder extends Seeder
             StateSeeder::class,
             CitySeeder::class,
             RoleSeeder::class,
+            TypeDocumentSeeder::class,
             UserSeeder::class,
+            ProductCategorySeeder::class,
+            UnitSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

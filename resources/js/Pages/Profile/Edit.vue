@@ -4,25 +4,30 @@ import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
+import { useSignedRoleStore } from '@/Store/SignedRole';
+import { storeToRefs } from 'pinia';
 
 const props = defineProps({
     cities: Array,
     mustVerifyEmail: {
         type: Boolean,
     },
-    role: String,
     states: Array,
     status: {
         type: String,
     },
+    typeDocuments: Object,
 });
+
+const useSignedRole = useSignedRoleStore();
+const { role } = storeToRefs(useSignedRole);
 
 </script>
 
 <template>
     <Head title="Profile" />
 
-    <AuthenticatedLayout :userRole="role">
+    <AuthenticatedLayout>
         <template #header v-if="role == 'admin'">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Perfil - Administrador</h2>
         </template>
@@ -38,6 +43,7 @@ const props = defineProps({
                         :must-verify-email="mustVerifyEmail"
                         :states="states"
                         :status="status"
+                        :typeDocuments="typeDocuments"
                         class="w-full"
                     />
                 </div>

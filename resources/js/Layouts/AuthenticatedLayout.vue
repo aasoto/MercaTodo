@@ -1,21 +1,25 @@
 <script setup>
 import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import { storeToRefs } from 'pinia';
+
+import { Link } from '@inertiajs/vue3';
+import { useSignedRoleStore } from '@/Store/SignedRole';
+
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
+import MercaTodoLogoGray from "@/Components/Images/MercaTodoLogoGray.vue";
+import MercaTodoLogoWhite from "@/Components/Images/MercaTodoLogoWhite.vue";
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
 
-defineProps({
-    userRole: String,
-});
+const useSignedRole = useSignedRoleStore();
+const { role } = storeToRefs(useSignedRole);
 </script>
 
 <template>
-    <div>
+    <div class="relative">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
@@ -24,24 +28,37 @@ defineProps({
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"
-                                    />
+                                <Link :href="route('start')">
+                                    <MercaTodoLogoGray class="block dark:hidden h-9 w-auto"/>
+                                    <MercaTodoLogoWhite class="hidden dark:block h-9 w-auto"/>
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>
-                            </div>
-                            <div v-if="userRole == 'admin'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('user.index', '1')" :active="route().current('user.index')">
-                                    Usuarios
-                                </NavLink>
-                            </div>
+                            <template v-if="role == 'admin'">
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('dashboard.index')" :active="route().current('dashboard')">
+                                        Dashboard
+                                    </NavLink>
+                                </div>
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('user.index', 'admin')" :active="route().current('user.index')">
+                                        Usuarios
+                                    </NavLink>
+                                </div>
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('products.index')" :active="route().current('products.index')">
+                                        Productos
+                                    </NavLink>
+                                </div>
+                            </template>
+                            <template v-if="role == 'client'">
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('showcase.index')" :active="route().current('dashboard')">
+                                        Vitrina
+                                    </NavLink>
+                                </div>
+                            </template>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -74,6 +91,13 @@ defineProps({
 
                                     <template #content>
                                         <DropdownLink :href="route('profile.edit')"> Perfil </DropdownLink>
+                                        <a
+                                            v-if="role == 'admin'"
+                                            href="/log-viewer"
+                                            class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out"
+                                        >
+                                            Logs
+                                        </a>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Cerrar sesión
                                         </DropdownLink>
@@ -120,17 +144,30 @@ defineProps({
                     :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
                     class="sm:hidden"
                 >
-                    <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
-                    <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('user.index', '1')" :active="route().current('user.index')">
-                            Clientes
-                        </ResponsiveNavLink>
-                    </div>
-
+                    <template v-if="role == 'admin'">
+                        <div class="pt-2 pb-3 space-y-1">
+                            <ResponsiveNavLink :href="route('dashboard.index')" :active="route().current('dashboard')">
+                                Dashboard
+                            </ResponsiveNavLink>
+                        </div>
+                        <div class="pt-2 pb-3 space-y-1">
+                            <ResponsiveNavLink :href="route('user.index', 'admin')" :active="route().current('user.index')">
+                                Usuarios
+                            </ResponsiveNavLink>
+                        </div>
+                        <div class="pt-2 pb-3 space-y-1">
+                            <ResponsiveNavLink :href="route('products.index')" :active="route().current('products.index')">
+                                Productos
+                            </ResponsiveNavLink>
+                        </div>
+                    </template>
+                    <template v-if="role == 'client'">
+                        <div class="pt-2 pb-3 space-y-1">
+                            <ResponsiveNavLink :href="route('showcase.index')" :active="route().current('dashboard')">
+                                Vitrina
+                            </ResponsiveNavLink>
+                        </div>
+                    </template>
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                         <div class="px-4">
@@ -142,6 +179,13 @@ defineProps({
 
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.edit')"> Perfil </ResponsiveNavLink>
+                            <a
+                                v-if="role == 'admin'"
+                                href="/log-viewer"
+                                class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out"
+                            >
+                                Logs
+                            </a>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                                 Cerrar sesión
                             </ResponsiveNavLink>

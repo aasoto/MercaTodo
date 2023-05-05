@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Classes\User\Action;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisteredUser\StoreRequest;
 use App\Models\City;
 use App\Models\State;
+use App\Models\TypeDocument;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Traits\useCache;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,17 +22,16 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
+    use useCache;
     /**
      * Display the registration view.
      */
     public function create(): Response
     {
-        $states = State::select('id', 'name')->get();
-        $cities = City::select('id', 'name', 'state_id')->get();
-
         return Inertia::render('Auth/Register', [
-            'cities' => $cities,
-            'states' => $states
+            'cities' => $this->getCities(),
+            'states' => $this->getStates(),
+            'typeDocuments' => $this->getTypeDocument(),
         ]);
     }
 
@@ -37,41 +40,9 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreRequest $request, Action $user): RedirectResponse
     {
-        $request->validate([
-            'typeDoc' => 'required|string|max:3',
-            'numDoc' => 'required|regex:/^[0-9A-Z]+$/i|max:100|unique:users,num_doc',
-            'firstName' => 'required|string|max:100',
-            'secondName' => 'nullable|string|max:100',
-            'surname' => 'required|string|max:100',
-            'seconSurname' => 'nullable|string|max:100',
-            'email' => 'required|string|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'birthdate' => 'required|date|before:18 years',
-            'gender' => 'required|regex:/^[fmo]+$/i|max:1',
-            'phone' => 'required|regex:/^[+\\-\\(\\)\\0-9x ]+$/i|max:100|unique:'.User::class,
-            'address' => 'required|string|max:1000',
-            'state' => 'required|integer',
-            'city' => 'required|integer'
-        ]);
-
-        $user = User::create([
-            'type_doc' => $request->typeDoc,
-            'num_doc' => $request->numDoc,
-            'first_name' => $request->firstName,
-            'second_name' => $request->secondName,
-            'surname' => $request->surname,
-            'second_surname' => $request->secondSurname,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'birthdate' => $request->birthdate,
-            'gender' => $request->gender,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'state_id' => $request->state,
-            'city_id' => $request->city
-        ])->assignRole('client');
+        $user = $user->register($request->validated());
 
         event(new Registered($user));
 

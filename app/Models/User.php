@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -21,8 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         // 'name',
-        'type_doc',
-        'num_doc',
+        'type_document',
+        'number_document',
         'first_name',
         'second_name',
         'surname',
@@ -56,4 +58,14 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Interact with the user's password.
+     */
+    // protected function password(): Attribute
+    // {
+    //     return Attribute::make(
+    //         set: fn (string $value) => Hash::make($value),
+    //     );
+    // }
 }
