@@ -18,7 +18,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
-use Tests\Feature\Traits\refreshStorage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
@@ -72,6 +71,69 @@ class ProductTest extends TestCase
         );
     }
 
+    public function test_can_search_product_by_name(): void
+    {
+        Product::factory()->create([
+            'name' => 'Camara'
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->get('products?search=Camara');
+
+        $response->assertStatus(200);
+
+        $response->assertSee('Camara');
+    }
+
+    public function test_can_search_product_by_category(): void
+    {
+        $category = ProductCategory::factory()->create([
+            'name' => 'electrodomesticos',
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Licuadora oster',
+            'products_category_id' => $category['id'],
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->get('products?category=electrodomesticos');
+
+        $response->assertStatus(200);
+
+        $response->assertSee('Licuadora oster');
+    }
+
+    public function test_can_search_enabled_products(): void
+    {
+        Product::factory()->create([
+            'name' => 'Licuadora oster',
+            'availability' => true,
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->get('products?availability=true');
+
+        $response->assertStatus(200);
+
+        $response->assertSee('Licuadora oster');
+    }
+
+    public function test_can_search_disabled_products(): void
+    {
+        Product::factory()->create([
+            'name' => 'Licuadora oster',
+            'availability' => false,
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->get('products?availability=false');
+
+        $response->assertStatus(200);
+
+        $response->assertSee('Licuadora oster');
+    }
+
     public function test_can_show_add_new_product_page(): void
     {
         $response = $this->actingAs($this->user)
@@ -102,6 +164,8 @@ class ProductTest extends TestCase
             'unit' => $unit['code'],
             'stock' => fake()->randomNumber(2, true),
             'picture_1' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
+            'picture_2' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
+            'picture_3' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
         ]);
 
         $this->assertDatabaseHas('products', [
