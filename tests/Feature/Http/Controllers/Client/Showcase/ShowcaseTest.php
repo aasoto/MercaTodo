@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Client\Showcase;
 
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\ProductCategorySeeder;
@@ -69,6 +70,41 @@ class ShowcaseTest extends TestCase
                 -> has('userRole')
                 -> has('filters')
         );
+    }
+
+    public function test_product_can_be_searched_by_name(): void
+    {
+        Product::factory()->create([
+            'name' => 'televisor',
+            'availability' => true,
+        ]);
+
+        $response = $this->actingAs($this->user)
+        ->get('showcase?search=televisor');
+
+
+        $response->assertStatus(200);
+
+        $response->assertSee('televisor');
+    }
+
+    public function test_can_search_product_by_category(): void
+    {
+        $category = ProductCategory::factory()->create([
+            'name' => 'electrodomesticos',
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Licuadora oster',
+            'products_category_id' => $category['id'],
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->get('showcase?category=electrodomesticos');
+
+        $response->assertStatus(200);
+
+        $response->assertSee('Licuadora oster');
     }
 
     public function test_show_description_of_product_from_the_showcase(): void

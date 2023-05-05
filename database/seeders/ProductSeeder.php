@@ -13,6 +13,15 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
+
         Product::factory()->count(5)->create();
+        // $count = 1;
+        // for ($i=0; $i < 105; $i++) {
+        //     Product::factory()->create([
+        //         'picture_1' => 'Imagen'.$count++.'.jpg',
+        //         'picture_2' => 'Imagen'.$count++.'.jpg',
+        //         'picture_3' => 'Imagen'.$count++.'.jpg',
+        //     ]);
+        // }
     }
 }

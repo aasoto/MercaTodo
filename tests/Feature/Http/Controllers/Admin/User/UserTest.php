@@ -61,6 +61,44 @@ class UserTest extends TestCase
 
     }
 
+    public function test_user_can_be_search_by_email(): void
+    {
+        User::factory()->create([
+            'email' => 'music@music.com'
+        ])->assignRole('admin');
+
+        $response = $this->actingAs($this->user)
+            ->get('/user/admin?search=music@music.com');
+
+        $response->assertStatus(200);
+
+        $response->assertSee('music@music.com');
+    }
+
+    public function test_can_list_only_enabled_users(): void
+    {
+        $response = $this->actingAs($this->user)
+            ->get('/user/admin?enabled=true');
+
+        $response->assertStatus(200);
+
+        $response->assertSee($this->user->email);
+    }
+
+    public function test_can_list_only_disabled_users(): void
+    {
+        $searching_user = User::factory()->create([
+            'enabled' => false
+        ])->assignRole('admin');
+
+        $response = $this->actingAs($this->user)
+            ->get('/user/admin?enabled=false');
+
+        $response->assertStatus(200);
+
+        $response->assertSee($searching_user->email);
+    }
+
     public function test_user_can_be_edited(): void
     {
 
