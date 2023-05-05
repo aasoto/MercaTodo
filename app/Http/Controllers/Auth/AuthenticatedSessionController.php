@@ -49,7 +49,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        Cache::flush();
+        // Cache::flush();
 
         return redirect('/');
     }
