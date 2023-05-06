@@ -2,9 +2,17 @@
 
 namespace App\Models;
 
+use App\QueryBuilders\ProductQueryBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
+/**
+ * @method static ProductQueryBuilder query()
+ * @method static Product select(...$parameters)
+ * @method static Product join(...$parameters)
+ * @method static Product orderBy(...$parameters)
+ */
 class Product extends Model
 {
     use HasFactory;
@@ -23,4 +31,13 @@ class Product extends Model
         'picture_3',
         'availability'
     ];
+
+    /**
+     * @param Builder $query
+     * @return ProductQueryBuilder
+     */
+    public function newEloquentBuilder($query): ProductQueryBuilder
+    {
+        return new ProductQueryBuilder($query);
+    }
 }
