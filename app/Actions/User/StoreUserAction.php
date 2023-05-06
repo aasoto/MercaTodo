@@ -14,6 +14,8 @@ class StoreUserAction
         $data = $request->validated();
         $role = $roles->get($data["role_id"]);
 
+        // Call to an undefined method Illuminate\Database\Eloquent\Model::assignRole().
+        /** @phpstan-ignore-next-line */
         User::create([
             "type_document" => $data["type_document"],
             "number_document" => $data["number_document"],

@@ -3,10 +3,11 @@
 namespace App\Actions\User;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 class EditUserAction
 {
-    public function handle(string $id): User|null
+    public function handle(string $id): Model|null
     {
         return User::select(
             'users.id',

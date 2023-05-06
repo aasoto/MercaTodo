@@ -12,6 +12,8 @@ class StoreRegisterAction
     {
         $data = $request->validated();
 
+        // Call to an undefined method Illuminate\Database\Eloquent\Model::assignRole().
+        /** @phpstan-ignore-next-line */
         return User::create([
             'type_document' => $data['typeDocument'],
             'number_document' => $data['numberDocument'],
