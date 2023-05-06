@@ -40,4 +40,11 @@ class ProductQueryBuilder extends Builder
     {
         return $this->where('slug', $slug);
     }
+
+    public function wherePriceBetween(?string $min_price, ?string $max_price): self
+    {
+        return ($min_price && $max_price) ?
+            $this->whereBetween('products.price', [$min_price, $max_price]) :
+            $this;
+    }
 }

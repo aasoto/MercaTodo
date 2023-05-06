@@ -41,13 +41,34 @@ const setCategory = (productCategory) => {
     category.value = productCategory;
 }
 
+const minPrice = ref(props.filters.minPrice);
+const maxPrice = ref(props.filters.maxPrice);
+
+watch(minPrice, value => {
+    if ((value > 0) && (maxPrice.value >= value)) {
+        router.get('/showcase', {minPrice: value, maxPrice: maxPrice.value}, {
+            preserveState: true,
+            replace: true,
+        });
+    }
+});
+
+watch(maxPrice, value => {
+    if ((minPrice.value > 0) && (value >= minPrice.value)) {
+        router.get('/showcase', {minPrice: minPrice.value, maxPrice: value}, {
+            preserveState: true,
+            replace: true,
+        });
+    }
+});
+
 </script>
 <template>
     <Head title="Vitrina de productos" />
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div class="col-span-1 flex justify-center items-center">
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                         Vitrina de productos
@@ -82,6 +103,20 @@ const setCategory = (productCategory) => {
                             </li>
                         </ul>
                     </div>
+                </div>
+                <div class="col-span-1 flex justify-center items-center gap-2">
+                    <input
+                        v-model="minPrice"
+                        type="number"
+                        placeholder="Valor min"
+                        class="w-28 px-2 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                    >
+                    <input
+                        v-model="maxPrice"
+                        type="number"
+                        placeholder="Valor max"
+                        class="w-28 px-2 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                    >
                 </div>
             </div>
         </template>

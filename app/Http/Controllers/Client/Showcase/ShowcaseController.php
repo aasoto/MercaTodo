@@ -18,7 +18,7 @@ class ShowcaseController extends Controller
     public function index(Request $request, IndexShowcaseAction $action): Response
     {
         return Inertia::render('Showcase/Index', [
-            'filters' => $request->only(['search', 'category']),
+            'filters' => $request->only(['search', 'category', 'minPrice', 'maxPrice']),
             'products' => $action->handle($request),
             'products_categories' => $this->getProductsCategories(),
             'userRole' => session('user_role') ? session('user_role') : $this->authHasRole($this->getRoles()),

@@ -13,6 +13,7 @@ class IndexShowcaseAction
         return Product::query()
         -> whereSearch($request->input('search'))
         -> whereCategory($request->input('category'))
+        -> wherePriceBetween($request->input('minPrice'), $request->input('maxPrice'))
         -> select(
                 'products.name',
                 'products.slug',
