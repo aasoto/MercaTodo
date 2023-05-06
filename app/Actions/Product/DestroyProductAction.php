@@ -2,13 +2,13 @@
 
 namespace App\Actions\Product;
 
-use App\Classes\Product\Images;
 use App\Models\Product;
+use App\Services\Product\ImagesServices;
 
 class DestroyProductAction
 {
     public function handle(
-        Images $images,
+        ImagesServices $images,
         ShowProductAction $showAction,
         string $slug): bool
     {

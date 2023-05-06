@@ -8,11 +8,10 @@ use App\Actions\Product\IndexProductAction;
 use App\Actions\Product\ShowProductAction;
 use App\Actions\Product\StoreProductAction;
 use App\Actions\Product\UpdateProductAction;
-use App\Classes\Product\Action;
-use App\Classes\Product\Images;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Http\Requests\Admin\Product\UpdateRequest;
+use App\Services\Product\ImagesServices;
 use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -53,10 +52,10 @@ class ProductController extends Controller
      */
     public function store(
         StoreRequest $request,
-        Images $images,
+        ImagesServices $service,
         StoreProductAction $action): RedirectResponse
     {
-        $action->handle($request, $images);
+        $action->handle($request, $service);
 
         return Redirect::route('products.index')->with('success', 'Product created.');
     }
@@ -89,13 +88,13 @@ class ProductController extends Controller
      */
     public function update(
         UpdateRequest $request,
-        Images $images,
+        ImagesServices $service,
         UpdateProductAction $action,
         string $id,
         string $files): RedirectResponse
     {
 
-        $slug = $action->handle($request, $images, $id, $files);
+        $slug = $action->handle($request, $service, $id, $files);
 
         return Redirect::route('product.edit', $slug)->with('success', 'Product updated.');
     }
@@ -104,13 +103,13 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(
-        Images $images,
+        ImagesServices $services,
         DestroyProductAction $action,
         ShowProductAction $showAction,
         string $slug): RedirectResponse
     {
 
-        $action->handle($images, $showAction, $slug);
+        $action->handle($services, $showAction, $slug);
 
         return Redirect::route('products.index')->with('success', 'Product deleted.');
     }
