@@ -20,47 +20,56 @@ const { assignRole } = useSignedRole;
 assignRole(props.userRole);
 
 const search = ref(props.filters.search);
+const category = ref(props.filters.category);
+const minPrice = ref(props.filters.minPrice);
+const maxPrice = ref(props.filters.maxPrice);
 
 watch(search, value => {
-    router.get('/showcase', {search: value}, {
-        preserveState: true,
-        replace: true,
-    });
+    getResults();
 });
 
-const category = ref(props.filters.category);
 
 watch(category, value => {
-    router.get('/showcase', {category: value}, {
-        preserveState: true,
-        replace: true,
-    });
+    getResults();
 });
 
 const setCategory = (productCategory) => {
     category.value = productCategory;
 }
 
-const minPrice = ref(props.filters.minPrice);
-const maxPrice = ref(props.filters.maxPrice);
 
 watch(minPrice, value => {
-    if ((value > 0) && (maxPrice.value >= value)) {
-        router.get('/showcase', {minPrice: value, maxPrice: maxPrice.value}, {
-            preserveState: true,
-            replace: true,
-        });
-    }
+    getResults();
 });
 
 watch(maxPrice, value => {
-    if ((minPrice.value > 0) && (value >= minPrice.value)) {
-        router.get('/showcase', {minPrice: minPrice.value, maxPrice: value}, {
+    getResults();
+});
+
+const getResults = () => {
+    if ((minPrice.value > 0) && (maxPrice.value >= minPrice.value)) {
+        router.get('/showcase', {
+            search: search.value,
+            category: category.value,
+            minPrice: minPrice.value,
+            maxPrice: maxPrice.value
+        }, {
             preserveState: true,
             replace: true,
         });
+    } else {
+        if ((!minPrice.value) && (!maxPrice.value))
+        {
+            router.get('/showcase', {
+                search: search.value,
+                category: category.value,
+            }, {
+                preserveState: true,
+                replace: true,
+            });
+        }
     }
-});
+}
 
 </script>
 <template>
