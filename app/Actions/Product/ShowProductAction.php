@@ -23,7 +23,7 @@ class ShowProductAction
         )
         -> join('products_categories', 'products.products_category_id', 'products_categories.id')
         -> join('units', 'products.unit', 'units.code')
-        -> where('slug', $slug)
+        -> whereSlug($slug)
         -> first();
     }
 }

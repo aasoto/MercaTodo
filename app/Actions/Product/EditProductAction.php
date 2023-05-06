@@ -23,7 +23,7 @@ class EditProductAction
             'products.picture_3',
             'products.availability'
         )
-        -> where('slug', $slug)
+        -> whereSlug($slug)
         -> first();
     }
 }

@@ -35,4 +35,9 @@ class ProductQueryBuilder extends Builder
             }
         });
     }
+
+    public function whereSlug(string $slug): self
+    {
+        return $this->where('slug', $slug);
+    }
 }
