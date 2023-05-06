@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Classes\User;
+namespace App\Services\User;
 
 use App\Models\TypeDocument;
 use Illuminate\Support\Facades\Cache;
 
-class TypesDocuments
+class TypesDocumentsServices
 {
     /**
      * @param array<string> $data

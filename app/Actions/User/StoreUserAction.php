@@ -2,14 +2,14 @@
 
 namespace App\Actions\User;
 
-use App\Classes\User\Roles;
 use App\Http\Requests\Admin\User\StoreRequest;
 use App\Models\User;
+use App\Services\User\RolesServices;
 use Illuminate\Support\Facades\Hash;
 
 class StoreUserAction
 {
-    public function handle(StoreRequest $request, Roles $roles): string
+    public function handle(StoreRequest $request, RolesServices $roles): string
     {
         $data = $request->validated();
         $role = $roles->get($data["role_id"]);

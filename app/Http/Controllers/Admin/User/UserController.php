@@ -6,10 +6,10 @@ use App\Actions\User\EditUserAction;
 use App\Actions\User\IndexUserAction;
 use App\Actions\User\StoreUserAction;
 use App\Actions\User\UpdateUserAction;
-use App\Classes\User\Roles;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreRequest;
 use App\Http\Requests\Admin\User\UpdateRequest;
+use App\Services\User\RolesServices;
 use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -50,21 +50,13 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, Roles $roles, StoreUserAction $action): RedirectResponse
+    public function store(StoreRequest $request, RolesServices $service, StoreUserAction $action): RedirectResponse
     {
-        $role = $action->handle($request, $roles);
+        $role = $action->handle($request, $service);
 
         return Redirect::route('user.index', $role)
             -> with('success', 'User created.');
     }
-
-    /**
-     * Display the specified resource.
-     */
-    // public function show(string $id)
-    // {
-    //     //
-    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -84,10 +76,10 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Roles $roles, UpdateUserAction $action, string $id): RedirectResponse
+    public function update(UpdateRequest $request, RolesServices $service, UpdateUserAction $action, string $id): RedirectResponse
     {
 
-        $action->handle($request, $roles, $id);
+        $action->handle($request, $service, $id);
 
         return Redirect::route('user.edit', $id)
             -> with('success', 'User updated.');
