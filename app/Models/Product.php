@@ -12,6 +12,8 @@ use Illuminate\Database\Query\Builder;
  * @method static Product select(...$parameters)
  * @method static Product join(...$parameters)
  * @method static Product orderByDesc(...$parameters)
+ * @method static Product orderBy(...$parameters)
+ * @method static Product whereBetween(...$parameters)
  */
 class Product extends Model
 {

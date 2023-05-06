@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @method static Product select(...$parameters)
+ * @method static Product whereBetween(...$parameters)
  */
 class ProductQueryBuilder extends Builder
 {
@@ -41,7 +42,7 @@ class ProductQueryBuilder extends Builder
         return $this->where('slug', $slug);
     }
 
-    public function wherePriceBetween(?string $min_price, ?string $max_price): self
+    public function wherePriceBetween(?string $min_price, ?string $max_price): self|Product
     {
         return ($min_price && $max_price) ?
             $this->whereBetween('products.price', [$min_price, $max_price]) :
