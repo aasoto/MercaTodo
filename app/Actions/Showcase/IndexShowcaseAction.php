@@ -1,22 +1,18 @@
 <?php
 
-namespace App\Classes\Showcase;
+namespace App\Actions\Showcase;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class Action
+class IndexShowcaseAction
 {
-    public function index(Request $request): LengthAwarePaginator
+    public function handle(Request $request): LengthAwarePaginator
     {
         return Product::query()
-        -> when($request->input('search'), function ($query, $search) {
-            $query->where('products.name', 'like', '%'.$search.'%');
-        })
-        -> when($request->input('category'), function ($query, $category) {
-            $query->where('products_categories.name', $category);
-        })
+        -> whereSearch($request->input('search'))
+        -> whereCategory($request->input('category'))
         -> select(
                 'products.name',
                 'products.slug',

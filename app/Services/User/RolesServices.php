@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Classes\User;
+namespace App\Services\User;
 
 use App\Models\Spatie\ModelHasRole;
 use Spatie\Permission\Models\Role;
 
-class Roles
+class RolesServices
 {
     public function get(int $id): Role|null
     {

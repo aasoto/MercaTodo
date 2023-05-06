@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Product;
 
-use App\Classes\Product\Units;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\Unit\StoreRequest;
 use App\Http\Requests\Admin\Product\Unit\UpdateRequest;
+use App\Services\Product\UnitsServices;
 use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,9 +37,9 @@ class UnitController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, Units $unit): RedirectResponse
+    public function store(StoreRequest $request, UnitsServices $service): RedirectResponse
     {
-        $unit->create($request->validated());
+        $service->create($request->validated());
 
         return Redirect::route(('unit.index'))->with('success', 'Unit created.');
     }
@@ -48,19 +47,19 @@ class UnitController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Units $unit, string $id): Response
+    public function edit(UnitsServices $service, string $id): Response
     {
         return Inertia::render('Product/Unit/Edit', [
-            'unit' => $unit->edit($id),
+            'unit' => $service->edit($id),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Units $unit, string $id): RedirectResponse
+    public function update(UpdateRequest $request, UnitsServices $service, string $id): RedirectResponse
     {
-        $unit->update($id, $request->validated());
+        $service->update($id, $request->validated());
         return Redirect::route('unit.index')->with('success', 'Unit updated.');
     }
 }
