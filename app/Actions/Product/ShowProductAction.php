@@ -3,10 +3,11 @@
 namespace App\Actions\Product;
 
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Model;
 
 class ShowProductAction
 {
-    public function handle(string $slug): Product|null
+    public function handle(string $slug): Model|null
     {
         return Product::select(
             'products.name',
