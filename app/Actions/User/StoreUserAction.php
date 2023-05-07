@@ -22,6 +22,7 @@ class StoreUserAction
             "first_name" => $data["first_name"],
             "second_name" => $data["second_name"],
             "surname" => $data["surname"],
+            "second_surname" => $data["second_surname"],
             "email" => $data["email"],
             "password" => Hash::make($data["number_document"]),
             "birthdate" => $data["birthdate"],
