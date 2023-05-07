@@ -20,25 +20,55 @@ const { assignRole } = useSignedRole;
 assignRole(props.userRole);
 
 const search = ref(props.filters.search);
+const category = ref(props.filters.category);
+const minPrice = ref(props.filters.minPrice);
+const maxPrice = ref(props.filters.maxPrice);
 
 watch(search, value => {
-    router.get('/showcase', {search: value}, {
-        preserveState: true,
-        replace: true,
-    });
+    getResults();
 });
 
-const category = ref(props.filters.category);
 
 watch(category, value => {
-    router.get('/showcase', {category: value}, {
-        preserveState: true,
-        replace: true,
-    });
+    getResults();
 });
 
 const setCategory = (productCategory) => {
     category.value = productCategory;
+}
+
+
+watch(minPrice, value => {
+    getResults();
+});
+
+watch(maxPrice, value => {
+    getResults();
+});
+
+const getResults = () => {
+    if ((minPrice.value > 0) && (maxPrice.value >= minPrice.value)) {
+        router.get('/showcase', {
+            search: search.value,
+            category: category.value,
+            minPrice: minPrice.value,
+            maxPrice: maxPrice.value
+        }, {
+            preserveState: true,
+            replace: true,
+        });
+    } else {
+        if ((!minPrice.value) && (!maxPrice.value))
+        {
+            router.get('/showcase', {
+                search: search.value,
+                category: category.value,
+            }, {
+                preserveState: true,
+                replace: true,
+            });
+        }
+    }
 }
 
 </script>
@@ -47,7 +77,7 @@ const setCategory = (productCategory) => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div class="col-span-1 flex justify-center items-center">
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                         Vitrina de productos
@@ -82,6 +112,20 @@ const setCategory = (productCategory) => {
                             </li>
                         </ul>
                     </div>
+                </div>
+                <div class="col-span-1 flex justify-center items-center gap-2">
+                    <input
+                        v-model="minPrice"
+                        type="number"
+                        placeholder="Valor min"
+                        class="w-28 px-2 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                    >
+                    <input
+                        v-model="maxPrice"
+                        type="number"
+                        placeholder="Valor max"
+                        class="w-28 px-2 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                    >
                 </div>
             </div>
         </template>

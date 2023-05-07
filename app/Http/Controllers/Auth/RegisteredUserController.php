@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Register\StoreRegisterAction;
 use App\Classes\User\Action;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisteredUser\StoreRequest;
@@ -40,9 +41,9 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(StoreRequest $request, Action $user): RedirectResponse
+    public function store(StoreRequest $request, StoreRegisterAction $action): RedirectResponse
     {
-        $user = $user->register($request->validated());
+        $user = $action->handle($request);
 
         event(new Registered($user));
 

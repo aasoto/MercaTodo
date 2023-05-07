@@ -6,6 +6,7 @@ use App\Classes\User\TypesDocuments;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\TypeDocument\StoreRequest;
 use App\Http\Requests\Admin\User\TypeDocument\UpdateRequest;
+use App\Services\User\TypesDocumentsServices;
 use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -38,10 +39,10 @@ class TypeDocumentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, TypesDocuments $type_document): RedirectResponse
+    public function store(StoreRequest $request, TypesDocumentsServices $service): RedirectResponse
     {
         // dd($request->validated());
-        $type_document->create($request->validated());
+        $service->create($request->validated());
 
         return Redirect::route(('type_document.index'))->with('success', 'Type document created.');
     }
@@ -49,19 +50,19 @@ class TypeDocumentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TypesDocuments $type_document, string $id): Response
+    public function edit(TypesDocumentsServices $service, string $id): Response
     {
         return Inertia::render('User/TypeDocument/Edit', [
-            'typeDocument' => $type_document->edit($id),
+            'typeDocument' => $service->edit($id),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, TypesDocuments $type_document, string $id): RedirectResponse
+    public function update(UpdateRequest $request, TypesDocumentsServices $service, string $id): RedirectResponse
     {
-        $type_document->update($id, $request->validated());
+        $service->update($id, $request->validated());
         return Redirect::route('type_document.index')->with('success', 'Type document updated.');
     }
 

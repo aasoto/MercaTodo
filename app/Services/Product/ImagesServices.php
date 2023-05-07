@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Classes\Product;
+namespace App\Services\Product;
 
 use App\Traits\StorageFiles;
 
-class Images
+class ImagesServices
 {
     use StorageFiles;
 

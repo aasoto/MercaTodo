@@ -107,6 +107,39 @@ class ShowcaseTest extends TestCase
         $response->assertSee('Licuadora oster');
     }
 
+    public function test_can_search_product_by_range_of_prices(): void
+    {
+        Product::factory()->create([
+            'name' => 'Plancha',
+            'price' => '350000',
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Estufa a gas',
+            'price' => '400000',
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Horno microndas',
+            'price' => '450000',
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Estufa electrica',
+            'price' => '500000',
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->get('showcase?minPrice=400000&maxPrice=500000');
+
+        $response->assertStatus(200);
+
+        $response->assertDontSee('Plancha');
+        $response->assertSee('Estufa a gas');
+        $response->assertSee('Horno microndas');
+        $response->assertSee('Estufa electrica');
+    }
+
     public function test_show_description_of_product_from_the_showcase(): void
     {
         $product = Product::select('slug')->inRandomOrder()->first();
