@@ -2,15 +2,25 @@
 
 namespace App\Models;
 
+use App\QueryBuilders\UserQueryBuilder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @method static UserQueryBuilder query()
+ * @method static User select(...$parameters)
+ * @method static User join(...$parameters)
+ * @method static User orderBy(...$parameters)
+ * @method static User role($parameter)
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -68,4 +78,13 @@ class User extends Authenticatable implements MustVerifyEmail
     //         set: fn (string $value) => Hash::make($value),
     //     );
     // }
+
+    /**
+     * @param Builder $query
+     * @return UserQueryBuilder
+     */
+    public function newEloquentBuilder($query): UserQueryBuilder
+    {
+        return new UserQueryBuilder($query);
+    }
 }

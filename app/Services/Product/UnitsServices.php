@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Classes\Product;
+namespace App\Services\Product;
 
 use App\Models\Unit;
 use Illuminate\Support\Facades\Cache;
 
-class Units
+class UnitsServices
 {
     /**
      * @param array<string> $data

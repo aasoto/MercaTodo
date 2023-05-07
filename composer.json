@@ -57,7 +57,8 @@
             "@php artisan key:generate --ansi"
         ],
         "test": "vendor/bin/phpunit --testdox",
-        "test:coverage": "vendor/bin/phpunit --coverage-html tests/coverage"
+        "test:coverage": "vendor/bin/phpunit --coverage-html tests/coverage",
+        "phpstan:8": "vendor/bin/phpstan analyse --level 8"
     },
     "extra": {
         "laravel": {
