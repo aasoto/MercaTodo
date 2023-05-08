@@ -6,6 +6,7 @@ use App\Actions\User\EditUserAction;
 use App\Actions\User\IndexUserAction;
 use App\Actions\User\StoreUserAction;
 use App\Actions\User\UpdateUserAction;
+use App\Dtos\User\StoreUserData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreRequest;
 use App\Http\Requests\Admin\User\UpdateRequest;
@@ -52,7 +53,9 @@ class UserController extends Controller
      */
     public function store(StoreRequest $request, RolesServices $service, StoreUserAction $action): RedirectResponse
     {
-        $role = $action->handle($request, $service);
+        $data = StoreUserData::fromRequest($request);
+
+        $role = $action->handle($data, $service);
 
         return Redirect::route('user.index', $role)
             -> with('success', 'User created.');

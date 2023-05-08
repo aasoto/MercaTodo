@@ -208,7 +208,7 @@ class UserTest extends TestCase
             'first_name' => fake()->firstName($gender = 'male'|'female'),
             'second_name' => fake()->firstName($gender = 'male'|'female'),
             'surname' => fake()->lastName(),
-            'second_Surname' => fake()->lastName(),
+            'second_surname' => fake()->lastName(),
             'email' => $email,
             'birthdate' => '1989-12-04',
             'gender' => fake()->randomElement(['m', 'f', 'o']),
