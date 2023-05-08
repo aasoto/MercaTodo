@@ -8,6 +8,7 @@ use App\Actions\Product\IndexProductAction;
 use App\Actions\Product\ShowProductAction;
 use App\Actions\Product\StoreProductAction;
 use App\Actions\Product\UpdateProductAction;
+use App\Dtos\Product\StoreProductData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Http\Requests\Admin\Product\UpdateRequest;
@@ -55,7 +56,9 @@ class ProductController extends Controller
         ImagesServices $service,
         StoreProductAction $action): RedirectResponse
     {
-        $action->handle($request, $service);
+        $data = StoreProductData::fromRequest($request);
+
+        $action->handle($data, $service);
 
         return Redirect::route('products.index')->with('success', 'Product created.');
     }
