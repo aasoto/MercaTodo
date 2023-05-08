@@ -7,6 +7,7 @@ use App\Actions\User\IndexUserAction;
 use App\Actions\User\StoreUserAction;
 use App\Actions\User\UpdateUserAction;
 use App\Dtos\User\StoreUserData;
+use App\Dtos\User\UpdateUserData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreRequest;
 use App\Http\Requests\Admin\User\UpdateRequest;
@@ -81,8 +82,9 @@ class UserController extends Controller
      */
     public function update(UpdateRequest $request, RolesServices $service, UpdateUserAction $action, string $id): RedirectResponse
     {
+        $data = UpdateUserData::fromRequest($request);
 
-        $action->handle($request, $service, $id);
+        $action->handle($data, $service, $id);
 
         return Redirect::route('user.edit', $id)
             -> with('success', 'User updated.');
