@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Classes\User\TypesDocuments;
 use App\Dtos\User\TypeDocument\StoreTypeDocumentData;
+use App\Dtos\User\TypeDocument\UpdateTypeDocumentData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\TypeDocument\StoreRequest;
 use App\Http\Requests\Admin\User\TypeDocument\UpdateRequest;
@@ -63,7 +64,10 @@ class TypeDocumentController extends Controller
      */
     public function update(UpdateRequest $request, TypesDocumentsServices $service, string $id): RedirectResponse
     {
-        $service->update($id, $request->validated());
+        $data = UpdateTypeDocumentData::fromRequest($request);
+
+        $service->update($id, $data);
+
         return Redirect::route('type_document.index')->with('success', 'Type document updated.');
     }
 
