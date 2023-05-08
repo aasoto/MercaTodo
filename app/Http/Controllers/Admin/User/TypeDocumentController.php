@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\User;
 
 use App\Classes\User\TypesDocuments;
+use App\Dtos\User\TypeDocument\StoreTypeDocumentData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\TypeDocument\StoreRequest;
 use App\Http\Requests\Admin\User\TypeDocument\UpdateRequest;
@@ -41,8 +42,8 @@ class TypeDocumentController extends Controller
      */
     public function store(StoreRequest $request, TypesDocumentsServices $service): RedirectResponse
     {
-        // dd($request->validated());
-        $service->create($request->validated());
+        $data = StoreTypeDocumentData::fromRequest($request);
+        $service->store($data);
 
         return Redirect::route(('type_document.index'))->with('success', 'Type document created.');
     }
