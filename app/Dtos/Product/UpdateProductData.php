@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\UploadedFile;
 
 /** @phpstan-consistent-constructor */
-class StoreProductData
+class UpdateProductData
 {
     public function __construct(
         public string $name,
@@ -17,7 +17,7 @@ class StoreProductData
         public string $price,
         public string $unit,
         public string $stock,
-        public UploadedFile $picture_1,
+        public UploadedFile|null $picture_1,
         public UploadedFile|null $picture_2,
         public UploadedFile|null $picture_3,
         public bool $availability,
@@ -38,7 +38,7 @@ class StoreProductData
             picture_1: $request->file('picture_1'),
             picture_2: $request->file('picture_2'),
             picture_3: $request->file('picture_3'),
-            availability: true,
+            availability: $request->input('availability'),
         );
     }
 }

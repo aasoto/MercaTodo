@@ -3,6 +3,7 @@
 namespace App\Services\Product;
 
 use App\Dtos\Product\StoreProductData;
+use App\Dtos\Product\UpdateProductData;
 use App\Traits\StorageFiles;
 
 class ImagesServices
@@ -10,10 +11,10 @@ class ImagesServices
     use StorageFiles;
 
     /**
-     * @param StoreProductData $data
-     * @return array $data_filtered
+     * @param StoreProductData|UpdateProductData $data
+     * @return array<mixed> $data_filtered
      */
-    public function Save(StoreProductData $data): array
+    public function Save(StoreProductData|UpdateProductData $data): array
     {
         $counter = 0;
         $data_filtered = [
@@ -28,6 +29,7 @@ class ImagesServices
             'picture_1' => '',
             'picture_2' => '',
             'picture_3' => '',
+            'availability' => $data->availability,
         ];
 
         if (isset($data->picture_1)) {
@@ -55,10 +57,10 @@ class ImagesServices
     }
 
     /**
-     * @param array<mixed> $data
+     * @param UpdateProductData $data
      * @return array<mixed> $data
      */
-    public function Update(array $data, string $files): array
+    public function Update(UpdateProductData $data, string $files): array
     {
         $data = $this->Save($data);
 

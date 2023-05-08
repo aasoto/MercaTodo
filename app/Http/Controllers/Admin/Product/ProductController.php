@@ -9,6 +9,7 @@ use App\Actions\Product\ShowProductAction;
 use App\Actions\Product\StoreProductAction;
 use App\Actions\Product\UpdateProductAction;
 use App\Dtos\Product\StoreProductData;
+use App\Dtos\Product\UpdateProductData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Http\Requests\Admin\Product\UpdateRequest;
@@ -97,7 +98,9 @@ class ProductController extends Controller
         string $files): RedirectResponse
     {
 
-        $slug = $action->handle($request, $service, $id, $files);
+        $data = UpdateProductData::fromRequest($request);
+
+        $slug = $action->handle($data, $service, $id, $files);
 
         return Redirect::route('product.edit', $slug)->with('success', 'Product updated.');
     }
