@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Product;
 
+use App\Dtos\Product\Unit\StoreUnitData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\Unit\StoreRequest;
 use App\Http\Requests\Admin\Product\Unit\UpdateRequest;
@@ -39,7 +40,9 @@ class UnitController extends Controller
      */
     public function store(StoreRequest $request, UnitsServices $service): RedirectResponse
     {
-        $service->create($request->validated());
+        $data = StoreUnitData::fromRequest($request);
+
+        $service->store($data);
 
         return Redirect::route(('unit.index'))->with('success', 'Unit created.');
     }

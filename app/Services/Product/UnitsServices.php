@@ -2,17 +2,21 @@
 
 namespace App\Services\Product;
 
+use App\Dtos\Product\Unit\StoreUnitData;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Cache;
 
 class UnitsServices
 {
     /**
-     * @param array<string> $data
+     * @param StoreUnitData $data
      */
-    public function create(array $data): void
+    public function store(StoreUnitData $data): void
     {
-        Unit::create($data);
+        Unit::create([
+            'code' => $data->code,
+            'name' => $data->name,
+        ]);
         Cache::put('units', Unit::select('id', 'code', 'name')->get());
     }
 
