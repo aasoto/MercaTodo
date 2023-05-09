@@ -3,6 +3,7 @@
 namespace App\Services\Product;
 
 use App\Dtos\Product\Unit\StoreUnitData;
+use App\Dtos\Product\Unit\UpdateUnitData;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Cache;
 
@@ -17,6 +18,7 @@ class UnitsServices
             'code' => $data->code,
             'name' => $data->name,
         ]);
+
         Cache::put('units', Unit::select('id', 'code', 'name')->get());
     }
 
@@ -26,11 +28,14 @@ class UnitsServices
     }
 
     /**
-     * @param array<mixed> $data
+     * @param UpdateUnitData $data
      */
-    public function update(string $id, array $data): void
+    public function update(string $id, UpdateUnitData $data): void
     {
-        Unit::where('id', $id)->update($data);
+        Unit::where('id', $id)->update([
+            'name' => $data->name,
+        ]);
+
         Cache::put('units', Unit::select('id', 'code', 'name')->get());
     }
 }
