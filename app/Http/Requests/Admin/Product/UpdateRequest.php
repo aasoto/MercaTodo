@@ -40,9 +40,9 @@ class UpdateRequest extends FormRequest
             'price' => ['required', 'numeric'],
             'unit' => ['required', 'string', 'max:100'],
             'stock' => ['required', 'integer'],
-            'picture_1' => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
-            'picture_2' => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
-            'picture_3' => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
+            'picture_1' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
+            'picture_2' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
+            'picture_3' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
             'availability' => ['required', 'boolean'],
         ];
     }
