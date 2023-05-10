@@ -2,17 +2,23 @@
 
 namespace App\Services\User;
 
+use App\Dtos\User\TypeDocument\StoreTypeDocumentData;
+use App\Dtos\User\TypeDocument\UpdateTypeDocumentData;
 use App\Models\TypeDocument;
 use Illuminate\Support\Facades\Cache;
 
 class TypesDocumentsServices
 {
     /**
-     * @param array<string> $data
+     * @param StoreTypeDocumentData $data
      */
-    public function create(array $data): void
+    public function store(StoreTypeDocumentData $data): void
     {
-        TypeDocument::create($data);
+        TypeDocument::create([
+            'code' => $data->code,
+            'name' => $data->name,
+        ]);
+
         Cache::put('type_documents', TypeDocument::select('id', 'code', 'name')->get());
     }
 
@@ -22,11 +28,14 @@ class TypesDocumentsServices
     }
 
     /**
-     * @param array<mixed> $data
+     * @param UpdateTypeDocumentData $data
      */
-    public function update(string $id, array $data): void
+    public function update(string $id, UpdateTypeDocumentData $data): void
     {
-        TypeDocument::where('id', $id)->update($data);
+        TypeDocument::where('id', $id)->update([
+            'name' => $data->name,
+        ]);
+
         Cache::put('type_documents', TypeDocument::select('id', 'code', 'name')->get());
     }
 }

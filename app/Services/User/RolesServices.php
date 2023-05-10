@@ -12,7 +12,7 @@ class RolesServices
         return Role::select('name')->where('id', $id)->first();
     }
 
-    public function update(string $id, string $role_id): int
+    public function update(string $id, int $role_id): int
     {
         return ModelHasRole::where('model_id', $id)->update(["role_id" => $role_id]);
     }

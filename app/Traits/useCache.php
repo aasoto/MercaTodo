@@ -24,6 +24,10 @@ trait useCache
             Cache::put('cities', $cities);
             return $cities;
         }
+
+        // return Cache::rememberForever(
+        //     SettingCode::ENABLE_OTP, fn () => (bool)$this->whereCode(SettingCode::ENABLE_OTP)->value('value')
+        // );
     }
 
     public function getProductsCategories(): Collection
