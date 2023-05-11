@@ -63,8 +63,15 @@ watch(category, value => {
     });
 });
 
+const btnCategoryText = ref('Categoría');
 const setCategory = (productCategory) => {
-    category.value = productCategory;
+    if (productCategory) {
+        category.value = productCategory;
+        btnCategoryText.value = productCategory;
+    } else {
+        category.value = '';
+        btnCategoryText.value = 'Categoría';
+    }
 }
 
 const availability = ref(props.filters.availability);
@@ -76,11 +83,22 @@ watch(availability, value => {
     });
 });
 
+const btnAvailabilityText = ref('Disponilidad');
+
 const setAvailability = (value) => {
-    if (value) {
-        availability.value = true;
-    } else {
-        availability.value = false;
+    switch (value) {
+        case 'enabled':
+            availability.value = true;
+            btnAvailabilityText.value = 'Habilitados';
+            break;
+        case 'disabled':
+            availability.value = false;
+            btnAvailabilityText.value = 'Inhabilitados';
+            break;
+        default:
+            availability.value = '';
+            btnAvailabilityText.value = 'Disponilidad';
+            break;
     }
 }
 </script>
@@ -127,7 +145,7 @@ const setAvailability = (value) => {
                                     class="text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex items-center shadow-none group-hover:shadow transition duration-200"
                                     type="button"
                                 >
-                                    Categorías
+                                    <span v-html="btnCategoryText" class="capitalize"></span>
                                     <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
@@ -135,6 +153,11 @@ const setAvailability = (value) => {
                                 <!-- Dropdown menu -->
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                        <li>
+                                            <span @click="setCategory()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                Todas
+                                            </span>
+                                        </li>
                                         <li v-for="product_category in products_categories">
                                             <span @click="setCategory(product_category.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
                                                 {{ product_category.name }}
@@ -150,7 +173,7 @@ const setAvailability = (value) => {
                                     class="text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex items-center shadow-none group-hover:shadow transition duration-200"
                                     type="button"
                                 >
-                                    Disponibilidad
+                                    <span v-html="btnAvailabilityText"></span>
                                     <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
@@ -159,12 +182,17 @@ const setAvailability = (value) => {
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                                         <li>
-                                            <span @click="setAvailability(true)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                            <span @click="setAvailability()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                Todos
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span @click="setAvailability('enabled')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
                                                 Habilitado
                                             </span>
                                         </li>
                                         <li>
-                                            <span @click="setAvailability(false)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                            <span @click="setAvailability('disabled')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
                                                 Inhabilitado
                                             </span>
                                         </li>
