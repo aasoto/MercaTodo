@@ -38,7 +38,8 @@ class ShowcaseController extends Controller
                 'products.stock',
                 'products.picture_1',
                 'products.picture_2',
-                'products.picture_3'
+                'products.picture_3',
+                'products.availability',
             )
             -> join('products_categories', 'products.products_category_id', 'products_categories.id')
             -> join('units', 'products.unit', 'units.code')
