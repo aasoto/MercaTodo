@@ -46,21 +46,15 @@ const deleteProduct = () => {
 }
 
 const search = ref(props.filters.search);
+const category = ref(props.filters.category);
+const availability = ref(props.filters.availability);
 
 watch(search, value => {
-    router.get('/products', {search: value}, {
-        preserveState: true,
-        replace: true,
-    });
+    getResults();
 });
 
-const category = ref(props.filters.category);
-
 watch(category, value => {
-    router.get('/products', {category: value}, {
-        preserveState: true,
-        replace: true,
-    });
+    getResults();
 });
 
 const btnCategoryText = ref('Categoría');
@@ -74,13 +68,8 @@ const setCategory = (productCategory) => {
     }
 }
 
-const availability = ref(props.filters.availability);
-
 watch(availability, value => {
-    router.get('/products', {availability: value}, {
-        preserveState: true,
-        replace: true,
-    });
+    getResults();
 });
 
 const btnAvailabilityText = ref('Disponilidad');
@@ -100,6 +89,17 @@ const setAvailability = (value) => {
             btnAvailabilityText.value = 'Disponilidad';
             break;
     }
+}
+
+const getResults = () => {
+    router.get('/products', {
+        search: search.value,
+        category: category.value,
+        availability: availability.value
+    }, {
+        preserveState: true,
+        replace: true,
+    });
 }
 </script>
 
