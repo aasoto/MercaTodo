@@ -27,13 +27,13 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, IndexProductAction $action): Response
+    public function index(Request $request, IndexProductAction $index_product_action): Response
     {
 
         return Inertia::render('Product/Index', [
             'filters' => $request->only(['search', 'category', 'availability']),
             'products_categories' => $this->getProductsCategories(),
-            'products' => $action->handle($request),
+            'products' => $index_product_action->handle($request),
             'success' => session('success'),
         ]);
     }
@@ -54,12 +54,12 @@ class ProductController extends Controller
      */
     public function store(
         StoreRequest $request,
-        ImagesServices $service,
-        StoreProductAction $action): RedirectResponse
+        ImagesServices $images_services,
+        StoreProductAction $store_product_action): RedirectResponse
     {
         $data = StoreProductData::fromRequest($request);
 
-        $action->handle($data, $service);
+        $store_product_action->handle($data, $images_services);
 
         return Redirect::route('products.index')->with('success', 'Product created.');
     }
@@ -67,20 +67,20 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug, ShowProductAction $action): Response
+    public function show(string $slug, ShowProductAction $show_product_action): Response
     {
         return Inertia::render('Product/Show', [
-            'product' => $action->handle($slug),
+            'product' => $show_product_action->handle($slug),
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $slug, EditProductAction $action): Response
+    public function edit(string $slug, EditProductAction $edit_product_action): Response
     {
         return Inertia::render('Product/Edit', [
-            'product' => $action->handle($slug),
+            'product' => $edit_product_action->handle($slug),
             'products_categories' => $this->getProductsCategories(),
             'units' => $this->getUnits(),
             'success' => session('success'),
@@ -92,15 +92,15 @@ class ProductController extends Controller
      */
     public function update(
         UpdateRequest $request,
-        ImagesServices $service,
-        UpdateProductAction $action,
+        ImagesServices $images_service,
+        UpdateProductAction $update_product_action,
         string $id,
         string $files): RedirectResponse
     {
 
         $data = UpdateProductData::fromRequest($request);
 
-        $slug = $action->handle($data, $service, $id, $files);
+        $slug = $update_product_action->handle($data, $images_service, $id, $files);
 
         return Redirect::route('product.edit', $slug)->with('success', 'Product updated.');
     }
@@ -110,12 +110,12 @@ class ProductController extends Controller
      */
     public function destroy(
         ImagesServices $services,
-        DestroyProductAction $action,
-        ShowProductAction $showAction,
+        DestroyProductAction $destroy_product_action,
+        ShowProductAction $show_product_action,
         string $slug): RedirectResponse
     {
 
-        $action->handle($services, $showAction, $slug);
+        $destroy_product_action->handle($services, $show_product_action, $slug);
 
         return Redirect::route('products.index')->with('success', 'Product deleted.');
     }
