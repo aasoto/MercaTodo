@@ -25,14 +25,14 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, IndexUserAction $action, string $role = "admin"): Response
+    public function index(Request $request, IndexUserAction $index_user_action, string $role = "admin"): Response
     {
         return Inertia::render('User/Index', [
             'filters' => $request->only(['search', 'enabled']),
             'roleSearch' => $role,
             'roles' => $this->getRoles(),
             'success' => session('success'),
-            'users' => $action->handle($request, $role),
+            'users' => $index_user_action->handle($request, $role),
         ]);
     }
 
@@ -52,11 +52,11 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, RolesServices $service, StoreUserAction $action): RedirectResponse
+    public function store(StoreRequest $request, RolesServices $roles_services, StoreUserAction $store_user_action): RedirectResponse
     {
         $data = StoreUserData::fromRequest($request);
 
-        $role = $action->handle($data, $service);
+        $role = $store_user_action->handle($data, $roles_services);
 
         return Redirect::route('user.index', $role)
             -> with('success', 'User created.');
@@ -65,7 +65,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(EditUserAction $action, string $id): Response
+    public function edit(EditUserAction $edit_user_action, string $id): Response
     {
         return Inertia::render('User/Edit', [
             'cities' => $this->getCities(),
@@ -73,18 +73,18 @@ class UserController extends Controller
             'states' => $this->getStates(),
             'success' => session('success'),
             'typeDocuments' => $this->getTypeDocument(),
-            'user' => $action->handle($id),
+            'user' => $edit_user_action->handle($id),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, RolesServices $service, UpdateUserAction $action, string $id): RedirectResponse
+    public function update(UpdateRequest $request, RolesServices $roles_services, UpdateUserAction $update_user_action, string $id): RedirectResponse
     {
         $data = UpdateUserData::fromRequest($request);
 
-        $action->handle($data, $service, $id);
+        $update_user_action->handle($data, $roles_services, $id);
 
         return Redirect::route('user.edit', $id)
             -> with('success', 'User updated.');

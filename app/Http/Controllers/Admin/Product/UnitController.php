@@ -39,11 +39,11 @@ class UnitController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, UnitsServices $service): RedirectResponse
+    public function store(StoreRequest $request, UnitsServices $units_services): RedirectResponse
     {
         $data = StoreUnitData::fromRequest($request);
 
-        $service->store($data);
+        $units_services->store($data);
 
         return Redirect::route(('unit.index'))->with('success', 'Unit created.');
     }
@@ -51,20 +51,20 @@ class UnitController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(UnitsServices $service, string $id): Response
+    public function edit(UnitsServices $units_services, string $id): Response
     {
         return Inertia::render('Product/Unit/Edit', [
-            'unit' => $service->edit($id),
+            'unit' => $units_services->edit($id),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, UnitsServices $service, string $id): RedirectResponse
+    public function update(UpdateRequest $request, UnitsServices $units_services, string $id): RedirectResponse
     {
         $data = UpdateUnitData::fromRequest($request);
-        $service->update($id, $data);
+        $units_services->update($id, $data);
         return Redirect::route('unit.index')->with('success', 'Unit updated.');
     }
 }
