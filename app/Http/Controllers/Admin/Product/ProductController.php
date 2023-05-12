@@ -21,9 +21,6 @@ use Inertia\Response;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): Response
     {
         return Inertia::render('Product/Index', [
@@ -51,9 +48,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): Response
     {
         return Inertia::render('Product/Create', [
@@ -62,9 +56,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(
         StoreRequest $request,
         StoreProductAction $store_product_action): RedirectResponse
@@ -76,9 +67,6 @@ class ProductController extends Controller
         return Redirect::route('products.index')->with('success', 'Product created.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $slug): Response
     {
         return Inertia::render('Product/Show', [
@@ -101,9 +89,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $slug): Response
     {
         return Inertia::render('Product/Edit', [
@@ -129,9 +114,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(
         UpdateRequest $request,
         UpdateProductAction $update_product_action,
@@ -146,9 +128,6 @@ class ProductController extends Controller
         return Redirect::route('product.edit', $slug)->with('success', 'Product updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(
         DestroyProductAction $destroy_product_action,
         string $slug): RedirectResponse

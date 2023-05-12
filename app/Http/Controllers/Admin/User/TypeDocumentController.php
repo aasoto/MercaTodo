@@ -17,9 +17,6 @@ use Inertia\Response;
 
 class TypeDocumentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): Response
     {
         return Inertia::render('User/TypeDocument/Index', [
@@ -28,17 +25,11 @@ class TypeDocumentController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): Response
     {
         return Inertia::render('User/TypeDocument/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreRequest $request, TypesDocumentsServices $types_documents_services): RedirectResponse
     {
         $data = StoreTypeDocumentData::fromRequest($request);
@@ -47,9 +38,6 @@ class TypeDocumentController extends Controller
         return Redirect::route(('type_document.index'))->with('success', 'Type document created.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(TypesDocumentsServices $types_documents_services, string $id): Response
     {
         return Inertia::render('User/TypeDocument/Edit', [
@@ -57,9 +45,6 @@ class TypeDocumentController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateRequest $request, TypesDocumentsServices $types_documents_services, string $id): RedirectResponse
     {
         $data = UpdateTypeDocumentData::fromRequest($request);

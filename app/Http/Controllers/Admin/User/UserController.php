@@ -22,9 +22,6 @@ use Inertia\Response;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request, string $role = "admin"): Response
     {
         return Inertia::render('User/Index', [
@@ -59,9 +56,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): Response
     {
         return Inertia::render('User/Create', [
@@ -72,9 +66,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreRequest $request, StoreUserAction $store_user_action): RedirectResponse
     {
         $data = StoreUserData::fromRequest($request);
@@ -85,9 +76,6 @@ class UserController extends Controller
             -> with('success', 'User created.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id): Response
     {
         return Inertia::render('User/Edit', [
@@ -120,9 +108,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateRequest $request, UpdateUserAction $update_user_action, string $id): RedirectResponse
     {
         $data = UpdateUserData::fromRequest($request);

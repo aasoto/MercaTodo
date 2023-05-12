@@ -16,9 +16,6 @@ use Inertia\Response;
 
 class UnitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): Response
     {
         return Inertia::render('Product/Unit/Index', [
@@ -27,17 +24,11 @@ class UnitController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): Response
     {
         return Inertia::render('Product/Unit/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreRequest $request, UnitsServices $units_services): RedirectResponse
     {
         $data = StoreUnitData::fromRequest($request);
@@ -47,9 +38,6 @@ class UnitController extends Controller
         return Redirect::route(('unit.index'))->with('success', 'Unit created.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(UnitsServices $units_services, string $id): Response
     {
         return Inertia::render('Product/Unit/Edit', [
@@ -57,9 +45,6 @@ class UnitController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateRequest $request, UnitsServices $units_services, string $id): RedirectResponse
     {
         $data = UpdateUnitData::fromRequest($request);

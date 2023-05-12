@@ -12,9 +12,6 @@ class DashboardController extends Controller
 {
     use AuthHasRole;
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): Response
     {
         return Inertia::render('Dashboard', [
