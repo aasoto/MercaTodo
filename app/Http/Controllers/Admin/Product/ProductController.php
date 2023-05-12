@@ -13,8 +13,9 @@ use App\Dtos\Product\UpdateProductData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Http\Requests\Admin\Product\UpdateRequest;
+use App\Models\ProductCategory;
+use App\Models\Unit;
 use App\Services\Product\ImagesServices;
-use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -23,7 +24,6 @@ use Inertia\Response;
 
 class ProductController extends Controller
 {
-    use useCache;
     /**
      * Display a listing of the resource.
      */
@@ -32,7 +32,7 @@ class ProductController extends Controller
 
         return Inertia::render('Product/Index', [
             'filters' => $request->only(['search', 'category', 'availability']),
-            'products_categories' => $this->getProductsCategories(),
+            'products_categories' => ProductCategory::getFromCache(),
             'products' => $index_product_action->handle($request),
             'success' => session('success'),
         ]);
@@ -44,8 +44,8 @@ class ProductController extends Controller
     public function create(): Response
     {
         return Inertia::render('Product/Create', [
-            'products_categories' => $this->getProductsCategories(),
-            'units' => $this->getUnits(),
+            'products_categories' => ProductCategory::getFromCache(),
+            'units' => Unit::getFromCache(),
         ]);
     }
 
@@ -81,8 +81,8 @@ class ProductController extends Controller
     {
         return Inertia::render('Product/Edit', [
             'product' => $edit_product_action->handle($slug),
-            'products_categories' => $this->getProductsCategories(),
-            'units' => $this->getUnits(),
+            'products_categories' => ProductCategory::getFromCache(),
+            'units' => Unit::getFromCache(),
             'success' => session('success'),
         ]);
     }

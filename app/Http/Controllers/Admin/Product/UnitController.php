@@ -7,8 +7,8 @@ use App\Dtos\Product\Unit\UpdateUnitData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\Unit\StoreRequest;
 use App\Http\Requests\Admin\Product\Unit\UpdateRequest;
+use App\Models\Unit;
 use App\Services\Product\UnitsServices;
-use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -16,14 +16,13 @@ use Inertia\Response;
 
 class UnitController extends Controller
 {
-    use useCache;
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
         return Inertia::render('Product/Unit/Index', [
-            'units' => $this->getUnits(),
+            'units' => Unit::getFromCache(),
             'success' => session('success'),
         ]);
     }

@@ -11,8 +11,11 @@ use App\Dtos\User\UpdateUserData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreRequest;
 use App\Http\Requests\Admin\User\UpdateRequest;
+use App\Models\City;
+use App\Models\Spatie\ModelHasRole as Role;
+use App\Models\State;
+use App\Models\TypeDocument;
 use App\Services\User\RolesServices;
-use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -21,7 +24,6 @@ use Inertia\Response;
 
 class UserController extends Controller
 {
-    use useCache;
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +32,7 @@ class UserController extends Controller
         return Inertia::render('User/Index', [
             'filters' => $request->only(['search', 'enabled']),
             'roleSearch' => $role,
-            'roles' => $this->getRoles(),
+            'roles' => Role::getFromCache(),
             'success' => session('success'),
             'users' => $index_user_action->handle($request, $role),
         ]);
@@ -42,10 +44,10 @@ class UserController extends Controller
     public function create(): Response
     {
         return Inertia::render('User/Create', [
-            'cities' => $this->getCities(),
-            'roles' => $this->getRoles(),
-            'states' => $this->getStates(),
-            'typeDocuments' => $this->getTypeDocument(),
+            'cities' => City::getFromCache(),
+            'roles' => Role::getFromCache(),
+            'states' => State::getFromCache(),
+            'typeDocuments' => TypeDocument::getFromCache(),
         ]);
     }
 
@@ -68,11 +70,11 @@ class UserController extends Controller
     public function edit(EditUserAction $edit_user_action, string $id): Response
     {
         return Inertia::render('User/Edit', [
-            'cities' => $this->getCities(),
-            'roles' => $this->getRoles(),
-            'states' => $this->getStates(),
+            'cities' => City::getFromCache(),
+            'roles' => Role::getFromCache(),
+            'states' => State::getFromCache(),
             'success' => session('success'),
-            'typeDocuments' => $this->getTypeDocument(),
+            'typeDocuments' => TypeDocument::getFromCache(),
             'user' => $edit_user_action->handle($id),
         ]);
     }

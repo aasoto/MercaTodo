@@ -5,23 +5,27 @@ namespace App\Http\Controllers\Client\Showcase;
 use App\Actions\Showcase\IndexShowcaseAction;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\Spatie\ModelHasRole as Role;
 use App\Traits\AuthHasRole;
-use App\Traits\useCache;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ShowcaseController extends Controller
 {
-    use AuthHasRole, useCache;
+    use AuthHasRole;
 
     public function index(Request $request, IndexShowcaseAction $index_showcase_action): Response
     {
         return Inertia::render('Showcase/Index', [
             'filters' => $request->only(['search', 'category', 'minPrice', 'maxPrice']),
             'products' => $index_showcase_action->handle($request),
-            'products_categories' => $this->getProductsCategories(),
-            'userRole' => session('user_role') ? session('user_role') : $this->authHasRole($this->getRoles()),
+            'products_categories' => ProductCategory::getFromCache(),
+            'userRole' =>
+                session('user_role') ?
+                session('user_role') :
+                $this->authHasRole(Role::getFromCache()),
         ]);
     }
 

@@ -3,34 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Traits\useCache;
+use App\Models\City;
+use App\Models\State;
+use App\Models\TypeDocument;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    use useCache;
     /**
      * Display the user's profile form.
      */
     public function edit(Request $request): Response
     {
-        $cities = $this->getCities();
-        $states = $this->getStates();
-        $type_documents = $this->getTypeDocument();
-
         return Inertia::render('Profile/Edit', [
-            'cities' => $cities,
+            'cities' => City::getFromCache(),
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'states' => $states,
+            'states' => State::getFromCache(),
             'status' => session('status'),
-            'typeDocuments' => $type_documents,
+            'typeDocuments' => TypeDocument::getFromCache(),
         ]);
     }
 

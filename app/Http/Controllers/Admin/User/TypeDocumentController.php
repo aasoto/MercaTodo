@@ -8,24 +8,22 @@ use App\Dtos\User\TypeDocument\UpdateTypeDocumentData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\TypeDocument\StoreRequest;
 use App\Http\Requests\Admin\User\TypeDocument\UpdateRequest;
+use App\Models\TypeDocument;
 use App\Services\User\TypesDocumentsServices;
-use App\Traits\useCache;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TypeDocumentController extends Controller
 {
-    use useCache;
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
         return Inertia::render('User/TypeDocument/Index', [
-            'typeDocuments' => $this->getTypeDocument(),
+            'typeDocuments' => TypeDocument::getFromCache(),
             'success' => session('success'),
         ]);
     }
