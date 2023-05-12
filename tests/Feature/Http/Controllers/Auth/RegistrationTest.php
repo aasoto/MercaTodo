@@ -3,8 +3,9 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\City;
+use App\Models\State;
+use App\Models\TypeDocument;
 use App\Providers\RouteServiceProvider;
-use App\Traits\useCache;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StateSeeder;
@@ -14,7 +15,7 @@ use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
-    use RefreshDatabase, useCache;
+    use RefreshDatabase;
 
     public function test_registration_screen_can_be_rendered(): void
     {
@@ -32,9 +33,9 @@ class RegistrationTest extends TestCase
             TypeDocumentSeeder::class,
         ]);
 
-        $state = $this->getStates();
+        $state = State::getFromCache();
         $city = City::select('id')->where('state_id', $state[0]["id"])->inRandomOrder()->first();
-        $type = $this->getTypeDocument();
+        $type = TypeDocument::getFromCache();
         $email = fake()->safeEmail();
 
         $response = $this->post('/register', [
