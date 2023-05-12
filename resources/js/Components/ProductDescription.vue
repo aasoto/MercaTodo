@@ -1,10 +1,31 @@
 <script setup>
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useSignedRoleStore } from '@/Store/SignedRole';
 
+// Props
 const props = defineProps({
     product: Object,
 });
 
+//define signed role
+const useSignedRole = useSignedRoleStore();
+const { role } = storeToRefs(useSignedRole);
+
+//quantity of products
+const quantity = ref(0);
+
+const decrement = () => {
+    if (quantity.value > 0) {
+        quantity.value = quantity.value - 1;
+    }
+}
+
+const increment = () => {
+    quantity.value = quantity.value + 1;
+}
+
+//iterate pictures
 const mainPicture = ref(props.product.picture_1);
 const alternativePicture1 = ref(props.product.picture_2);
 const alternativePicture2 = ref(props.product.picture_3);
@@ -71,13 +92,16 @@ const watchOtherPicture = (image) => {
                             class="text-lg text-black dark:text-white"
                             v-html="product.description"
                         ></div>
-                        <div class="flex justify-center items-center gap-5">
+                        <div v-if="role == 'client'" class="flex justify-center items-center gap-5">
                             <div class="flex flex-col justify-center items-center">
                                 <label for="btnIncrement" class="font-bold text-3xl">
                                     Cantidad
                                 </label>
                                 <div class="flex">
-                                    <button class="rounded-md px-3 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200">
+                                    <button
+                                        @click="decrement()"
+                                        class="rounded-md px-3 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200"
+                                    >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 24 24"
@@ -88,9 +112,12 @@ const watchOtherPicture = (image) => {
                                         </svg>
                                     </button>
                                     <h3 class="font-bold text-3xl mx-3">
-                                        0
+                                        {{ quantity }}
                                     </h3>
-                                    <button class="rounded-md px-3 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200">
+                                    <button
+                                        @click="increment()"
+                                        class="rounded-md px-3 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200"
+                                    >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 24 24"
