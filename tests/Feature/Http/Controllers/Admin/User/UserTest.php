@@ -3,8 +3,10 @@
 namespace Tests\Feature\Http\Controllers\Admin\User;
 
 use App\Models\City;
+use App\Models\Spatie\ModelHasRole as Role;
+use App\Models\State;
+use App\Models\TypeDocument;
 use App\Models\User;
-use App\Traits\useCache;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StateSeeder;
@@ -15,7 +17,7 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase, useCache;
+    use RefreshDatabase;
 
     private User $user;
 
@@ -39,7 +41,7 @@ class UserTest extends TestCase
         $response = $this->actingAs($this->user)
             ->get(route('user.index', "admin"));
 
-        $roles = $this->getRoles();
+        $roles = Role::getFromCache();
 
         $response->assertStatus(200);
 
@@ -128,8 +130,8 @@ class UserTest extends TestCase
 
     public function test_user_can_be_updated(): void
     {
-        $role = $this->getRoles();
-        $type = $this->getTypeDocument();
+        $role = Role::getFromCache();
+        $type = TypeDocument::getFromCache();
 
         $first_name = fake()->firstName($gender = 'male'|'female');
         $address = fake()->streetAddress();
@@ -195,10 +197,10 @@ class UserTest extends TestCase
 
     public function test_user_can_be_saved(): void
     {
-        $state = $this->getStates();
+        $state = State::getFromCache();
         $city = City::select('id')->where('state_id', $state[0]["id"])->inRandomOrder()->first();
-        $role = $this->getRoles();
-        $type = $this->getTypeDocument();
+        $role = Role::getFromCache();
+        $type = TypeDocument::getFromCache();
         $email = fake()->safeEmail();
 
         $response = $this->actingAs($this->user)

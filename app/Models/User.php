@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -19,6 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static User select(...$parameters)
  * @method static User join(...$parameters)
  * @method static User orderBy(...$parameters)
+ * @method static User orderByDesc(...$parameters)
  * @method static User role($parameter)
  */
 class User extends Authenticatable implements MustVerifyEmail
@@ -32,7 +32,6 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        // 'name',
         'type_document',
         'number_document',
         'first_name',
@@ -68,16 +67,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    /**
-     * Interact with the user's password.
-     */
-    // protected function password(): Attribute
-    // {
-    //     return Attribute::make(
-    //         set: fn (string $value) => Hash::make($value),
-    //     );
-    // }
 
     /**
      * @param Builder $query

@@ -28,11 +28,15 @@ class ProductQueryBuilder extends Builder
         }
 
         return $this->when($search, function ($query, $availability) {
+
+            $enabled = '1';
+            $disabled = '0';
+
             if ($availability == 'true') {
-                $query -> where('products.availability', '1');
+                $query -> where('products.availability', $enabled);
             }
             if ($availability == 'false') {
-                $query -> where('products.availability', '0');
+                $query -> where('products.availability', $disabled);
             }
         });
     }

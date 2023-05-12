@@ -7,7 +7,6 @@ use App\Http\Controllers\Admin\User\TypeDocumentController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Admin\Product\UnitController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StartController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,9 +31,6 @@ Route::get('/', function () {
     ]);
 });
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/user_disabled', function () {
     return Inertia::render('Auth/UserDisabled');
@@ -45,7 +41,9 @@ Route::get('/405_method_not_allowed', function () {
 
 Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
 
-    Route::get('/start', [StartController::class, 'index'])->name('start');
+    Route::get('/start', function () {
+        return Inertia::render('Auth/NoRole');
+    })->name('start')->middleware('start');
 
     /** DASHBOARD */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');

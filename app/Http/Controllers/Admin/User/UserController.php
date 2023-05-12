@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin\User;
 
-use App\Actions\User\EditUserAction;
-use App\Actions\User\IndexUserAction;
 use App\Actions\User\StoreUserAction;
 use App\Actions\User\UpdateUserAction;
 use App\Dtos\User\StoreUserData;
@@ -11,8 +9,11 @@ use App\Dtos\User\UpdateUserData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreRequest;
 use App\Http\Requests\Admin\User\UpdateRequest;
-use App\Services\User\RolesServices;
-use App\Traits\useCache;
+use App\Models\City;
+use App\Models\Spatie\ModelHasRole as Role;
+use App\Models\State;
+use App\Models\TypeDocument;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -21,70 +22,97 @@ use Inertia\Response;
 
 class UserController extends Controller
 {
-    use useCache;
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request, IndexUserAction $action, string $role = "admin"): Response
+    public function index(Request $request, string $role = "admin"): Response
     {
         return Inertia::render('User/Index', [
             'filters' => $request->only(['search', 'enabled']),
             'roleSearch' => $role,
-            'roles' => $this->getRoles(),
+            'roles' => Role::getFromCache(),
             'success' => session('success'),
-            'users' => $action->handle($request, $role),
+            'users' => User::query()
+            -> whereSearch($request->input('search'))
+            -> whenEnabled($request->input('enabled'))
+            -> select(
+                    'users.id',
+                    'users.number_document',
+                    'users.first_name',
+                    'users.second_name',
+                    'users.surname',
+                    'users.second_surname',
+                    'users.email',
+                    'users.email_verified_at',
+                    'users.enabled',
+                    'states.name as state_name',
+                    'cities.name as city_name',
+                    'model_has_roles.role_id'
+                )
+            -> join('states', 'users.state_id', 'states.id')
+            -> join('cities', 'users.city_id', 'cities.id')
+            -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+            -> orderByDesc('users.id')
+            -> role($role)
+            -> paginate(10)
+            -> withQueryString(),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): Response
     {
         return Inertia::render('User/Create', [
-            'cities' => $this->getCities(),
-            'roles' => $this->getRoles(),
-            'states' => $this->getStates(),
-            'typeDocuments' => $this->getTypeDocument(),
+            'cities' => City::getFromCache(),
+            'roles' => Role::getFromCache(),
+            'states' => State::getFromCache(),
+            'typeDocuments' => TypeDocument::getFromCache(),
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreRequest $request, RolesServices $service, StoreUserAction $action): RedirectResponse
+    public function store(StoreRequest $request, StoreUserAction $store_user_action): RedirectResponse
     {
         $data = StoreUserData::fromRequest($request);
 
-        $role = $action->handle($data, $service);
+        $role = $store_user_action->handle($data);
 
         return Redirect::route('user.index', $role)
             -> with('success', 'User created.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(EditUserAction $action, string $id): Response
+    public function edit(string $id): Response
     {
         return Inertia::render('User/Edit', [
-            'cities' => $this->getCities(),
-            'roles' => $this->getRoles(),
-            'states' => $this->getStates(),
+            'cities' => City::getFromCache(),
+            'roles' => Role::getFromCache(),
+            'states' => State::getFromCache(),
             'success' => session('success'),
-            'typeDocuments' => $this->getTypeDocument(),
-            'user' => $action->handle($id),
+            'typeDocuments' => TypeDocument::getFromCache(),
+            'user' => User::select(
+                    'users.id',
+                    'users.type_document',
+                    'users.number_document',
+                    'users.first_name',
+                    'users.second_name',
+                    'users.surname',
+                    'users.second_surname',
+                    'users.email',
+                    'users.birthdate',
+                    'users.gender',
+                    'users.phone',
+                    'users.address',
+                    'users.enabled',
+                    'users.state_id',
+                    'users.city_id',
+                    'model_has_roles.role_id'
+                )
+                -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+                -> where('users.id', $id)
+                -> first(),
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateRequest $request, RolesServices $service, UpdateUserAction $action, string $id): RedirectResponse
+    public function update(UpdateRequest $request, UpdateUserAction $update_user_action, string $id): RedirectResponse
     {
         $data = UpdateUserData::fromRequest($request);
 
-        $action->handle($data, $service, $id);
+        $update_user_action->handle($data, $id);
 
         return Redirect::route('user.edit', $id)
             -> with('success', 'User updated.');

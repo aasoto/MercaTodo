@@ -9,6 +9,7 @@ use Database\Seeders\StateSeeder;
 use Database\Seeders\TypeDocumentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class StartTest extends TestCase
@@ -61,6 +62,11 @@ class StartTest extends TestCase
         $response = $this->actingAs($user)
             ->get(route('start'));
 
-        $response->assertStatus(500);
+        $response->assertStatus(200);
+
+        $response->assertInertia(
+            fn (Assert $page) => $page
+                -> component('Auth/NoRole')
+        );
     }
 }

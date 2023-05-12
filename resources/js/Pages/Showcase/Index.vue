@@ -8,6 +8,7 @@ import { useSignedRoleStore } from '@/Store/SignedRole';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 import NotFoundMessage from "@/Components/NotFoundMessage.vue";
+
 const props = defineProps({
     filters: Object,
     products: Object,
@@ -19,6 +20,8 @@ const useSignedRole = useSignedRoleStore();
 const { assignRole } = useSignedRole;
 assignRole(props.userRole);
 
+const btnCategoryLabel = ref('Categorías');
+
 const search = ref(props.filters.search);
 const category = ref(props.filters.category);
 const minPrice = ref(props.filters.minPrice);
@@ -28,15 +31,18 @@ watch(search, value => {
     getResults();
 });
 
-
 watch(category, value => {
     getResults();
 });
 
 const setCategory = (productCategory) => {
-    category.value = productCategory;
+    if (productCategory === 'Categorías') {
+        category.value = '';
+    } else {
+        category.value = productCategory;
+    }
+    btnCategoryLabel.value = productCategory;
 }
-
 
 watch(minPrice, value => {
     getResults();
@@ -97,13 +103,20 @@ const getResults = () => {
                         class="w-full text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
                         type="button"
                     >
-                        Categorías
+                        <span v-html="btnCategoryLabel" class="capitalize"></span>
                         <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
                     <!-- Dropdown menu -->
                     <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                            <li>
+                                <span @click="setCategory('Categorías')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                    Ninguna
+                                </span>
+                            </li>
+                        </ul>
                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                             <li v-for="product_category in products_categories">
                                 <span @click="setCategory(product_category.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
