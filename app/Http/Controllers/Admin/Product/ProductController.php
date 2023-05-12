@@ -15,7 +15,6 @@ use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Http\Requests\Admin\Product\UpdateRequest;
 use App\Models\ProductCategory;
 use App\Models\Unit;
-use App\Services\Product\ImagesServices;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -54,12 +53,11 @@ class ProductController extends Controller
      */
     public function store(
         StoreRequest $request,
-        ImagesServices $images_services,
         StoreProductAction $store_product_action): RedirectResponse
     {
         $data = StoreProductData::fromRequest($request);
 
-        $store_product_action->handle($data, $images_services);
+        $store_product_action->handle($data);
 
         return Redirect::route('products.index')->with('success', 'Product created.');
     }
@@ -92,7 +90,6 @@ class ProductController extends Controller
      */
     public function update(
         UpdateRequest $request,
-        ImagesServices $images_service,
         UpdateProductAction $update_product_action,
         string $id,
         string $files): RedirectResponse
@@ -100,7 +97,7 @@ class ProductController extends Controller
 
         $data = UpdateProductData::fromRequest($request);
 
-        $slug = $update_product_action->handle($data, $images_service, $id, $files);
+        $slug = $update_product_action->handle($data, $id, $files);
 
         return Redirect::route('product.edit', $slug)->with('success', 'Product updated.');
     }
@@ -109,13 +106,11 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(
-        ImagesServices $services,
         DestroyProductAction $destroy_product_action,
-        ShowProductAction $show_product_action,
         string $slug): RedirectResponse
     {
 
-        $destroy_product_action->handle($services, $show_product_action, $slug);
+        $destroy_product_action->handle($slug);
 
         return Redirect::route('products.index')->with('success', 'Product deleted.');
     }

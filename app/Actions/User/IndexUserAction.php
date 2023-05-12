@@ -30,7 +30,7 @@ class IndexUserAction
         -> join('states', 'users.state_id', 'states.id')
         -> join('cities', 'users.city_id', 'cities.id')
         -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
-        -> orderBy('users.id')
+        -> orderByDesc('users.id')
         -> role($role)
         -> paginate(10)
         -> withQueryString();

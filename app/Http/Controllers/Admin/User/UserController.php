@@ -54,11 +54,11 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request, RolesServices $roles_services, StoreUserAction $store_user_action): RedirectResponse
+    public function store(StoreRequest $request, StoreUserAction $store_user_action): RedirectResponse
     {
         $data = StoreUserData::fromRequest($request);
 
-        $role = $store_user_action->handle($data, $roles_services);
+        $role = $store_user_action->handle($data);
 
         return Redirect::route('user.index', $role)
             -> with('success', 'User created.');
@@ -82,11 +82,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, RolesServices $roles_services, UpdateUserAction $update_user_action, string $id): RedirectResponse
+    public function update(UpdateRequest $request, UpdateUserAction $update_user_action, string $id): RedirectResponse
     {
         $data = UpdateUserData::fromRequest($request);
 
-        $update_user_action->handle($data, $roles_services, $id);
+        $update_user_action->handle($data, $id);
 
         return Redirect::route('user.edit', $id)
             -> with('success', 'User updated.');

@@ -7,14 +7,17 @@ use App\Services\Product\ImagesServices;
 
 class DestroyProductAction
 {
-    public function handle(
-        ImagesServices $images,
-        ShowProductAction $showAction,
-        string $slug): bool
-    {
-        $query = $showAction->handle($slug);
+    public function __construct(
+        protected ImagesServices $images,
+        protected ShowProductAction $show_product_action,
+    )
+    {}
 
-        $images->Delete($query ? $query->toArray() : []);
+    public function handle(string $slug): bool
+    {
+        $query = $this->show_product_action->handle($slug);
+
+        $this->images->Delete($query ? $query->toArray() : []);
 
         return Product::where('slug', $slug)->delete();
     }
