@@ -9,13 +9,17 @@ class DestroyProductAction
 {
     public function __construct(
         protected ImagesServices $images,
-        protected ShowProductAction $show_product_action,
     )
     {}
 
     public function handle(string $slug): bool
     {
-        $query = $this->show_product_action->handle($slug);
+        $query = Product::select(
+            'picture_1',
+            'picture_2',
+            'picture_3')
+        ->whereSlug($slug)
+        ->first();
 
         $this->images->Delete($query ? $query->toArray() : []);
 

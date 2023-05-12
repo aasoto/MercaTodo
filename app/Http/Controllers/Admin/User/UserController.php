@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin\User;
 
-use App\Actions\User\EditUserAction;
-use App\Actions\User\IndexUserAction;
 use App\Actions\User\StoreUserAction;
 use App\Actions\User\UpdateUserAction;
 use App\Dtos\User\StoreUserData;
@@ -15,7 +13,7 @@ use App\Models\City;
 use App\Models\Spatie\ModelHasRole as Role;
 use App\Models\State;
 use App\Models\TypeDocument;
-use App\Services\User\RolesServices;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -27,14 +25,37 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, IndexUserAction $index_user_action, string $role = "admin"): Response
+    public function index(Request $request, string $role = "admin"): Response
     {
         return Inertia::render('User/Index', [
             'filters' => $request->only(['search', 'enabled']),
             'roleSearch' => $role,
             'roles' => Role::getFromCache(),
             'success' => session('success'),
-            'users' => $index_user_action->handle($request, $role),
+            'users' => User::query()
+            -> whereSearch($request->input('search'))
+            -> whenEnabled($request->input('enabled'))
+            -> select(
+                    'users.id',
+                    'users.number_document',
+                    'users.first_name',
+                    'users.second_name',
+                    'users.surname',
+                    'users.second_surname',
+                    'users.email',
+                    'users.email_verified_at',
+                    'users.enabled',
+                    'states.name as state_name',
+                    'cities.name as city_name',
+                    'model_has_roles.role_id'
+                )
+            -> join('states', 'users.state_id', 'states.id')
+            -> join('cities', 'users.city_id', 'cities.id')
+            -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+            -> orderByDesc('users.id')
+            -> role($role)
+            -> paginate(10)
+            -> withQueryString(),
         ]);
     }
 
@@ -67,7 +88,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(EditUserAction $edit_user_action, string $id): Response
+    public function edit(string $id): Response
     {
         return Inertia::render('User/Edit', [
             'cities' => City::getFromCache(),
@@ -75,7 +96,27 @@ class UserController extends Controller
             'states' => State::getFromCache(),
             'success' => session('success'),
             'typeDocuments' => TypeDocument::getFromCache(),
-            'user' => $edit_user_action->handle($id),
+            'user' => User::select(
+                    'users.id',
+                    'users.type_document',
+                    'users.number_document',
+                    'users.first_name',
+                    'users.second_name',
+                    'users.surname',
+                    'users.second_surname',
+                    'users.email',
+                    'users.birthdate',
+                    'users.gender',
+                    'users.phone',
+                    'users.address',
+                    'users.enabled',
+                    'users.state_id',
+                    'users.city_id',
+                    'model_has_roles.role_id'
+                )
+                -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+                -> where('users.id', $id)
+                -> first(),
         ]);
     }
 

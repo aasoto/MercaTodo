@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Client\Showcase;
 
-use App\Actions\Showcase\IndexShowcaseAction;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -16,11 +15,28 @@ class ShowcaseController extends Controller
 {
     use AuthHasRole;
 
-    public function index(Request $request, IndexShowcaseAction $index_showcase_action): Response
+    public function index(Request $request): Response
     {
         return Inertia::render('Showcase/Index', [
             'filters' => $request->only(['search', 'category', 'minPrice', 'maxPrice']),
-            'products' => $index_showcase_action->handle($request),
+            'products' => Product::query()
+                -> whereSearch($request->input('search'))
+                -> whereCategory($request->input('category'))
+                -> wherePriceBetween($request->input('minPrice'), $request->input('maxPrice'))
+                -> select(
+                        'products.name',
+                        'products.slug',
+                        'products_categories.name as category',
+                        'products.price',
+                        'units.name as unit',
+                        'products.picture_1'
+                    )
+                -> join('products_categories', 'products.products_category_id', 'products_categories.id')
+                -> join('units', 'products.unit', 'units.code')
+                -> orderBy('products.id')
+                -> where('availability', 1)
+                -> paginate(12)
+                -> withQueryString(),
             'products_categories' => ProductCategory::getFromCache(),
             'userRole' =>
                 session('user_role') ?
