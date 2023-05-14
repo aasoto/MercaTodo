@@ -3,10 +3,11 @@ import { storeToRefs } from 'pinia';
 import { Head, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useCartStore } from '@/Store/Cart';
+import { ref } from 'vue';
 
 const useCart = useCartStore();
 const { order } = storeToRefs(useCart);
-const { remove } = useCart;
+const { remove, update } = useCart;
 
 const form = useForm({
     slug: '',
@@ -17,6 +18,32 @@ const showProduct = (slug) => {
     form.get(route('showcase.show', form.slug));
 }
 
+const errorAlert = ref(false);
+const errorInfo = ref('');
+
+const decrement = (productId, productQuantity) => {
+    try {
+        if (productQuantity > 1) {
+            productQuantity--;
+            update(productId, productQuantity);
+            errorAlert.value = false;
+        }
+    } catch (error) {
+        errorAlert.value = true;
+        errorInfo.value = error;
+    }
+}
+
+const increment = (productId, productQuantity) => {
+    try {
+        productQuantity++;
+        update(productId, productQuantity);
+        errorAlert.value = false;
+    } catch (error) {
+        errorAlert.value = true;
+        errorInfo.value = error;
+    }
+}
 </script>
 <template>
     <Head title="Vitrina de productos" />
@@ -33,7 +60,10 @@ const showProduct = (slug) => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-10">
                     <div class="flex flex-col justify-center items-center">
-                        <table class="w-full m-5 rounded-lg">
+                        <div v-if="errorAlert" class="bg-red-200 rounded-md w-full text-red-700 text-center py-3">
+                            Ha ocurrido un error al agregar este producto {{ errorInfo }}
+                        </div>
+                        <table v-if="order[0]" class="w-full m-5 rounded-lg">
                             <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
                                 <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
                                     Articulo
@@ -59,8 +89,30 @@ const showProduct = (slug) => {
                                     <td class="px-3 py-3 text-black dark:text-white text-right">
                                         {{ item.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                                     </td>
-                                    <td class="px-3 py-3 text-black dark:text-white text-center">
-                                        {{ item.quantity }}
+                                    <td class="px-3 py-3 text-black dark:text-white flex justify-center items-center gap-3">
+                                        <button @click="decrement(item.id, item.quantity)" class="rounded-md p-1 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24"
+                                                fill="currentColor"
+                                                class="w-6 h-6"
+                                            >
+                                                <path fill-rule="evenodd" d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                        <span class="font-bold text-lg text-gray-900 dark:text-white">
+                                            {{ item.quantity }}
+                                        </span>
+                                        <button @click="increment(item.id, item.quantity)" class="rounded-md p-1 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24"
+                                                fill="currentColor"
+                                                class="w-6 h-6"
+                                            >
+                                                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white text-right">
                                         {{ item.totalPrice.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
@@ -99,6 +151,9 @@ const showProduct = (slug) => {
                                 </th>
                             </tfoot>
                         </table>
+                        <div v-else class="w-full my-5 px-10 py-5 border border-blue-600 bg-blue-300 rounded-lg text-blue-700 text-center">
+                            No hay elementos en el carrito de compra, vaya a la vitrina y busque los articulos que desea ordenar
+                        </div>
                     </div>
                 </div>
             </div>
