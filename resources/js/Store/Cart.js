@@ -5,18 +5,15 @@ export const useCartStore = defineStore('cart', () => {
     const cart = ref([]);
 
     const order = computed(() => {
-        return cart.value.forEach( item => {
-            return {
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity,
+        return cart.value.map( item => ({
+                ...item,
                 totalPrice: item.price * item.quantity
-            };
-        });
+            })
+        );
     });
 
-    const add = (id, name, price, quantity) => {
-        cart.value.push({ id, name, price, quantity });
+    const add = (id, name, slug, price, quantity) => {
+        cart.value.push({ id, name, slug, price, quantity });
     }
 
     const find = (id) => {

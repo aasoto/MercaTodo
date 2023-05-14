@@ -65,7 +65,7 @@ const actionAdd = () => {
 
 const addToCart = () => {
     try {
-        add(props.product.id, props.product.name, props.product.price, quantity.value);
+        add(props.product.id, props.product.name, props.product.slug, props.product.price, quantity.value);
         errorAlert.value = false;
         success.value = true;
         setTimeout(() => {
