@@ -12,6 +12,10 @@ export const useCartStore = defineStore('cart', () => {
         );
     });
 
+    const numberOfProducts = computed(() => {
+        return cart.value.length
+    });
+
     const add = (id, name, slug, price, quantity) => {
         cart.value.push({ id, name, slug, price, quantity });
     }
@@ -36,6 +40,7 @@ export const useCartStore = defineStore('cart', () => {
     return {
         cart,
         order,
+        numberOfProducts,
         add,
         find,
         update,
