@@ -24,6 +24,7 @@ class ShowcaseController extends Controller
                 -> whereCategory($request->input('category'))
                 -> wherePriceBetween($request->input('minPrice'), $request->input('maxPrice'))
                 -> select(
+                        'products.id',
                         'products.name',
                         'products.slug',
                         'products_categories.name as category',

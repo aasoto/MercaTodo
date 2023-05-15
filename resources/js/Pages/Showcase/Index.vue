@@ -4,6 +4,7 @@ import { ref, watch } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 
 import { useSignedRoleStore } from '@/Store/SignedRole';
+import { useCartStore } from '@/Store/Cart';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
@@ -19,6 +20,9 @@ const props = defineProps({
 const useSignedRole = useSignedRoleStore();
 const { assignRole } = useSignedRole;
 assignRole(props.userRole);
+
+const useCart = useCartStore();
+const { find } = useCart;
 
 const btnCategoryLabel = ref('Categorías');
 
@@ -148,12 +152,29 @@ const getResults = () => {
                     v-for="product in products.data"
                     class="bg-white dark:bg-gray-800 rounded-md p-4 shadow-md hover:shadow-lg scale-100 hover:scale-105 transition duration-200 flex flex-col gap-4"
                 >
-                    <Link :href="route('showcase.show', product.slug)">
+                    <Link :href="route('showcase.show', product.slug)" class="relative">
                         <img
                             class="w-full h-56 rounded object-cover object-center cursor-pointer"
                             :src="`../storage/images/products/${product.picture_1}`"
                             alt="product_image_1"
                         >
+                        <div class="absolute top-5 right-5">
+                            <div
+                                v-if="find(product.id)"
+                                class="relative h-12 w-12 bg-black/40 flex items-center justify-center rounded-full"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    class="w-6 h-6 text-white"
+                                >
+                                    <path
+                                        d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
                         <h2 class="text-lg truncate font-medium hover:font-bold no-underline hover:underline cursor-pointer capitalize">
                             {{ product.name }}
                         </h2>
