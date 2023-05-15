@@ -19,7 +19,7 @@ const useSignedRole = useSignedRoleStore();
 const { role } = storeToRefs(useSignedRole);
 
 const useCart = useCartStore();
-const { numberOfProducts } = storeToRefs(useCart);
+const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
 
 </script>
 
@@ -70,7 +70,7 @@ const { numberOfProducts } = storeToRefs(useCart);
                             <div v-if="role == 'client'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('order')" :active="route().current('order')">
                                     <div
-                                        class="absolute h-12 w-12 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full"
+                                        class="relative h-12 w-12 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full"
                                     >
                                         <svg
                                             v-if="!numberOfProducts"
@@ -79,7 +79,7 @@ const { numberOfProducts } = storeToRefs(useCart);
                                             viewBox="0 0 24 24"
                                             stroke-width="1.5"
                                             stroke="currentColor"
-                                            class="w-7 h-7 stroke-red-500"
+                                            class="w-9 h-9 stroke-red-500"
                                         >
                                             <path
                                                 stroke-linecap="round"
@@ -92,20 +92,26 @@ const { numberOfProducts } = storeToRefs(useCart);
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 24 24"
                                             fill="currentColor"
-                                            class="w-7 h-7 text-red-500"
+                                            class="w-9 h-9 text-red-500"
                                         >
                                             <path
                                                 d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
                                             />
                                         </svg>
+                                        <span
+                                            class="absolute translate-x-0.5 -translate-y-0.5 z-20 text-xs font-bold"
+                                            :class="numberQuantityOfProducts ? 'text-white' : 'text-red-500'"
+                                        >
+                                            {{ numberQuantityOfProducts }}
+                                        </span>
+                                        <span
+                                            v-if="numberOfProducts"
+                                            class="absolute right-0 top-0 translate-x-3 -translate-y-1 text-xs font-bold px-1.5 py-0.5 h-max rounded bg-red-600 text-white"
+                                        >
+                                            {{ numberOfProducts }}
+                                        </span>
                                     </div>
                                 </NavLink>
-                                <span
-                                    v-if="numberOfProducts"
-                                    class="relative translate-x-2 translate-y-2 text-xs font-bold px-1.5 py-0.5 h-max rounded bg-red-600 text-white"
-                                >
-                                    {{ numberOfProducts }}
-                                </span>
                             </div>
                             <div class="flex justify-end items-center">
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">

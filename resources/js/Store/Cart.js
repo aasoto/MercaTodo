@@ -13,8 +13,22 @@ export const useCartStore = defineStore('cart', () => {
     });
 
     const numberOfProducts = computed(() => {
-        return cart.value.length
+        return cart.value.length;
     });
+
+    const numberQuantityOfProducts = computed((quantity = 0) => {
+        cart.value.forEach( item => {
+            quantity = quantity + item.quantity;
+        });
+        return quantity;
+    });
+
+    const totalPriceOrder = computed((price = 0) => {
+        order.value.forEach( item => {
+            price = price + item.totalPrice;
+        });
+        return price;
+    })
 
     const add = (id, name, slug, price, quantity) => {
         cart.value.push({ id, name, slug, price, quantity });
@@ -41,6 +55,8 @@ export const useCartStore = defineStore('cart', () => {
         cart,
         order,
         numberOfProducts,
+        numberQuantityOfProducts,
+        totalPriceOrder,
         add,
         find,
         update,

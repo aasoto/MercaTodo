@@ -6,7 +6,7 @@ import { useCartStore } from '@/Store/Cart';
 import { ref } from 'vue';
 
 const useCart = useCartStore();
-const { order } = storeToRefs(useCart);
+const { order, totalPriceOrder } = storeToRefs(useCart);
 const { remove, update } = useCart;
 
 const form = useForm({
@@ -44,6 +44,7 @@ const increment = (productId, productQuantity) => {
         errorInfo.value = error;
     }
 }
+
 </script>
 <template>
     <Head title="Vitrina de productos" />
@@ -131,20 +132,13 @@ const increment = (productId, productQuantity) => {
                                         </button>
                                     </td>
                                 </tr>
-
                             </tbody>
                             <tfoot class="bg-gray-300 dark:bg-gray-700 rounded-b-lg">
-                                <th class="rounded-bl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
-                                    Articulo
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Precio
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Cantidad
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
+                                <th colspan="3" class="rounded-bl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-right">
                                     Precio total
+                                </th>
+                                <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-right">
+                                    {{ totalPriceOrder.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                                 </th>
                                 <th class="rounded-br-lg py-3 text-black dark:text-white text-lg font-bold text-center">
                                     Acciones
