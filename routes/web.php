@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Client\Showcase\ShowcaseController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\Product\ProductController;
-use App\Http\Controllers\Admin\User\TypeDocumentController;
-use App\Http\Controllers\Admin\User\UserController;
-use App\Http\Controllers\Admin\Product\UnitController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Web\Admin\DashboardController;
+use App\Http\Controllers\Web\Admin\ProductController;
+use App\Http\Controllers\Web\Admin\TypeDocumentController;
+use App\Http\Controllers\Web\Admin\UnitController;
+use App\Http\Controllers\Web\Admin\UserController;
+use App\Http\Controllers\Web\Client\ShowcaseController;
+use App\Http\Controllers\Web\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
