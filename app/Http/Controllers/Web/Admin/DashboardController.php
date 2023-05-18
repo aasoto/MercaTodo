@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Web\Admin;
 
-use App\Traits\AuthHasRole;
+use App\Domain\User\Models\ModelHasRole as Role;
 use App\Http\Controllers\Controller;
-use App\Models\Spatie\ModelHasRole as Role;
+use App\Support\Traits\AuthHasRole;
 use Inertia\Inertia;
 use Inertia\Response;
 

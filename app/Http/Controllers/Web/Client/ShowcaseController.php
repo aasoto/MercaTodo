@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Client\Showcase;
+namespace App\Http\Controllers\Web\Client;
 
+use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
+use App\Domain\User\Models\ModelHasRole as Role;
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\Spatie\ModelHasRole as Role;
-use App\Traits\AuthHasRole;
+use App\Support\Traits\AuthHasRole;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;

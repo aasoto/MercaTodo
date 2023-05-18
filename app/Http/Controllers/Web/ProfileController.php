@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
+use App\Domain\TypeDocument\Models\TypeDocument;
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\State;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\City;
-use App\Models\State;
-use App\Models\TypeDocument;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Admin\User\TypeDocument;
+namespace App\Http\Requests\Admin\Unit;
 
-use App\Models\TypeDocument;
+use App\Domain\Unit\Models\Unit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:50', Rule::unique(TypeDocument::class)->ignore($this->route('id'))],
+            'name' => ['required', 'string', 'max:100', Rule::unique(Unit::class)->ignore($this->route('id'))],
         ];
     }
 }

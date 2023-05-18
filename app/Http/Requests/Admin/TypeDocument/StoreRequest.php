@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Admin\User\TypeDocument;
+namespace App\Http\Requests\Admin\TypeDocument;
 
-use App\Models\TypeDocument;
+use App\Domain\TypeDocument\Models\TypeDocument;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Admin\User;
+namespace App\Http\Controllers\Web\Admin;
 
-use App\Classes\User\TypesDocuments;
-use App\Dtos\User\TypeDocument\StoreTypeDocumentData;
-use App\Dtos\User\TypeDocument\UpdateTypeDocumentData;
+use App\Domain\TypeDocument\Actions\StoreTypeDocumentAction;
+use App\Domain\TypeDocument\Actions\UpdateTypeDocumentAction;
+use App\Domain\TypeDocument\Dtos\StoreTypeDocumentData;
+use App\Domain\TypeDocument\Dtos\UpdateTypeDocumentData;
+use App\Domain\TypeDocument\Models\TypeDocument;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\User\TypeDocument\StoreRequest;
-use App\Http\Requests\Admin\User\TypeDocument\UpdateRequest;
-use App\Models\TypeDocument;
-use App\Services\User\TypesDocumentsServices;
+use App\Http\Requests\Admin\TypeDocument\StoreRequest;
+use App\Http\Requests\Admin\TypeDocument\UpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -30,26 +30,26 @@ class TypeDocumentController extends Controller
         return Inertia::render('User/TypeDocument/Create');
     }
 
-    public function store(StoreRequest $request, TypesDocumentsServices $types_documents_services): RedirectResponse
+    public function store(StoreRequest $request, StoreTypeDocumentAction $store_type_document_action): RedirectResponse
     {
         $data = StoreTypeDocumentData::fromRequest($request);
-        $types_documents_services->store($data);
+        $store_type_document_action->handle($data);
 
         return Redirect::route(('type_document.index'))->with('success', 'Type document created.');
     }
 
-    public function edit(TypesDocumentsServices $types_documents_services, string $id): Response
+    public function edit(string $id): Response
     {
         return Inertia::render('User/TypeDocument/Edit', [
-            'typeDocument' => $types_documents_services->edit($id),
+            'typeDocument' => TypeDocument::where('id', $id)->first(),
         ]);
     }
 
-    public function update(UpdateRequest $request, TypesDocumentsServices $types_documents_services, string $id): RedirectResponse
+    public function update(UpdateRequest $request, UpdateTypeDocumentAction $update_type_document_action, string $id): RedirectResponse
     {
         $data = UpdateTypeDocumentData::fromRequest($request);
 
-        $types_documents_services->update($id, $data);
+        $update_type_document_action->handle($id, $data);
 
         return Redirect::route('type_document.index')->with('success', 'Type document updated.');
     }

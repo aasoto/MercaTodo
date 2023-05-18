@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Product;
+namespace App\Http\Controllers\Web\Admin;
 
-use App\Dtos\Product\Unit\StoreUnitData;
-use App\Dtos\Product\Unit\UpdateUnitData;
+use App\Domain\Unit\Actions\StoreUnitAction;
+use App\Domain\Unit\Actions\UpdateUnitAction;
+use App\Domain\Unit\Dtos\StoreUnitData;
+use App\Domain\Unit\Dtos\UpdateUnitData;
+use App\Domain\Unit\Models\Unit;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Product\Unit\StoreRequest;
-use App\Http\Requests\Admin\Product\Unit\UpdateRequest;
-use App\Models\Unit;
-use App\Services\Product\UnitsServices;
+use App\Http\Requests\Admin\Unit\StoreRequest;
+use App\Http\Requests\Admin\Unit\UpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -29,26 +30,26 @@ class UnitController extends Controller
         return Inertia::render('Product/Unit/Create');
     }
 
-    public function store(StoreRequest $request, UnitsServices $units_services): RedirectResponse
+    public function store(StoreRequest $request, StoreUnitAction $store_unit_action): RedirectResponse
     {
         $data = StoreUnitData::fromRequest($request);
 
-        $units_services->store($data);
+        $store_unit_action->handle($data);
 
         return Redirect::route(('unit.index'))->with('success', 'Unit created.');
     }
 
-    public function edit(UnitsServices $units_services, string $id): Response
+    public function edit(string $id): Response
     {
         return Inertia::render('Product/Unit/Edit', [
-            'unit' => $units_services->edit($id),
+            'unit' => Unit::where('id', $id)->first(),
         ]);
     }
 
-    public function update(UpdateRequest $request, UnitsServices $units_services, string $id): RedirectResponse
+    public function update(UpdateRequest $request, UpdateUnitAction $update_unit_action, string $id): RedirectResponse
     {
         $data = UpdateUnitData::fromRequest($request);
-        $units_services->update($id, $data);
+        $update_unit_action->handle($id, $data);
         return Redirect::route('unit.index')->with('success', 'Unit updated.');
     }
 }

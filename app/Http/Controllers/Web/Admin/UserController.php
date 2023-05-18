@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Admin\User;
+namespace App\Http\Controllers\Web\Admin;
 
-use App\Actions\User\StoreUserAction;
-use App\Actions\User\UpdateUserAction;
-use App\Dtos\User\StoreUserData;
-use App\Dtos\User\UpdateUserData;
+use App\Domain\TypeDocument\Models\TypeDocument;
+use App\Domain\User\Actions\StoreUserAction;
+use App\Domain\User\Actions\UpdateUserAction;
+use App\Domain\User\Dtos\StoreUserData;
+use App\Domain\User\Dtos\UpdateUserData;
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\ModelHasRole as Role;
+use App\Domain\User\Models\State;
+use App\Domain\User\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreRequest;
 use App\Http\Requests\Admin\User\UpdateRequest;
-use App\Models\City;
-use App\Models\Spatie\ModelHasRole as Role;
-use App\Models\State;
-use App\Models\TypeDocument;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;

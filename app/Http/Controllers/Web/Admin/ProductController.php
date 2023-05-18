@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Product;
+namespace App\Http\Controllers\Web\Admin;
 
-use App\Actions\Product\DestroyProductAction;
-use App\Actions\Product\StoreProductAction;
-use App\Actions\Product\UpdateProductAction;
-use App\Dtos\Product\StoreProductData;
-use App\Dtos\Product\UpdateProductData;
+use App\Domain\Product\Actions\DestroyProductAction;
+use App\Domain\Product\Actions\StoreProductAction;
+use App\Domain\Product\Actions\UpdateProductAction;
+use App\Domain\Product\Dtos\StoreProductData;
+use App\Domain\Product\Dtos\UpdateProductData;
+use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
+use App\Domain\Unit\Models\Unit;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Http\Requests\Admin\Product\UpdateRequest;
-use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\Unit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;

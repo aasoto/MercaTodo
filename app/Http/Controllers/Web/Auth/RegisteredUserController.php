@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Web\Auth;
 
-use App\Actions\Register\StoreRegisterAction;
+use App\Domain\Register\Actions\StoreRegisterAction;
+use App\Domain\Register\Dtos\StoreRegisterData;
+use App\Domain\TypeDocument\Models\TypeDocument;
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\State;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisteredUser\StoreRequest;
-use App\Models\City;
-use App\Models\State;
-use App\Models\TypeDocument;
-use App\Providers\RouteServiceProvider;
+use App\Support\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +40,8 @@ class RegisteredUserController extends Controller
         StoreRegisterAction $store_register_action
     ): RedirectResponse
     {
-        $user = $store_register_action->handle($request);
+        $data = StoreRegisterData::fromRequest($request);
+        $user = $store_register_action->handle($data);
 
         event(new Registered($user));
 

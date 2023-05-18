@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Admin\Product\Unit;
+namespace App\Http\Requests\Admin\Unit;
 
-use App\Models\Unit;
+use App\Domain\Unit\Models\Unit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,8 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100', Rule::unique(Unit::class)->ignore($this->route('id'))],
+            'code' => ['required', 'string', 'max:100', Rule::unique(Unit::class)],
+            'name' => ['required', 'string', 'max:100', Rule::unique(Unit::class)],
         ];
     }
 }
