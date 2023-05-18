@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\User;
+use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StateSeeder;
@@ -57,7 +57,7 @@ class StartTest extends TestCase
 
     public function test_when_user_role_is_wrong_dispatch_error(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create()->assignRole('');
 
         $response = $this->actingAs($user)
             ->get(route('start'));

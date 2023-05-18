@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Http\Controllers\Admin\Product;
 
-use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\Unit;
-use App\Models\User;
+use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
+use App\Domain\Unit\Models\Unit;
+use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\StateSeeder;

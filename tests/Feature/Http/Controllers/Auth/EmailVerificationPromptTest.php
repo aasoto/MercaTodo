@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Controllers\Auth;
 
-use App\Models\User;
+use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StateSeeder;
@@ -41,7 +41,7 @@ class EmailVerificationPromptTest extends TestCase
 
     public function test_if_email_is_not_verfied_direct_verify_email_page(): void
     {
-        $user = User::factory()->create(['email_verified_at' => null]);
+        $user = User::factory()->create(['email_verified_at' => null])->assignRole('admin');
 
         $response = $this->actingAs($user)->get(route('verification.notice'));
 
