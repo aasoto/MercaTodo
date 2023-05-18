@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\State;
+use App\Domain\User\Models\State;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

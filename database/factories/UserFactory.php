@@ -2,9 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\City;
-use App\Models\State;
-use App\Models\TypeDocument;
+use App\Domain\TypeDocument\Models\TypeDocument;
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\State;
+use App\Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -19,11 +20,12 @@ class UserFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = User::class;
+
     public function definition(): array
     {
         $state = $this->search_state();
         return [
-            // 'name' => fake()->name(),
             'type_document' => $this->search_type_document(),
             'number_document' => fake()->randomNumber(7, true),
             'first_name' => fake()->firstName($gender = 'male'|'female'),
@@ -43,16 +45,6 @@ class UserFactory extends Factory
             // 'remember_token' => Str::random(10),
         ];
     }
-
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    // public function unverified(): static
-    // {
-    //     return $this->state(fn (array $attributes) => [
-    //         'email_verified_at' => null,
-    //     ]);
-    // }
 
     public function search_type_document ()
     {

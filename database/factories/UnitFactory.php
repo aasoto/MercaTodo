@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Domain\Unit\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,6 +15,8 @@ class UnitFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Unit::class;
+
     public function definition(): array
     {
         return [
