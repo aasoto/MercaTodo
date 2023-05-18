@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\TypeDocument;
+use App\Domain\TypeDocument\Models\TypeDocument;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

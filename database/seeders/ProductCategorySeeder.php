@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ProductCategory;
+use App\Domain\Product\Models\ProductCategory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
