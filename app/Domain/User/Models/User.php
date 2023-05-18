@@ -80,6 +80,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return new UserQueryBuilder($query);
     }
 
+    /**
+     * @var string
+     */
     protected $guard_name = "web";
 
     protected static function newFactory(): Factory
