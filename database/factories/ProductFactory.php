@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\ProductCategory;
-use App\Models\Unit;
+use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
+use App\Domain\Product\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\UploadedFile;
 
@@ -17,6 +18,8 @@ class ProductFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Product::class;
+
     public function definition(): array
     {
         return [
@@ -28,10 +31,6 @@ class ProductFactory extends Factory
             'price' => fake()->randomFloat(2, 10000, 1000000),
             'unit' => $this->get_code_unit(),
             'stock' => fake()->randomNumber(2, true),
-            // vendor\fakerphp\faker\src\Faker\Provider\Image.php
-            // 'picture_1' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
-            // 'picture_2' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
-            // 'picture_3' => fake()->image(storage_path('app/public/images/products'), 500, 500, null, false),
             'picture_1' => $this->upload_image(),
             'picture_2' => $this->upload_image(),
             'picture_3' => $this->upload_image(),

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\TypeDocument;
-use App\Models\User;
+use App\Domain\User\Models\TypeDocument;
+use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StateSeeder;

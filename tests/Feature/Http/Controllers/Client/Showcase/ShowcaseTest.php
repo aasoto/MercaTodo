@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Http\Controllers\Client\Showcase;
 
-use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\User;
+use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
+use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\ProductSeeder;

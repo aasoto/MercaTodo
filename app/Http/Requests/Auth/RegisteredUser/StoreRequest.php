@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Auth\RegisteredUser;
 
-use App\Models\User;
+use App\Domain\User\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rules\Password;

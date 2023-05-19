@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
-use App\Providers\RouteServiceProvider;
+use App\Domain\User\Models\User;
+use App\Support\Providers\RouteServiceProvider;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StateSeeder;
@@ -33,7 +33,7 @@ class EmailVerificationTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified_at' => null,
-        ]);
+        ])->assignRole('admin');
 
         $response = $this->actingAs($user)->get('/verify-email');
 
@@ -44,7 +44,7 @@ class EmailVerificationTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified_at' => null,
-        ]);
+        ])->assignRole('admin');
 
         Event::fake();
 
@@ -65,7 +65,7 @@ class EmailVerificationTest extends TestCase
     {
         $user = User::factory()->create([
             'email_verified_at' => null,
-        ]);
+        ])->assignRole('admin');
 
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',

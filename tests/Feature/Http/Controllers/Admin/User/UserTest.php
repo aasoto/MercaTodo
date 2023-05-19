@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Http\Controllers\Admin\User;
 
-use App\Models\City;
-use App\Models\Spatie\ModelHasRole as Role;
-use App\Models\State;
-use App\Models\TypeDocument;
-use App\Models\User;
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\ModelHasRole as Role;
+use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
+use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StateSeeder;

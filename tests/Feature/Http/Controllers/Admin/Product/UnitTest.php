@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers\Admin\Product;
 
-use App\Models\Unit;
-use App\Models\User;
+use App\Domain\Product\Models\Unit;
+use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StateSeeder;
