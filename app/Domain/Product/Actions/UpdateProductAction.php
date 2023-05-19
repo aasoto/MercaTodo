@@ -4,7 +4,7 @@ namespace App\Domain\Product\Actions;
 
 use App\Domain\Product\Dtos\UpdateProductData;
 use App\Domain\Product\Models\Product;
-use App\Support\Services\Product\ImagesServices;
+use App\Domain\Product\Services\ImagesServices;
 
 class UpdateProductAction
 {

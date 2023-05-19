@@ -4,7 +4,7 @@ namespace App\Domain\User\Actions;
 
 use App\Domain\User\Dtos\UpdateUserData;
 use App\Domain\User\Models\User;
-use App\Support\Services\User\RolesServices;
+use App\Domain\User\Services\RolesServices;
 
 class UpdateUserAction
 {

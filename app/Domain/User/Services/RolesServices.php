@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Services\User;
+namespace App\Domain\User\Services;
 
 use App\Domain\User\Models\ModelHasRole;
 use Spatie\Permission\Models\Role;

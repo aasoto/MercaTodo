@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Services\Product;
+namespace App\Domain\Product\Services;
 
 use App\Domain\Product\Dtos\StoreProductData;
 use App\Domain\Product\Dtos\UpdateProductData;
