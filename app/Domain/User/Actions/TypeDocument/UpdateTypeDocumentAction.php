@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Domain\TypeDocument\Actions;
+namespace App\Domain\User\Actions\TypeDocument;
 
-use App\Domain\TypeDocument\Dtos\UpdateTypeDocumentData;
-use App\Domain\TypeDocument\Models\TypeDocument;
+use App\Domain\User\Dtos\TypeDocument\UpdateTypeDocumentData;
+use App\Domain\User\Models\TypeDocument;
 use Illuminate\Support\Facades\Cache;
 
 class UpdateTypeDocumentAction

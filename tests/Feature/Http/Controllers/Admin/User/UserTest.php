@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Http\Controllers\Admin\User;
 
-use App\Domain\TypeDocument\Models\TypeDocument;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\ModelHasRole as Role;
 use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;

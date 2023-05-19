@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Register\Actions;
+namespace App\Domain\User\Actions;
 
-use App\Domain\Register\Dtos\StoreRegisterData;
+use App\Domain\User\Dtos\StoreRegisterData;
 use App\Domain\User\Models\User;
 use Illuminate\Support\Facades\Hash;
 

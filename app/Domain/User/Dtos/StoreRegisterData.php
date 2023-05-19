@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Register\Dtos;
+namespace App\Domain\User\Dtos;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Domain\TypeDocument\Models\TypeDocument;
+use App\Domain\User\Models\TypeDocument;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

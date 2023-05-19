@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Domain\Product\Models\Product;
 use App\Domain\Product\Models\ProductCategory;
-use App\Domain\Unit\Models\Unit;
+use App\Domain\Product\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\UploadedFile;
 

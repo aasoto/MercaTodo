@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Admin\TypeDocument;
 
-use App\Domain\TypeDocument\Models\TypeDocument;
+use App\Domain\User\Models\TypeDocument;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

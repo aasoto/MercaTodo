@@ -9,7 +9,7 @@ use App\Domain\Product\Dtos\StoreProductData;
 use App\Domain\Product\Dtos\UpdateProductData;
 use App\Domain\Product\Models\Product;
 use App\Domain\Product\Models\ProductCategory;
-use App\Domain\Unit\Models\Unit;
+use App\Domain\Product\Models\Unit;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Http\Requests\Admin\Product\UpdateRequest;

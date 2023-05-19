@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
-use App\Domain\Unit\Actions\StoreUnitAction;
-use App\Domain\Unit\Actions\UpdateUnitAction;
-use App\Domain\Unit\Dtos\StoreUnitData;
-use App\Domain\Unit\Dtos\UpdateUnitData;
-use App\Domain\Unit\Models\Unit;
+use App\Domain\Product\Actions\Unit\StoreUnitAction;
+use App\Domain\Product\Actions\Unit\UpdateUnitAction;
+use App\Domain\Product\Dtos\Unit\StoreUnitData;
+use App\Domain\Product\Dtos\Unit\UpdateUnitData;
+use App\Domain\Product\Models\Unit;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Unit\StoreRequest;
 use App\Http\Requests\Admin\Unit\UpdateRequest;

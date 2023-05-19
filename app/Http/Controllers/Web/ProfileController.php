@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Domain\TypeDocument\Models\TypeDocument;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

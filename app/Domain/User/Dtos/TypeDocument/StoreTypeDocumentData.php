@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Domain\Unit\Dtos;
+namespace App\Domain\User\Dtos\TypeDocument;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 /** @phpstan-consistent-constructor */
-class StoreUnitData
+class StoreTypeDocumentData
 {
     public function __construct(
         public string $code,

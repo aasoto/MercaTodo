@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Domain\TypeDocument\Models\TypeDocument;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\TypeDocument\Models;
+namespace App\Domain\User\Models;
 
 use Database\Factories\TypeDocumentFactory;
 use Illuminate\Database\Eloquent\Collection;

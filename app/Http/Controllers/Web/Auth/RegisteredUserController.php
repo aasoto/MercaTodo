@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Web\Auth;
 
-use App\Domain\Register\Actions\StoreRegisterAction;
-use App\Domain\Register\Dtos\StoreRegisterData;
-use App\Domain\TypeDocument\Models\TypeDocument;
+use App\Domain\User\Actions\StoreRegisterAction;
+use App\Domain\User\Dtos\StoreRegisterData;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisteredUser\StoreRequest;
 use App\Support\Providers\RouteServiceProvider;

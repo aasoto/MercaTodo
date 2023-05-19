@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
-use App\Domain\TypeDocument\Models\TypeDocument;
 use App\Domain\User\Actions\StoreUserAction;
 use App\Domain\User\Actions\UpdateUserAction;
 use App\Domain\User\Dtos\StoreUserData;
@@ -10,6 +9,7 @@ use App\Domain\User\Dtos\UpdateUserData;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\ModelHasRole as Role;
 use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreRequest;

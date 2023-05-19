@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Unit\Models;
+namespace App\Domain\Product\Models;
 
 use Database\Factories\UnitFactory;
 use Illuminate\Database\Eloquent\Collection;

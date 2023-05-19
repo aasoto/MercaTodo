@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
-use App\Domain\TypeDocument\Actions\StoreTypeDocumentAction;
-use App\Domain\TypeDocument\Actions\UpdateTypeDocumentAction;
-use App\Domain\TypeDocument\Dtos\StoreTypeDocumentData;
-use App\Domain\TypeDocument\Dtos\UpdateTypeDocumentData;
-use App\Domain\TypeDocument\Models\TypeDocument;
+use App\Domain\User\Actions\TypeDocument\StoreTypeDocumentAction;
+use App\Domain\User\Actions\TypeDocument\UpdateTypeDocumentAction;
+use App\Domain\User\Dtos\TypeDocument\StoreTypeDocumentData;
+use App\Domain\User\Dtos\TypeDocument\UpdateTypeDocumentData;
+use App\Domain\User\Models\TypeDocument;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\TypeDocument\StoreRequest;
 use App\Http\Requests\Admin\TypeDocument\UpdateRequest;

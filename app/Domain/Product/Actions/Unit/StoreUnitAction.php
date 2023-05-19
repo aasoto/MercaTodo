@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Domain\Unit\Actions;
+namespace App\Domain\Product\Actions\Unit;
 
-use App\Domain\Unit\Dtos\StoreUnitData;
-use App\Domain\Unit\Models\Unit;
+use App\Domain\Product\Dtos\Unit\StoreUnitData;
+use App\Domain\Product\Models\Unit;
 use Illuminate\Support\Facades\Cache;
 
 class StoreUnitAction
