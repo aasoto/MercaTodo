@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Web\Admin\DashboardController;
 use App\Http\Controllers\Web\Admin\ProductController;
+use App\Http\Controllers\Web\Admin\StateController;
 use App\Http\Controllers\Web\Admin\TypeDocumentController;
 use App\Http\Controllers\Web\Admin\UnitController;
 use App\Http\Controllers\Web\Admin\UserController;
@@ -68,6 +69,14 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::post('/type_document/store', [TypeDocumentController::class, 'store'])->name('type_document.store');
         Route::get('/type_document/edit/{id}', [TypeDocumentController::class, 'edit'])->name('type_document.edit');
         Route::patch('/type_document/edit/{id}', [TypeDocumentController::class, 'update'])->name('type_document.update');
+    });
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/states', [StateController::class, 'index'])->name('state.index');
+        Route::get('/state', [StateController::class, 'create'])->name('state.create');
+        Route::post('/state/store', [StateController::class, 'store'])->name('state.store');
+        Route::get('/state/edit/{id}', [StateController::class, 'edit'])->name('state.edit');
+        Route::patch('/state/edit/{id}', [StateController::class, 'update'])->name('state.update');
     });
 
     /** PRODUCTS */
