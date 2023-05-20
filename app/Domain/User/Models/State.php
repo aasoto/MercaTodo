@@ -21,7 +21,7 @@ class State extends Model
     public static function getFromCache(): Collection
     {
         return Cache::rememberForever(
-            'states', fn () => State::select('id', 'name')->get()
+            'states', fn () => State::select('id', 'name')->orderBy('name')->get()
         );
     }
 
