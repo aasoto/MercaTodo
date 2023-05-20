@@ -77,16 +77,16 @@ const props = defineProps({
             </div>
         </div>
         <AlertSuccess
-            v-if="success === 'Unit created.'"
+            v-if="success === 'Product category created.'"
             title="¡Bien Hecho!"
-            text="Unidad agregada satisfactoriamente."
+            text="Categoría de producto agregada satisfactoriamente."
             :close="false"
             :btn-close="true"
         />
         <AlertSuccess
-            v-if="success === 'Unit updated.'"
+            v-if="success === 'Product category updated.'"
             title="¡Bien Hecho!"
-            text="Unidad actualizada satisfactoriamente."
+            text="Categoría de producto actualizada satisfactoriamente."
             :close="false"
             :btn-close="true"
         />
