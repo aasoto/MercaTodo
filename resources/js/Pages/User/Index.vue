@@ -1,5 +1,4 @@
 <script setup>
-// import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import Pagination from '@/Components/Pagination.vue';
@@ -48,15 +47,42 @@ const setEnabled = (value) => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Listado de usuarios</h2>
-                <Link :href="route('type_document.index')">
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Listado de usuarios
+                </h2>
+                <div class="relative group col-span-2">
                     <button
-                        class="text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-md group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
+                        id="dropdownDefaultButton"
+                        class="w-80 text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
                         type="button"
                     >
-                        Tipo de documento
+                        Gestión de dependencias
+                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
                     </button>
-                </Link>
+                    <!-- Dropdown menu -->
+                    <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-80 dark:bg-gray-700 transition duration-200">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                            <li>
+                                <Link
+                                    :href="route('state.index')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer"
+                                >
+                                    Estados
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    :href="route('type_document.index')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                                >
+                                    Tipo de documento
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </template>
 
