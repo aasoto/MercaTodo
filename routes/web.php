@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\Admin\DashboardController;
+use App\Http\Controllers\Web\Admin\ProductCategoryController;
 use App\Http\Controllers\Web\Admin\ProductController;
 use App\Http\Controllers\Web\Admin\TypeDocumentController;
 use App\Http\Controllers\Web\Admin\UnitController;
@@ -79,6 +80,14 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::get('/product/edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
         Route::patch('/product/edit/{id}/{files}', [ProductController::class, 'update'])->name('product.update');
         Route::delete('/product/{slug}', [ProductController::class, 'destroy'])->name('product.destroy');
+    });
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/product_categories', [ProductCategoryController::class, 'index'])->name('product_category.index');
+        Route::get('/product_category', [ProductCategoryController::class, 'create'])->name('product_category.create');
+        Route::post('/product_category/store', [ProductCategoryController::class, 'store'])->name('product_category.store');
+        Route::get('/product_category/edit/{id}', [ProductCategoryController::class, 'edit'])->name('product_category.edit');
+        Route::patch('/product_category/edit/{id}', [ProductCategoryController::class, 'update'])->name('product_category.update');
     });
 
     Route::middleware(['role:admin'])->group(function () {

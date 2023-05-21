@@ -23,7 +23,7 @@ class ProductCategory extends Model
     public static function getFromCache(): Collection
     {
         return Cache::rememberForever(
-            'products_categories', fn () => ProductCategory::select('id', 'name')->get()
+            'products_categories', fn () => ProductCategory::select('id', 'name')->orderBy('name')->get()
         );
     }
 
