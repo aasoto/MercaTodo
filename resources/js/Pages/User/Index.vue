@@ -47,7 +47,9 @@ const setEnabled = (value) => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Listado de usuarios</h2>
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Listado de usuarios
+                </h2>
                 <div class="relative group col-span-2">
                     <button
                         id="dropdownDefaultButton"
@@ -68,6 +70,14 @@ const setEnabled = (value) => {
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer"
                                 >
                                     Ciudades
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    :href="route('state.index')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer"
+                                >
+                                    Estados
                                 </Link>
                             </li>
                             <li>

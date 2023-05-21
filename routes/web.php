@@ -3,6 +3,7 @@
 use App\Http\Controllers\Web\Admin\CityController;
 use App\Http\Controllers\Web\Admin\DashboardController;
 use App\Http\Controllers\Web\Admin\ProductController;
+use App\Http\Controllers\Web\Admin\StateController;
 use App\Http\Controllers\Web\Admin\TypeDocumentController;
 use App\Http\Controllers\Web\Admin\UnitController;
 use App\Http\Controllers\Web\Admin\UserController;
@@ -77,6 +78,15 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::post('/city/store', [CityController::class, 'store'])->name('city.store');
         Route::get('/city/edit/{id}', [CityController::class, 'edit'])->name('city.edit');
         Route::patch('/city/edit/{id}', [CityController::class, 'update'])->name('city.update');
+
+    });
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/states', [StateController::class, 'index'])->name('state.index');
+        Route::get('/state', [StateController::class, 'create'])->name('state.create');
+        Route::post('/state/store', [StateController::class, 'store'])->name('state.store');
+        Route::get('/state/edit/{id}', [StateController::class, 'edit'])->name('state.edit');
+        Route::patch('/state/edit/{id}', [StateController::class, 'update'])->name('state.update');
     });
 
     /** PRODUCTS */
