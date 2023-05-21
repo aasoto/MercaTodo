@@ -4,6 +4,7 @@ namespace App\Domain\User\Dtos\State;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** @phpstan-consistent-constructor */
 class StoreStateData
 {
     public function __construct(

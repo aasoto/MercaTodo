@@ -4,6 +4,7 @@ namespace App\Domain\User\Dtos\City;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** @phpstan-consistent-constructor */
 class UpdateCityData
 {
     public function __construct(
