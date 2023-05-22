@@ -13,6 +13,15 @@ class StateSeeder extends Seeder
      */
     public function run(): void
     {
-        State::factory()->count(5)->create();
+        for ($i = 0; $i < 5; $i++) {
+            do {
+                $state = fake()->state();
+                $found = State::select('id')->where('name', $state)->get();
+            } while (count($found) != 0);
+
+            State::factory()->create([
+                'name' => $state,
+            ]);
+        }
     }
 }
