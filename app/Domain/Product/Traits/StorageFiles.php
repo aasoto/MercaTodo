@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Traits;
+namespace App\Domain\Product\Traits;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;

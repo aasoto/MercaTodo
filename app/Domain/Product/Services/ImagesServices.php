@@ -4,7 +4,7 @@ namespace App\Domain\Product\Services;
 
 use App\Domain\Product\Dtos\StoreProductData;
 use App\Domain\Product\Dtos\UpdateProductData;
-use App\Support\Traits\StorageFiles;
+use App\Domain\Product\Traits\StorageFiles;
 
 class ImagesServices
 {

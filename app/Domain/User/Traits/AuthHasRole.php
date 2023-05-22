@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Traits;
+namespace App\Domain\User\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
 
