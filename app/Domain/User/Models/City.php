@@ -21,7 +21,7 @@ class City extends Model
     public static function getFromCache(): Collection
     {
         return Cache::rememberForever(
-            'cities', fn () => City::select('id', 'name', 'state_id')->get()
+            'cities', fn () => City::select('id', 'name', 'state_id')->orderBy('name')->get()
         );
     }
 
