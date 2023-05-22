@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Requests\Admin\TypeDocument;
+namespace App\Http\Requests\Web\Admin\State;
 
-use App\Domain\User\Models\TypeDocument;
+use App\Domain\User\Models\State;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool|null
+    public function authorize(): bool
     {
-        return auth()->user()?->hasRole('admin');
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:50', Rule::unique(TypeDocument::class)->ignore($this->route('id'))],
+            'name' => ['required', 'string', 'max:100', Rule::unique(State::class)],
         ];
     }
 }

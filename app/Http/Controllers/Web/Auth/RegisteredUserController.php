@@ -8,7 +8,7 @@ use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\RegisteredUser\StoreRequest;
+use App\Http\Requests\Web\Auth\RegisteredUser\StoreRequest;
 use App\Support\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;

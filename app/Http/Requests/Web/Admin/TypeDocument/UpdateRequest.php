@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Requests\Admin\ProductCategory;
+namespace App\Http\Requests\Web\Admin\TypeDocument;
 
-use App\Domain\Product\Models\ProductCategory;
+use App\Domain\User\Models\TypeDocument;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize(): bool|null
     {
-        return true;
+        return auth()->user()?->hasRole('admin');
     }
 
     /**
@@ -24,7 +24,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:200', Rule::unique(ProductCategory::class)],
+            'name' => ['required', 'string', 'max:50', Rule::unique(TypeDocument::class)->ignore($this->route('id'))],
         ];
     }
 }

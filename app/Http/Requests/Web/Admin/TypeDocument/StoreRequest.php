@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\TypeDocument;
+namespace App\Http\Requests\Web\Admin\TypeDocument;
 
 use App\Domain\User\Models\TypeDocument;
 use Illuminate\Foundation\Http\FormRequest;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Admin\State;
+namespace App\Http\Requests\Web\Admin\Unit;
 
-use App\Domain\User\Models\State;
+use App\Domain\Product\Models\Unit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -11,9 +11,9 @@ class StoreRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize(): bool|null
     {
-        return true;
+        return auth()->user()?->hasRole('admin');
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100', Rule::unique(State::class)],
+            'code' => ['required', 'string', 'max:100', Rule::unique(Unit::class)],
+            'name' => ['required', 'string', 'max:100', Rule::unique(Unit::class)],
         ];
     }
 }

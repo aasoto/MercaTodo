@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\ProductCategory;
+namespace App\Http\Requests\Web\Admin\ProductCategory;
 
 use App\Domain\Product\Models\ProductCategory;
 use Illuminate\Foundation\Http\FormRequest;
