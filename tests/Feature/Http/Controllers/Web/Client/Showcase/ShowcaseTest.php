@@ -14,10 +14,9 @@ use Database\Seeders\TypeDocumentSeeder;
 use Database\Seeders\UnitSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
-use Tests\Feature\Traits\refreshStorage;
 use Tests\TestCase;
 
 class ShowcaseTest extends TestCase
@@ -46,7 +45,7 @@ class ShowcaseTest extends TestCase
 
     }
 
-    public function test_can_show_showcase_of_products(): void
+    public function test_can_show_showcase_of_products_without_role_specification(): void
     {
 
         $response = $this->actingAs($this->user)
@@ -70,6 +69,13 @@ class ShowcaseTest extends TestCase
                 -> has('userRole')
                 -> has('filters')
         );
+    }
+
+    public function test_can_show_showcase_of_products_with_role_specification(): void
+    {
+        $response = $this->actingAs($this->user)->get(route('start'));
+
+        $response->assertSessionHasAll(['user_role' => 'client']);
     }
 
     public function test_product_can_be_searched_by_name(): void

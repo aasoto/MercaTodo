@@ -16,9 +16,7 @@ class DashboardController extends Controller
     {
         return Inertia::render('Dashboard', [
             'userRole' =>
-                session('user_role') ?
-                session('user_role') :
-                $this->authHasRole(Role::getFromCache()),
+                session('user_role') ? session('user_role') : $this->authHasRole(Role::getFromCache()),
         ]);
     }
 
