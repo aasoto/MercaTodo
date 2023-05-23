@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers\Web;
 
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;

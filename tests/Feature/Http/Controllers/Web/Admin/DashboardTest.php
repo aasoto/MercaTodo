@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Admin;
+namespace Tests\Feature\Http\Controllers\Web\Admin;
 
 use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;

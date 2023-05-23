@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Client\Showcase;
+namespace Tests\Feature\Http\Controllers\Web\Client\Showcase;
 
 use App\Domain\Product\Models\Product;
 use App\Domain\Product\Models\ProductCategory;

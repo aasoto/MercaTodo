@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Admin\User;
+namespace Tests\Feature\Http\Controllers\Web\Admin\User;
 
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\User;

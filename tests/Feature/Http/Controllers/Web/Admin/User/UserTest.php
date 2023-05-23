@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Admin\User;
+namespace Tests\Feature\Http\Controllers\Web\Admin\User;
 
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\ModelHasRole as Role;
