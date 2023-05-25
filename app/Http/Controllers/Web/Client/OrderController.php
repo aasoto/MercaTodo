@@ -25,10 +25,12 @@ class OrderController extends Controller
                         'id',
                         'purchase_date',
                         'payment_status',
+                        'purchase_total',
                     )
                 -> whereAuthUser()
-                -> orderBy('purchase_date')
+                -> orderByDesc('purchase_date')
                 -> paginate(10),
+            'success' => session('success'),
         ]);
     }
 
@@ -41,7 +43,7 @@ class OrderController extends Controller
 
         $store_order_has_product_action->handle($data, $store_order_action->handle($data));
 
-        return Redirect::route('showcase.index')->with('success', 'Order created.');
+        return Redirect::route('order.index')->with('success', 'Order created.');
     }
 
     public function show(string $id): Response
