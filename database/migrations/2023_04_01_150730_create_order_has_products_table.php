@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId("order_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId("product_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->integer('quantity');
-            $table->boolean('dispatched')->default(false);//despachado
+            $table->double('price', 15, 2);
+            // $table->boolean('dispatched')->default(false);//despachado
             $table->timestamps();
         });
     }
