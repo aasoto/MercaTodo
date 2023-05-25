@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\Admin\StateController;
 use App\Http\Controllers\Web\Admin\TypeDocumentController;
 use App\Http\Controllers\Web\Admin\UnitController;
 use App\Http\Controllers\Web\Admin\UserController;
+use App\Http\Controllers\Web\Client\OrderController;
 use App\Http\Controllers\Web\Client\ShowcaseController;
 use App\Http\Controllers\Web\ProfileController;
 use Illuminate\Foundation\Application;
@@ -124,6 +125,8 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::get('/order', function () {
             return Inertia::render('Order/Index');
         })->name('order');
+        Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
+        Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
     });
 });
 
