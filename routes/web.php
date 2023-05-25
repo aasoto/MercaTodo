@@ -127,6 +127,7 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         })->name('order');
         Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
         Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
+        Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
     });
 });
 
