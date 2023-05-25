@@ -51,6 +51,10 @@ export const useCartStore = defineStore('cart', () => {
         cart.value.splice(index, 1);
     }
 
+    const emptyCart = () => {
+        cart.value = [];
+    }
+
     return {
         cart,
         order,
@@ -61,5 +65,6 @@ export const useCartStore = defineStore('cart', () => {
         find,
         update,
         remove,
+        emptyCart,
     };
 });
