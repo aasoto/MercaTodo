@@ -16,6 +16,8 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['user_id', 'purchase_date', 'payment_status', 'purchase_total'];
+
     /**
      * @param Builder $query
      * @return OrderQueryBuilder
