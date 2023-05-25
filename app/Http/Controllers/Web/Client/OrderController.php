@@ -49,6 +49,15 @@ class OrderController extends Controller
     public function show(string $id): Response
     {
         return Inertia::render('Order/Detail', [
+            'order' => Order::query()
+                -> select(
+                        'id',
+                        'purchase_date',
+                        'payment_status',
+                        'purchase_total',
+                    )
+                -> where('id', $id)
+                -> first(),
             'products' => OrderHasProduct::query()
                 -> select(
                         'products.name',
@@ -59,7 +68,7 @@ class OrderController extends Controller
                 -> join('products', 'order_has_products.product_id', 'products.id')
                 -> join('units', 'products.unit', 'units.code')
                 -> whereMatchOrder($id)
-                -> get()
+                -> paginate(10),
         ]);
     }
 }
