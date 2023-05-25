@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('purchase_date');//fecha de compra
             //$table->enum('purchase_status', ['pending', 'delivered'])->default('pending');//estado de compra
             $table->enum('payment_status', ['pending', 'paid'])->default('pending');//estado de pago
+            $table->double('purchase_total', 15, 2);
             $table->timestamps();
         });
     }
