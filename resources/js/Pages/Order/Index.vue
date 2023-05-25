@@ -6,6 +6,8 @@ import { useCartStore } from '@/Store/Cart';
 import { ref } from 'vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import InfoButton from '@/Components/Buttons/InfoButton.vue';
+import InputError from '@/Components/InputError.vue';
+import { watch } from 'vue';
 
 const useCart = useCartStore();
 const { order, totalPriceOrder } = storeToRefs(useCart);
@@ -18,6 +20,17 @@ const form = useForm({
 const showProduct = (slug) => {
     form.slug = slug;
     form.get(route('showcase.show', form.slug));
+}
+const formSave = useForm({
+    products: order.value,
+});
+
+watch(order, value => {
+    formSave.products = value;
+});
+
+const saveOrder = () => {
+    formSave.post(route('order.store'));
 }
 
 const errorAlert = ref(false);
@@ -67,6 +80,7 @@ const increment = (productId, productQuantity) => {
                             Ha ocurrido un error al agregar este producto {{ errorInfo }}
                         </div>
                         <div v-if="order[0]" class="w-full py-5">
+                            <InputError class="mt-2" :message="formSave.errors.products" />
                             <table class="w-full m-5 rounded-lg">
                                 <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
                                     <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
@@ -149,7 +163,7 @@ const increment = (productId, productQuantity) => {
                                 </tfoot>
                             </table>
                             <div class="flex justify-end items-center gap-5">
-                                <InfoButton class="flex gap-4">
+                                <InfoButton @click="saveOrder()" class="flex gap-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                         <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
                                     </svg>
