@@ -63,6 +63,11 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
                                         Vitrina
                                     </NavLink>
                                 </div>
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('order.index')" :active="route().current('order.index')">
+                                        Ordenes
+                                    </NavLink>
+                                </div>
                             </template>
                         </div>
 

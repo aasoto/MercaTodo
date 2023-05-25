@@ -1,5 +1,113 @@
 <script setup>
+import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
+import Pagination from '@/Components/Pagination.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { useCartStore } from '@/Store/Cart';
+import { Head } from '@inertiajs/vue3';
+
+const props = defineProps({
+    orders: Object,
+    success: String,
+});
+
+const useCart = useCartStore();
+
+const { emptyCart } = useCart;
+
+if (props.success == 'Order created.') {
+    emptyCart();
+}
 </script>
 <template>
-    List of orders
+    <Head title="Mis ordenes" />
+    <AuthenticatedLayout>
+        <template #header>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Mis ordenes
+                </h2>
+            </div>
+        </template>
+
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-10">
+                    <div class="flex flex-col justify-center items-center">
+                        <table class="w-full m-5 rounded-lg">
+                            <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
+                                <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
+                                    ID
+                                </th>
+                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Fecha de la compra
+                                </th>
+                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Estado de pago
+                                </th>
+                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Total de la compra
+                                </th>
+                                <th class="rounded-tr-lg py-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Acciones
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr v-for="order in orders.data" class="border-b border-gray-400">
+                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
+                                        {{ order.id }}
+                                    </td>
+                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
+                                        {{ order.purchase_date }}
+                                    </td>
+                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
+                                        {{ order.payment_status }}
+                                    </td>
+                                    <td class="px-3 py-3 text-black dark:text-white text-right capitalize">
+                                        {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
+                                    </td>
+                                    <td class="px-3 py-3 text-black dark:text-white capitalize flex justify-center items-center gap-3">
+                                        <button class="bg-blue-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
+                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                            <span>
+                                                Detalles
+                                            </span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="bg-gray-300 dark:bg-gray-700 rounded-b-lg">
+                                <th class="rounded-bl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
+                                    ID
+                                </th>
+                                <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Fecha de la compra
+                                </th>
+                                <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Estado de pago
+                                </th>
+                                <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Total de la compra
+                                </th>
+                                <th class="rounded-br-lg py-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Acciones
+                                </th>
+                            </tfoot>
+                        </table>
+                        <Pagination class="my-6" :links="orders.links" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <AlertSuccess
+            v-if="success === 'Order created.'"
+            icon="success"
+            title="¡Listo!"
+            text="Orden enviada satisfactoriamente."
+            :close="false"
+            :btn-close="true"
+        />
+    </AuthenticatedLayout>
 </template>
