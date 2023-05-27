@@ -7,6 +7,7 @@ use App\Domain\Order\Actions\StoreOrderHasProductAction;
 use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Models\Order;
 use App\Domain\Order\Models\OrderHasProduct;
+use App\Domain\Order\Services\WebCheckoutServices;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\Client\Order\StoreRequest;
 use Illuminate\Http\RedirectResponse;
@@ -17,8 +18,9 @@ use Inertia\Response;
 
 class OrderController extends Controller
 {
-    public function index(): Response
+    public function index(WebCheckoutServices $place_to_pay): Response
     {
+        dd(json_decode($place_to_pay->createSession(5000), true));
         return Inertia::render('Order/List', [
             'orders' => Order::query()
                 -> select(
