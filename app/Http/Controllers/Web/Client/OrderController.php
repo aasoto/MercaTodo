@@ -22,7 +22,7 @@ class OrderController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('Order/List', [
+        return Inertia::render('Order/Index', [
             'orders' => Order::query()
                 -> select(
                         'id',
@@ -33,6 +33,14 @@ class OrderController extends Controller
                 -> whereAuthUser()
                 -> orderByDesc('purchase_date')
                 -> paginate(10),
+            'success' => session('success'),
+        ]);
+    }
+
+    public function create(): Response
+    {
+        return Inertia::render('Order/Create', [
+            'limitatedStock' => session('limitatedStock'),
             'success' => session('success'),
         ]);
     }
@@ -49,7 +57,7 @@ class OrderController extends Controller
         if (count($limitated_stock) == 0) {
             $store_order_has_product_action->handle($data, $store_order_action->handle($data));
         } else {
-            return Redirect::route('order')
+            return Redirect::route('order.create')
                 ->with('success', 'Order rejected.')
                 ->with('limitatedStock', json_encode($limitated_stock));
         }
@@ -59,7 +67,7 @@ class OrderController extends Controller
 
     public function show(string $id): Response
     {
-        return Inertia::render('Order/Detail', [
+        return Inertia::render('Order/Show', [
             'order' => Order::query()
                 -> select(
                         'id',

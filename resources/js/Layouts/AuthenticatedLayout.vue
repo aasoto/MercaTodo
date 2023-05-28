@@ -73,7 +73,7 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
 
                         <div class="flex gap-5">
                             <div v-if="role == 'client'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('order')" :active="route().current('order')">
+                                <NavLink :href="route('order.create')" :active="route().current('order.create')">
                                     <div
                                         class="relative h-12 w-12 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full"
                                     >
@@ -226,11 +226,14 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
                             <ResponsiveNavLink :href="route('showcase.index')" :active="route().current('showcase.index')">
                                 Vitrina
                             </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('order.index')" :active="route().current('order.index')">
+                                Ordenes
+                            </ResponsiveNavLink>
                         </div>
                         <div class="pt-2 pb-3 space-y-1">
                             <ResponsiveNavLink
-                                :href="route('order')"
-                                :active="route().current('order')"
+                                :href="route('order.create')"
+                                :active="route().current('order.create')"
                                 class="flex justify-start items-center gap-3"
                             >
                                 <div

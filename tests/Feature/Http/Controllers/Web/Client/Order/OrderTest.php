@@ -56,7 +56,7 @@ class OrderTest extends TestCase
 
         $response->assertInertia(
             fn (Assert $page) => $page
-                -> component('Order/List')
+                -> component('Order/Index')
                 -> has('orders')
                 -> has('orders.data.0', fn (Assert $page) => $page
                     -> has('id')
