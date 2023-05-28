@@ -9,9 +9,20 @@ import InfoButton from '@/Components/Buttons/InfoButton.vue';
 import InputError from '@/Components/InputError.vue';
 import { watch } from 'vue';
 
+const props = defineProps({
+    limitatedStock: String,
+    success: String,
+});
+
 const useCart = useCartStore();
 const { order, totalPriceOrder } = storeToRefs(useCart);
 const { remove, update } = useCart;
+
+const productsLimitated = ref();
+
+const setProductsLimitated = () => {
+    productsLimitated.value = JSON.parse(props.limitatedStock);
+}
 
 const form = useForm({
     slug: '',
@@ -76,8 +87,11 @@ const increment = (productId, productQuantity) => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-10">
                     <div class="flex flex-col justify-center items-center">
-                        <div v-if="errorAlert" class="bg-red-200 rounded-md w-full text-red-700 text-center py-3">
+                        <div v-if="errorAlert" class="bg-red-200 rounded-md w-full text-red-700 text-center py-3 mt-3">
                             Ha ocurrido un error al agregar este producto {{ errorInfo }}
+                        </div>
+                        <div v-if="success == 'Order rejected.'" @click="setProductsLimitated()" class="bg-red-200 rounded-md w-full text-red-700 text-center py-3 mt-3 cursor-pointer">
+                            Alguno(s) de los productos sobrepasan las existencias disponibles, de click aquí para averiguarlos.
                         </div>
                         <div v-if="order[0]" class="w-full py-5">
                             <InputError class="mt-2" :message="formSave.errors.products" />
@@ -101,8 +115,15 @@ const increment = (productId, productQuantity) => {
                                 </thead>
                                 <tbody>
                                     <tr class="border-b border-gray-400" v-for="item in order">
-                                        <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                            {{ item.name }}
+                                        <td class="px-3 py-3 text-black dark:text-white">
+                                            <div class="capitalize">
+                                                {{ item.name }}
+                                            </div>
+                                            <template v-for="limitated in productsLimitated">
+                                                <div v-if="limitated.id == item.id" class="text-sm text-red-600">
+                                                    Este producto tiene unidades limitadas escoga un número igual o menor al inferior de color rojo dado en la columna de cantidad
+                                                </div>
+                                            </template>
                                         </td>
                                         <td class="px-3 py-3 text-black dark:text-white text-right">
                                             {{ item.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
@@ -119,7 +140,14 @@ const increment = (productId, productQuantity) => {
                                                 </svg>
                                             </button>
                                             <span class="font-bold text-lg text-gray-900 dark:text-white">
-                                                {{ item.quantity }}
+                                                <div>
+                                                    {{ item.quantity }}
+                                                </div>
+                                                <template v-for="limitated in productsLimitated">
+                                                    <div v-if="limitated.id == item.id" class="text-sm text-red-600">
+                                                        {{ limitated.stock }}
+                                                    </div>
+                                                </template>
                                             </span>
                                             <button @click="increment(item.id, item.quantity)" class="rounded-md p-1 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200">
                                                 <svg

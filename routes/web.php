@@ -123,7 +123,10 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase.index');
         Route::get('/showcase/{slug}', [ShowcaseController::class, 'show'])->name('showcase.show');
         Route::get('/order', function () {
-            return Inertia::render('Order/Index');
+            return Inertia::render('Order/Index', [
+            'limitatedStock' => session('limitatedStock'),
+            'success' => session('success'),
+            ]);
         })->name('order');
         Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
         Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
