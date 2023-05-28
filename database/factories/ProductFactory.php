@@ -30,7 +30,7 @@ class ProductFactory extends Factory
             'description' => fake()->paragraph(),
             'price' => fake()->randomFloat(2, 10000, 1000000),
             'unit' => $this->get_code_unit(),
-            'stock' => fake()->randomNumber(2, true),
+            'stock' => fake()->randomNumber(1, true),
             'picture_1' => $this->upload_image(),
             'picture_2' => $this->upload_image(),
             'picture_3' => $this->upload_image(),
