@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia';
 import { useSignedRoleStore } from '@/Store/SignedRole';
 import { useCartStore } from "@/Store/Cart";
 import AlertSuccess from './Alerts/AlertSuccess.vue';
+import { Link } from '@inertiajs/vue3';
 
 // Props
 const props = defineProps({
@@ -231,6 +232,9 @@ const removeFromCart = () => {
                         <div v-if="maxStock" class="bg-blue-200 rounded-md w-full text-blue-700 text-center py-3">
                             Cantidad máxima de existencias (puede que aún no todas estén disponibles)
                         </div>
+                        <Link v-if="!$page.props.auth.user" :href="route('login')" class="bg-red-200 rounded-md w-full text-red-700 text-center py-3 cursor-pointer">
+                            Para comprar este producto debe iniciar sesión, click aquí
+                        </Link>
                     </div>
                 </div>
 

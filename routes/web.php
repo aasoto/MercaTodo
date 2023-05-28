@@ -26,15 +26,16 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Showcase/Index', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
+Route::get('/', [ShowcaseController::class, 'index'])->name('root');
 
 Route::get('/user_disabled', function () {
     return Inertia::render('Auth/UserDisabled');
@@ -43,11 +44,15 @@ Route::get('/405_method_not_allowed', function () {
     return Inertia::render('Auth/MethodNotAllowed');
 })->name('405');
 
-Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
+Route::get('/start', function () {
+    return Inertia::render('Auth/NoRole');
+})->name('start')->middleware('start');
 
-    Route::get('/start', function () {
-        return Inertia::render('Auth/NoRole');
-    })->name('start')->middleware('start');
+Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase.index');
+Route::get('/showcase/{slug}', [ShowcaseController::class, 'show'])->name('showcase.show');
+
+
+Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
 
     /** DASHBOARD */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -118,10 +123,8 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::patch('/unit/edit/{id}', [UnitController::class, 'update'])->name('unit.update');
     });
 
-    /** SHOWCASE */
+    /** ORDERS */
     Route::middleware(['role:client'])->group( function () {
-        Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase.index');
-        Route::get('/showcase/{slug}', [ShowcaseController::class, 'show'])->name('showcase.show');
         Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
         Route::get('/order', [OrderController::class, 'create'])->name('order.create');
         Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');

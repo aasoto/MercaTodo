@@ -83,7 +83,8 @@ const getResults = () => {
 
 </script>
 <template>
-    <Head title="Vitrina de productos" />
+    <Head v-if="$page.props.auth.user" title="Vitrina de productos" />
+    <Head v-else title="MercaTodo"/>
 
     <AuthenticatedLayout>
         <template #header>
