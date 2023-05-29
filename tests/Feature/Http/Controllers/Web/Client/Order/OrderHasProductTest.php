@@ -60,7 +60,7 @@ class OrderHasProductTest extends TestCase
 
         $response->assertInertia(
             fn (Assert $page) => $page
-                -> component('Order/Detail')
+                -> component('Order/Show')
                 -> has('products')
                 -> has('products.0', fn (Assert $page) => $page
                     -> has('name')
