@@ -62,7 +62,7 @@ class OrderHasProductTest extends TestCase
             fn (Assert $page) => $page
                 -> component('Order/Show')
                 -> has('products')
-                -> has('products.0', fn (Assert $page) => $page
+                -> has('products.data.0', fn (Assert $page) => $page
                     -> has('name')
                     -> has('price')
                     -> has('quantity')
