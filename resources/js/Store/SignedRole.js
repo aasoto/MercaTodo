@@ -9,8 +9,13 @@ export const useSignedRoleStore = defineStore('signedRole', () => {
         role.value = name;
     }
 
+    const unassignRole = () => {
+        role.value = '';
+    }
+
     return {
         role,
         assignRole,
+        unassignRole,
     }
 });

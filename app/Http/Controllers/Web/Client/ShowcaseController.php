@@ -29,6 +29,7 @@ class ShowcaseController extends Controller
                         'products.slug',
                         'products_categories.name as category',
                         'products.price',
+                        'products.stock',
                         'units.name as unit',
                         'products.picture_1'
                     )

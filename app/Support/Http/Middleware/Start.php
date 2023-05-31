@@ -23,6 +23,10 @@ class Start
         if (auth()->user()?->hasRole('client')) {
             return Redirect::route('showcase.index')->with('user_role', 'client');
         }
+        if (!auth()->user()) {
+            return Redirect::route('login');
+        }
+
         return $next($request);
     }
 }

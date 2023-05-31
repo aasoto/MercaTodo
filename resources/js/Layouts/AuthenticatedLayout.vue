@@ -17,6 +17,7 @@ const showingNavigationDropdown = ref(false);
 
 const useSignedRole = useSignedRoleStore();
 const { role } = storeToRefs(useSignedRole);
+const { unassignRole } = useSignedRole;
 
 const useCart = useCartStore();
 const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
@@ -38,7 +39,11 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
                                     <MercaTodoLogoWhite class="hidden dark:block h-9 w-auto"/>
                                 </Link>
                             </div>
-
+                            <div v-if="!$page.props.auth.user" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('root')" :active="route().current('root')">
+                                    Inicio
+                                </NavLink>
+                            </div>
                             <!-- Navigation Links -->
                             <template v-if="role == 'admin'">
                                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -73,7 +78,7 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
 
                         <div class="flex gap-5">
                             <div v-if="role == 'client'" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('order')" :active="route().current('order')">
+                                <NavLink :href="route('order.create')" :active="route().current('order.create')">
                                     <div
                                         class="relative h-12 w-12 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full"
                                     >
@@ -121,7 +126,7 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
                             <div class="flex justify-end items-center">
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                                     <!-- Settings Dropdown -->
-                                    <div class="ml-3 relative">
+                                    <div v-if="$page.props.auth.user" class="ml-3 relative">
                                         <Dropdown align="right" width="48">
                                             <template #trigger>
                                                 <span class="inline-flex rounded-md">
@@ -156,11 +161,25 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
                                                 >
                                                     Logs
                                                 </a>
-                                                <DropdownLink :href="route('logout')" method="post" as="button">
+                                                <DropdownLink :href="route('logout')" @click="unassignRole()" method="post" as="button">
                                                     Cerrar sesión
                                                 </DropdownLink>
                                             </template>
                                         </Dropdown>
+                                    </div>
+                                    <div v-else class="flex justify-center items-center gap-5">
+                                        <Link
+                                            :href="route('login')"
+                                            class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                                        >
+                                            Iniciar sesión
+                                        </Link>
+                                        <Link
+                                            :href="route('register')"
+                                            class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                                        >
+                                            Registarse
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
@@ -226,11 +245,14 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
                             <ResponsiveNavLink :href="route('showcase.index')" :active="route().current('showcase.index')">
                                 Vitrina
                             </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('order.index')" :active="route().current('order.index')">
+                                Ordenes
+                            </ResponsiveNavLink>
                         </div>
                         <div class="pt-2 pb-3 space-y-1">
                             <ResponsiveNavLink
-                                :href="route('order')"
-                                :active="route().current('order')"
+                                :href="route('order.create')"
+                                :active="route().current('order.create')"
                                 class="flex justify-start items-center gap-3"
                             >
                                 <div
@@ -273,7 +295,7 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
                         </div>
                     </template>
                     <!-- Responsive Settings Options -->
-                    <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+                    <div v-if="$page.props.auth.user" class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                         <div class="px-4">
                             <div class="font-medium text-base text-gray-800 dark:text-gray-200">
                                 {{ $page.props.auth.user.first_name + ' ' + $page.props.auth.user.surname }}
@@ -290,10 +312,24 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
                             >
                                 Logs
                             </a>
-                            <ResponsiveNavLink :href="route('logout')" method="post" as="button">
+                            <ResponsiveNavLink :href="route('logout')" @click="unassignRole()" method="post" as="button">
                                 Cerrar sesión
                             </ResponsiveNavLink>
                         </div>
+                    </div>
+                    <div v-else class="flex justify-center items-center gap-5">
+                        <Link
+                            :href="route('login')"
+                            class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                        >
+                            Iniciar sesión
+                        </Link>
+                        <Link
+                            :href="route('register')"
+                            class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                        >
+                            Registarse
+                        </Link>
                     </div>
                 </div>
             </nav>

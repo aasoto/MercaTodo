@@ -4,6 +4,7 @@ namespace App\Domain\Order\Actions;
 
 use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Models\OrderHasProduct;
+use App\Domain\Product\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class StoreOrderHasProductAction
@@ -17,6 +18,14 @@ class StoreOrderHasProductAction
                 'quantity' => $value['quantity'],
                 'price' => $value['price'],
             ]);
+
+            $current_stock = Product::select('stock')->where('id', $value['id'])->first();
+
+            Product::where('id', $value['id'])->update([
+                'stock' => intval($current_stock['stock']) - $value['quantity'],
+            ]);
         }
+
+
     }
 }

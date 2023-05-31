@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia';
 import { useSignedRoleStore } from '@/Store/SignedRole';
 import { useCartStore } from "@/Store/Cart";
 import AlertSuccess from './Alerts/AlertSuccess.vue';
+import { Link } from '@inertiajs/vue3';
 
 // Props
 const props = defineProps({
@@ -16,6 +17,7 @@ const { role } = storeToRefs(useSignedRole);
 
 //quantity of products
 const quantity = ref(1);
+const maxStock = ref(false);
 
 const decrement = () => {
     if (quantity.value > 1) {
@@ -24,7 +26,14 @@ const decrement = () => {
 }
 
 const increment = () => {
-    quantity.value = quantity.value + 1;
+    if (quantity.value < props.product.stock) {
+        quantity.value = quantity.value + 1;
+    } else {
+        maxStock.value = true;
+        setTimeout(() => {
+            maxStock.value = false;
+        }, 8000);
+    }
 }
 
 //iterate pictures
@@ -148,7 +157,7 @@ const removeFromCart = () => {
                             class="text-lg text-black dark:text-white"
                             v-html="product.description"
                         ></div>
-                        <div v-if="role == 'client'" class="flex justify-center items-center gap-5">
+                        <div v-if="role == 'client' && product.stock > 0" class="flex justify-center items-center gap-5">
                             <div class="flex flex-col justify-center items-center">
                                 <label for="btnIncrement" class="font-bold text-3xl">
                                     Cantidad
@@ -217,6 +226,15 @@ const removeFromCart = () => {
                         <div v-if="updated" class="bg-yellow-200 rounded-md w-full text-yellow-700 text-center py-3">
                             Actualizado correctamente
                         </div>
+                        <div v-if="product.stock == 0" class="bg-yellow-200 rounded-md w-full text-yellow-700 text-center py-3">
+                            Producto agotado
+                        </div>
+                        <div v-if="maxStock" class="bg-blue-200 rounded-md w-full text-blue-700 text-center py-3">
+                            Cantidad máxima de existencias (puede que aún no todas estén disponibles)
+                        </div>
+                        <Link v-if="!$page.props.auth.user" :href="route('login')" class="bg-red-200 rounded-md w-full text-red-700 text-center py-3 cursor-pointer">
+                            Para comprar este producto debe iniciar sesión, click aquí
+                        </Link>
                     </div>
                 </div>
 

@@ -7,7 +7,8 @@ use App\Domain\Order\Actions\StoreOrderHasProductAction;
 use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Models\Order;
 use App\Domain\Order\Models\OrderHasProduct;
-use App\Domain\Order\Services\WebCheckoutServices;
+use App\Domain\Order\Services\PlaceToPayPaymentServices;
+use App\Domain\Order\Traits\CheckStock;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\Client\Order\StoreRequest;
 use Illuminate\Http\RedirectResponse;
@@ -18,10 +19,11 @@ use Inertia\Response;
 
 class OrderController extends Controller
 {
-    public function index(WebCheckoutServices $place_to_pay): Response
+    use CheckStock;
+
+    public function index(): Response
     {
-        dd(json_decode($place_to_pay->createSession(5000), true));
-        return Inertia::render('Order/List', [
+        return Inertia::render('Order/Index', [
             'orders' => Order::query()
                 -> select(
                         'id',
@@ -36,6 +38,14 @@ class OrderController extends Controller
         ]);
     }
 
+    public function create(): Response
+    {
+        return Inertia::render('Order/Create', [
+            'limitatedStock' => session('limitatedStock'),
+            'success' => session('success'),
+        ]);
+    }
+
     public function store(
         StoreRequest $request,
         StoreOrderAction $store_order_action,
@@ -43,14 +53,22 @@ class OrderController extends Controller
     {
         $data = StoreOrderData::fromRequest($request);
 
-        $store_order_has_product_action->handle($data, $store_order_action->handle($data));
+        $limitated_stock = $this->solvent_order($data);
+
+        if (count($limitated_stock) == 0) {
+            $store_order_has_product_action->handle($data, $store_order_action->handle($data));
+        } else {
+            return Redirect::route('order.create')
+                ->with('success', 'Order rejected.')
+                ->with('limitatedStock', json_encode($limitated_stock));
+        }
 
         return Redirect::route('order.index')->with('success', 'Order created.');
     }
 
     public function show(string $id): Response
     {
-        return Inertia::render('Order/Detail', [
+        return Inertia::render('Order/Show', [
             'order' => Order::query()
                 -> select(
                         'id',
