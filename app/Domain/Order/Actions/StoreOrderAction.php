@@ -17,7 +17,7 @@ class StoreOrderAction
         }
         return Order::create([
             'user_id' => auth()->user()?->id,
-            'purchase_date' => date('Y-m-d'),
+            'purchase_date' => date('Y-m-d H:i:s'),
             'payment_status' => 'pending',
             'purchase_total' => $purchase_total,
         ]);

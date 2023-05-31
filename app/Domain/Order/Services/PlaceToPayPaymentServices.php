@@ -4,14 +4,27 @@ namespace App\Domain\Order\Services;
 
 use App\Domain\Order\Actions\OrderGetLastAction;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class PlaceToPayPaymentServices
 {
-    private function createSession(Model $order, string $ipAddress, string $userAgent): array
+    private string $ipAddress, $userAgent;
+
+    public function pay(Model $order, string $ipAddress, string $userAgent)
+    {
+        $this->ipAddress = $ipAddress;
+        $this->userAgent = $userAgent;
+
+        $response = Http::post(config('placetopay.url').'/api/session',
+            $this->createSession($order)
+        );
+
+        dd(json_decode($response, true));
+    }
+
+    private function createSession(Model $order): array
     {
         return [
             'auth' => $this->getAuth(),
@@ -27,10 +40,10 @@ class PlaceToPayPaymentServices
                     'total' => $order->purchase_total
                 ]
             ],
-            'expiration' => Carbon::now()->addHour(),
-            'returnUrl' => route('payments.processResponse'),
-            'ipAddress' => $ipAddress,
-            'userAgent' => $userAgent,
+            'expiration' => Carbon::now()->addDay(),
+            'returnUrl' => route('payment.response'),
+            'ipAddress' => $this->ipAddress,
+            'userAgent' => $this->userAgent,
         ];
     }
 

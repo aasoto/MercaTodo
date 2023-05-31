@@ -49,14 +49,17 @@ class OrderController extends Controller
     public function store(
         StoreRequest $request,
         StoreOrderAction $store_order_action,
-        StoreOrderHasProductAction $store_order_has_product_action): RedirectResponse
+        StoreOrderHasProductAction $store_order_has_product_action,
+        PlaceToPayPaymentServices $placetopay): RedirectResponse
     {
         $data = StoreOrderData::fromRequest($request);
 
         $limitated_stock = $this->solvent_order($data);
 
         if (count($limitated_stock) == 0) {
-            $store_order_has_product_action->handle($data, $store_order_action->handle($data));
+            $order = $store_order_action->handle($data);
+            $store_order_has_product_action->handle($data, $order);
+            $placetopay->pay($order, $request->ip(), $request->userAgent());
         } else {
             return Redirect::route('order.create')
                 ->with('success', 'Order rejected.')

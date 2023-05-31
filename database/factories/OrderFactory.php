@@ -21,8 +21,10 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
+            'code' => fake()->lexify('????????'),
             'user_id' => User::select('id')->where('email', env('CLIENT_EMAIL'))->first(),
-            'purchase_date' => fake()->date(),
+            'purchase_date' => fake()->date('Y-m-d H:i:s'),
+            'currency' => 'COP',
             'payment_status' => fake()->randomElement(['pending', 'paid']),
             'purchase_total' => fake()->randomFloat(2, 10000, 1000000),
         ];
