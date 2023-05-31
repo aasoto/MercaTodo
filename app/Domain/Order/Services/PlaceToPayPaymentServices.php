@@ -3,6 +3,7 @@
 namespace App\Domain\Order\Services;
 
 use App\Domain\Order\Actions\OrderGetLastAction;
+use App\Domain\Order\Actions\OrderUpdateAction;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
@@ -21,7 +22,18 @@ class PlaceToPayPaymentServices
             $this->createSession($order)
         );
 
-        dd(json_decode($response, true));
+        if ($response->ok()) {
+            $order->request_id = $response->json()['requestId'];
+            $order->url = $response->json()['processUrl'];
+
+            OrderUpdateAction::handle($order);
+
+            redirect()->to($order->url)->send();
+        }
+
+        throw new \Exception($response->body());
+
+        // dd(json_decode($response, true));
     }
 
     private function createSession(Model $order): array
@@ -33,7 +45,7 @@ class PlaceToPayPaymentServices
                 'email' => auth()->user()->email
             ],
             'payment' => [
-                'reference' => $order->id,
+                'reference' => $order->code,
                 'description' => 'Payment of purchase total',
                 'amount' => [
                     'currency' => 'COP',
@@ -70,9 +82,10 @@ class PlaceToPayPaymentServices
     {
         $order = OrderGetLastAction::handle();
 
-        $result = Http::post(config('placetopay.url')."/api/session/$order->order_id", [
+        $result = Http::post(config('placetopay.url')."/api/session/$order->request_id", [
             'auth' => $this->getAuth()
         ]);
+
 
         if ($result->ok()) {
             $status = $result->json()['status']['status'];

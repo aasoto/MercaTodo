@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->text('code')->unique();
+            $table->string('request_id')->nullable();
             $table->foreignId("user_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamp('purchase_date');//fecha de compra
             $table->enum('currency', ['COP', 'USD'])->default('COP');

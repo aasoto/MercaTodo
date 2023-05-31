@@ -16,7 +16,15 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'purchase_date', 'payment_status', 'purchase_total'];
+    protected $fillable = [
+        'code',
+        'user_id',
+        'purchase_date',
+        'currency',
+        'url',
+        'payment_status',
+        'purchase_total'
+    ];
 
     /**
      * @param Builder $query
@@ -35,14 +43,14 @@ class Order extends Model
     public function paid(): void
     {
         $this->update([
-            'status' => 'paid'
+            'payment_status' => 'paid'
         ]);
     }
 
     public function pending(): void
     {
         $this->update([
-            'status' => 'pending'
+            'payment_status' => 'pending'
         ]);
     }
 }
