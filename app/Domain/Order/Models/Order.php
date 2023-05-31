@@ -31,4 +31,18 @@ class Order extends Model
     {
         return OrderFactory::new();
     }
+
+    public function paid(): void
+    {
+        $this->update([
+            'status' => 'paid'
+        ]);
+    }
+
+    public function pending(): void
+    {
+        $this->update([
+            'status' => 'pending'
+        ]);
+    }
 }
