@@ -33,16 +33,21 @@ class PlaceToPayPaymentServices
 
         throw new \Exception($response->body());
 
-        // dd(json_decode($response, true));
     }
 
     private function createSession(Model $order): array
     {
+        $user = auth()->user();
+
         return [
             'auth' => $this->getAuth(),
             'buyer' => [
-                'name' => auth()->user()->first_name.' '.auth()->user()->surname,
-                'email' => auth()->user()->email
+                'document' => $user->number_document,
+                'name' => $user->first_name.' '.$user->second_name,
+                'surname' => $user->surname.' '.$user->second_surname,
+                'mobile' => $user->phone,
+                'email' => $user->email,
+                'address' => $user->address,
             ],
             'payment' => [
                 'reference' => $order->code,
