@@ -2,21 +2,12 @@
 import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useCartStore } from '@/Store/Cart';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     orders: Object,
     success: String,
 });
-
-const useCart = useCartStore();
-
-const { emptyCart } = useCart;
-
-if (props.success == 'Order created.' || props.success == 'Payment completed.') {
-    emptyCart();
-}
 
 const form = useForm({
     id: '',
@@ -73,7 +64,24 @@ const openWebcheckout = (url) => {
                                         {{ order.purchase_date }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ order.payment_status }}
+                                        <div
+                                            v-if="order.payment_status == 'canceled'"
+                                            class="rounded-md px-4 py-2 bg-red-200 text-center font-bold"
+                                        >
+                                            CANCELADO
+                                        </div>
+                                        <div
+                                            v-if="order.payment_status == 'paid'"
+                                            class="rounded-md px-4 py-2 bg-green-200 text-center font-bold"
+                                        >
+                                            PAGADO
+                                        </div>
+                                        <div
+                                            v-if="order.payment_status == 'pending'"
+                                            class="rounded-md px-4 py-2 bg-yellow-200 text-center font-bold"
+                                        >
+                                            PENDIENTE
+                                        </div>
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white text-right capitalize">
                                         {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
@@ -88,7 +96,7 @@ const openWebcheckout = (url) => {
                                                 Detalles
                                             </span>
                                         </button>
-                                        <button @click="openWebcheckout(order.url)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
+                                        <button v-if="order.payment_status == 'pending'" @click="openWebcheckout(order.url)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                 <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
                                                 <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />

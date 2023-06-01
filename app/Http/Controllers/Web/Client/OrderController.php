@@ -67,7 +67,7 @@ class OrderController extends Controller
                 ->with('limitatedStock', json_encode($limitated_stock));
         }
 
-        return Redirect::route('order.index')->with('success', 'Order created.');
+        return Redirect::route('order.show', $order->id)->with('success', 'Order created.');
     }
 
     public function show(string $id): Response
@@ -79,6 +79,7 @@ class OrderController extends Controller
                         'purchase_date',
                         'payment_status',
                         'purchase_total',
+                        'url',
                     )
                 -> where('id', $id)
                 -> first(),
@@ -93,6 +94,7 @@ class OrderController extends Controller
                 -> join('units', 'products.unit', 'units.code')
                 -> whereMatchOrder($id)
                 -> paginate(10),
+            'success' => session('success'),
         ]);
     }
 }

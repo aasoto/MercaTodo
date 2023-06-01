@@ -25,7 +25,7 @@ class OrderFactory extends Factory
             'user_id' => User::select('id')->where('email', env('CLIENT_EMAIL'))->first(),
             'purchase_date' => fake()->date('Y-m-d H:i:s'),
             'currency' => 'COP',
-            'payment_status' => fake()->randomElement(['pending', 'paid']),
+            'payment_status' => 'pending',
             'purchase_total' => fake()->randomFloat(2, 10000, 1000000),
         ];
     }

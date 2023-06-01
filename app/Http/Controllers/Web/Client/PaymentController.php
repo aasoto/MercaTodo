@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Client;
 
+use App\Domain\Order\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Domain\Order\Services\PlaceToPayPaymentServices;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +15,8 @@ class PaymentController extends Controller
     {
         $result = $placetopay_payment->getRequestInformation($code);
 
-        return Redirect::route('order.index')->with('success', $result == 'ok' ?  'Payment completed.' : 'Payment error.');
+        $order = Order::select('id')->where('code', $code)->first();
+
+        return Redirect::route('order.show', $order['id'])->with('success', $result == 'ok' ?  'Payment completed.' : 'Payment error.');
     }
 }
