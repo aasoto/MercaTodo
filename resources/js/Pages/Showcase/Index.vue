@@ -175,7 +175,7 @@ const getResults = () => {
                                     />
                                 </svg>
                             </div>
-                            <div v-if="product.stock == 0" class="relative h-12 w-12 bg-black/40 flex items-center justify-center rounded-md text-white">
+                            <div v-if="product.stock == 0" class="relative h-12 w-max bg-black/40 flex items-center justify-center rounded-md text-white">
                                 AGOTADO
                             </div>
                         </div>

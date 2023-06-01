@@ -133,7 +133,7 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
     });
 
     Route::middleware(['role:client'])->group( function () {
-        Route::get('/payment/response', [PaymentController::class, 'process_response'])->name('payment.response');
+        Route::get('/payment/response/{code}', [PaymentController::class, 'process_response'])->name('payment.response');
     });
 });
 

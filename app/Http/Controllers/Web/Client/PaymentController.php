@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Redirect;
 
 class PaymentController extends Controller
 {
-    public function process_response(PlaceToPayPaymentServices $placetopay_payment): RedirectResponse
+    public function process_response(PlaceToPayPaymentServices $placetopay_payment, string $code): RedirectResponse
     {
-        $result = $placetopay_payment->getRequestInformation();
+        $result = $placetopay_payment->getRequestInformation($code);
 
         return Redirect::route('order.index')->with('success', $result == 'ok' ?  'Payment completed.' : 'Payment error.');
     }

@@ -30,6 +30,7 @@ class OrderController extends Controller
                         'purchase_date',
                         'payment_status',
                         'purchase_total',
+                        'url',
                     )
                 -> whereAuthUser()
                 -> orderByDesc('purchase_date')

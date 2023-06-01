@@ -2,7 +2,7 @@
 
 namespace App\Domain\Order\Services;
 
-use App\Domain\Order\Actions\OrderGetLastAction;
+use App\Domain\Order\Actions\GetOrderAction;
 use App\Domain\Order\Actions\OrderUpdateAction;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -28,10 +28,10 @@ class PlaceToPayPaymentServices
 
             OrderUpdateAction::handle($order);
 
-            redirect()->to($order->url)->send();
+            // redirect()->to($order->url)->send();
         }
 
-        throw new \Exception($response->body());
+        // throw new \Exception($response->body());
 
     }
 
@@ -58,7 +58,7 @@ class PlaceToPayPaymentServices
                 ]
             ],
             'expiration' => Carbon::now()->addDay(),
-            'returnUrl' => route('payment.response'),
+            'returnUrl' => route('payment.response', $order->code),
             'ipAddress' => $this->ipAddress,
             'userAgent' => $this->userAgent,
         ];
@@ -83,9 +83,9 @@ class PlaceToPayPaymentServices
         ];
     }
 
-    public function getRequestInformation(): string
+    public function getRequestInformation(string $code): string
     {
-        $order = OrderGetLastAction::handle();
+        $order = GetOrderAction::handle($code);
 
         $result = Http::post(config('placetopay.url')."/api/session/$order->request_id", [
             'auth' => $this->getAuth()
