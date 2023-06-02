@@ -30,7 +30,7 @@ class consultSession extends Command
     public function handle(): void
     {
         $orders = Order::query()
-            ->where('payment_status', '=', 'pending')
+            ->where('payment_status', 'pending')
             ->get();
 
         foreach ($orders as $order) {
@@ -43,19 +43,19 @@ class consultSession extends Command
                 if ($status == 'APPROVED') {
                     $order->paid();
                     Log::channel('payment_webcheckout')
-                        ->info('[AUTO][APPROVED] Payment reported successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                        ->info('['.$result->status().'][AUTO][APPROVED] Payment reported successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                             'response' => json_decode($result->body(), true),
                         ]);
                 } elseif ($status == 'PENDING') {
                     $order->pending();
                     Log::channel('payment_webcheckout')
-                        ->warning('[AUTO][PENDING] Payment is stil pending for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                        ->warning('['.$result->status().'][AUTO][PENDING] Payment is stil pending for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                             'response' => json_decode($result->body(), true),
                         ]);
                 } elseif ($status == 'REJECTED') {
                     $order->canceled();
                     Log::channel('payment_webcheckout')
-                        ->error('[AUTO][REJECTED] Payment has been rejected for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                        ->error('['.$result->status().'][AUTO][REJECTED] Payment has been rejected for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                             'response' => json_decode($result->body(), true),
                         ]);
                 }

@@ -30,18 +30,14 @@ class PlaceToPayPaymentServices
             OrderUpdateAction::handle($order);
 
             Log::channel('response_webcheckout')
-                ->info('Session created successfully for the order No.{id} with code {code} with the response {response}', [
-                    'id' => $order->id,
-                    'code' => $order->code,
+                ->info('['.$response->status().'] Session created successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                     'response' => json_decode($response->body(), true),
                 ]);
 
             // redirect()->to($order->url)->send();
         } else {
             Log::channel('response_webcheckout')
-                ->error('Error creating the session for the order No.{id} with code {code} with the response {response}', [
-                    'id' => $order->id,
-                    'code' => $order->code,
+                ->error('['.$response->status().'] Error creating the session for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                     'response' => json_decode($response->body(), true),
                 ]);
         }
@@ -113,21 +109,21 @@ class PlaceToPayPaymentServices
             if ($status == 'APPROVED') {
                 $order->paid();
                 Log::channel('payment_webcheckout')
-                    ->info('[MANUAL][APPROVED] Payment reported successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                    ->info('['.$result->status().'][MANUAL][APPROVED] Payment reported successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                         'response' => json_decode($result->body(), true),
                     ]);
 
             } elseif ($status == 'PENDING') {
                 $order->pending();
                 Log::channel('payment_webcheckout')
-                    ->warning('[MANUAL][PENDING] Payment is stil pending for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                    ->warning('['.$result->status().'][MANUAL][PENDING] Payment is stil pending for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                         'response' => json_decode($result->body(), true),
                     ]);
 
             } elseif ($status == 'REJECTED') {
                 $order->canceled();
                 Log::channel('payment_webcheckout')
-                    ->error('[MANUAL][REJECTED] Payment has been rejected for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                    ->error('['.$result->status().'][MANUAL][REJECTED] Payment has been rejected for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                         'response' => json_decode($result->body(), true),
                     ]);
 
@@ -137,9 +133,9 @@ class PlaceToPayPaymentServices
         }
 
         Log::channel('payment_webcheckout')
-                    ->error('Error for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                        'response' => json_decode($result->body(), true),
-                    ]);
+            ->critical('['.$result->status().'] Error for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                'response' => json_decode($result->body(), true),
+            ]);
         throw  new \Exception($result->body());
     }
 }
