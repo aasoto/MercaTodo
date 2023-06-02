@@ -113,16 +113,24 @@ class PlaceToPayPaymentServices
             if ($status == 'APPROVED') {
                 $order->paid();
                 Log::channel('payment_webcheckout')
-                    ->info('Payment reported successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                    ->info('[MANUAL][APPROVED] Payment reported successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                        'response' => json_decode($result->body(), true),
+                    ]);
+
+            } elseif ($status == 'PENDING') {
+                $order->pending();
+                Log::channel('payment_webcheckout')
+                    ->warning('[MANUAL][PENDING] Payment is stil pending for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                         'response' => json_decode($result->body(), true),
                     ]);
 
             } elseif ($status == 'REJECTED') {
-                $order->pending();
+                $order->canceled();
                 Log::channel('payment_webcheckout')
-                    ->warning('Payment has been rejected for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                    ->error('[MANUAL][REJECTED] Payment has been rejected for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                         'response' => json_decode($result->body(), true),
                     ]);
+
             }
 
             return 'ok';

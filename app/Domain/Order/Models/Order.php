@@ -40,6 +40,13 @@ class Order extends Model
         return OrderFactory::new();
     }
 
+    public function canceled(): void
+    {
+        $this->update([
+            'payment_status' => 'canceled'
+        ]);
+    }
+
     public function paid(): void
     {
         $this->update([
