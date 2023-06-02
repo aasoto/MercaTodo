@@ -7,6 +7,7 @@ use App\Domain\Order\Actions\OrderUpdateAction;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PlaceToPayPaymentServices
@@ -28,10 +29,25 @@ class PlaceToPayPaymentServices
 
             OrderUpdateAction::handle($order);
 
+            Log::channel('response_webcheckout')
+                ->info('Session created successfully for the order No.{id} with code {code} with the response {response}', [
+                    'id' => $order->id,
+                    'code' => $order->code,
+                    'response' => json_decode($response->body(), true),
+                ]);
+
             // redirect()->to($order->url)->send();
+        } else {
+            Log::channel('response_webcheckout')
+                ->error('Error creating the session for the order No.{id} with code {code} with the response {response}', [
+                    'id' => $order->id,
+                    'code' => $order->code,
+                    'response' => json_decode($response->body(), true),
+                ]);
         }
 
         // throw new \Exception($response->body());
+
 
     }
 
@@ -96,13 +112,26 @@ class PlaceToPayPaymentServices
             $status = $result->json()['status']['status'];
             if ($status == 'APPROVED') {
                 $order->paid();
+                Log::channel('payment_webcheckout')
+                    ->info('Payment reported successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                        'response' => json_decode($result->body(), true),
+                    ]);
+
             } elseif ($status == 'REJECTED') {
                 $order->pending();
+                Log::channel('payment_webcheckout')
+                    ->warning('Payment has been rejected for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                        'response' => json_decode($result->body(), true),
+                    ]);
             }
 
             return 'ok';
         }
 
+        Log::channel('payment_webcheckout')
+                    ->error('Error for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                        'response' => json_decode($result->body(), true),
+                    ]);
         throw  new \Exception($result->body());
     }
 }
