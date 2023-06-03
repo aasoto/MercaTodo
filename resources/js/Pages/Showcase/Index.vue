@@ -9,11 +9,13 @@ import { useCartStore } from '@/Store/Cart';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 import NotFoundMessage from "@/Components/NotFoundMessage.vue";
+import AlertError from '@/Components/Alerts/AlertError.vue';
 
 const props = defineProps({
     filters: Object,
     products: Object,
     products_categories: Object,
+    success: String,
     userRole: String,
 });
 
@@ -175,7 +177,7 @@ const getResults = () => {
                                     />
                                 </svg>
                             </div>
-                            <div v-if="product.stock == 0" class="relative h-12 w-max bg-black/40 flex items-center justify-center rounded-md text-white">
+                            <div v-if="product.stock == 0" class="relative h-12 w-max px-2 bg-black/40 flex items-center justify-center rounded-md text-white">
                                 AGOTADO
                             </div>
                         </div>
@@ -204,5 +206,12 @@ const getResults = () => {
             </div>
             <Pagination class="my-6" :links="products.links" />
         </div>
+        <AlertError
+            v-if="success === 'Payment canceled.'"
+            title="¡Proceso de pago cancelado!"
+            text="Si desea retormar el proceso de nuevo, busque en la pestaña de ordenes el pedido que canceló, este debe aparecer con el estado de cancelado. En caso de que tenga varios pedidos pendentes puede buscarlos por la fecha de compra o simplemente cliqueando en el botón de detalles de la orden para ver los articulos que hay en ella, recuerde que el link de compra tiene un duración de 24 horas, si el link está expirado deberá generar un nuevo."
+            :close="false"
+            :btn-close="true"
+        />
     </AuthenticatedLayout>
 </template>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Client;
 
+use App\Domain\Order\Actions\UpdateOrderCanceledAction;
 use App\Domain\Order\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Domain\Order\Services\PlaceToPayPaymentServices;
@@ -35,5 +36,12 @@ class PaymentController extends Controller
         $order = Order::select('id')->where('code', $code)->first();
 
         return Redirect::route('order.show', $order['id'])->with('success', $result == 'ok' ?  'Payment completed.' : 'Payment error.');
+    }
+
+    public function process_canceled(UpdateOrderCanceledAction $cancel_order, string $code): RedirectResponse
+    {
+        $cancel_order->handle($code);
+
+        return Redirect::route('showcase.index')->with('success', 'Payment canceled.');
     }
 }
