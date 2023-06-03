@@ -7,6 +7,7 @@ use App\Domain\Order\Actions\OrderUpdateAction;
 use App\Domain\Order\Services\Entities\Placetopay\Authentication;
 use App\Domain\Order\Services\Entities\Placetopay\Buyer;
 use App\Domain\Order\Services\Entities\Placetopay\Payment;
+use App\Domain\Order\Services\Entities\Placetopay\ReportStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
@@ -71,43 +72,20 @@ class PlaceToPayPaymentServices
         $order = GetOrderAction::handle($code);
         $authentication = new Authentication();
 
-        $result = Http::post(config('placetopay.url').config('placetopay.route.api').$order->request_id, [
+        $response = Http::post(config('placetopay.url').config('placetopay.route.api').$order->request_id, [
             'auth' => $authentication->getAuth()
         ]);
 
-
-        if ($result->ok()) {
-            $status = $result->json()['status']['status'];
-            if ($status == 'APPROVED') {
-                $order->paid();
-                Log::channel('payment_webcheckout')
-                    ->info('['.$result->status().'][MANUAL][APPROVED] Payment reported successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                        'response' => json_decode($result->body(), true),
-                    ]);
-
-            } elseif ($status == 'PENDING') {
-                $order->pending();
-                Log::channel('payment_webcheckout')
-                    ->warning('['.$result->status().'][MANUAL][PENDING] Payment is stil pending for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                        'response' => json_decode($result->body(), true),
-                    ]);
-
-            } elseif ($status == 'REJECTED') {
-                $order->canceled();
-                Log::channel('payment_webcheckout')
-                    ->error('['.$result->status().'][MANUAL][REJECTED] Payment has been rejected for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                        'response' => json_decode($result->body(), true),
-                    ]);
-
-            }
-
+        $status = new ReportStatus($order, $response);
+        if ($response->ok()) {
+            $status->saveOk();
             return 'ok';
         }
 
         Log::channel('payment_webcheckout')
-            ->critical('['.$result->status().'] Error for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                'response' => json_decode($result->body(), true),
+            ->critical('['.$response->status().'] Error for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                'response' => json_decode($response->body(), true),
             ]);
-        throw  new \Exception($result->body());
+        throw  new \Exception($response->body());
     }
 }
