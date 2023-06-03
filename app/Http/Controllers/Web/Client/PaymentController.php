@@ -18,6 +18,11 @@ class PaymentController extends Controller
         string $id)
     {
         $order = Order::where('id', $id)->first();
+
+        if ($order->payment_status == 'canceled') {
+            $order->pending();
+        }
+
         $placetopay->pay($order, $request->ip(), $request->userAgent());
 
         return Redirect::route('order.show', $order['id']);
