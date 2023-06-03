@@ -2,9 +2,6 @@
 
 namespace App\Domain\Order\Traits;
 
-/**
- *
- */
 trait CodeOrder
 {
     public function generate_code(): string

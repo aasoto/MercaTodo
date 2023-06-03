@@ -6,7 +6,13 @@ trait TranKey {
 
     public function getTranKey($nonce, $seed): string
     {
-        return base64_encode(sha1($nonce . $seed . env('WEBCHECKOUT_SECRETKEY'), true));
+        return base64_encode(
+            hash(
+                'sha256',
+                $nonce.$seed.config('placetopay.tranKey'),
+                true
+            )
+        );
     }
 
 }

@@ -52,7 +52,7 @@ class PaymentTest extends TestCase
             'status' => [
                 'status' => 'OK',
                 'reason' => 'PC',
-                'nessage' => 'La petición se ha procesado correctamente',
+                'message' => 'La petición se ha procesado correctamente',
                 'date' => '2023-06-02T16:09:39-05:00'
             ],
             'requestId' => 1213,

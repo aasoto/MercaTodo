@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Domain\Order\Models\Order;
+use App\Domain\Order\Services\Entities\Placetopay\Authentication;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -33,9 +34,11 @@ class consultSession extends Command
             ->where('payment_status', 'pending')
             ->get();
 
+        $authentication = new Authentication();
+
         foreach ($orders as $order) {
-            $result = Http::post(config('placetopay.url').'/api/session/'.$order->request_id, [
-                'auth' => $this->getAuth()
+            $result = Http::post(config('placetopay.url').config('placetopay.route.api').$order->request_id, [
+                'auth' => $authentication->getAuth(),
             ]);
 
             if ($result->ok()) {
@@ -63,22 +66,4 @@ class consultSession extends Command
         }
     }
 
-    private function getAuth(): array
-    {
-        $nonce = Str::random();
-        $seed = date('c');
-
-        return [
-            'login' => config('placetopay.login'),
-            'tranKey' => base64_encode(
-                hash(
-                    'sha256',
-                    $nonce.$seed.config('placetopay.tranKey'),
-                    true
-                )
-            ),
-            'nonce' => base64_encode($nonce),
-            'seed' => $seed,
-        ];
-    }
 }

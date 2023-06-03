@@ -4,11 +4,13 @@ namespace App\Domain\Order\Services;
 
 use App\Domain\Order\Actions\GetOrderAction;
 use App\Domain\Order\Actions\OrderUpdateAction;
+use App\Domain\Order\Services\Entities\Placetopay\Authentication;
+use App\Domain\Order\Services\Entities\Placetopay\Buyer;
+use App\Domain\Order\Services\Entities\Placetopay\Payment;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class PlaceToPayPaymentServices
 {
@@ -19,7 +21,7 @@ class PlaceToPayPaymentServices
         $this->ipAddress = $ipAddress;
         $this->userAgent = $userAgent;
 
-        $response = Http::post(config('placetopay.url').'/api/session',
+        $response = Http::post(config('placetopay.url').config('placetopay.route.api'),
             $this->createSession($order)
         );
 
@@ -49,26 +51,14 @@ class PlaceToPayPaymentServices
 
     private function createSession(Model $order): array
     {
-        $user = auth()->user();
+        $authentication = new Authentication();
+        $buyer = new Buyer(auth()->user());
+        $payment = new Payment($order);
 
         return [
-            'auth' => $this->getAuth(),
-            'buyer' => [
-                'document' => $user->number_document,
-                'name' => $user->first_name.' '.$user->second_name,
-                'surname' => $user->surname.' '.$user->second_surname,
-                'mobile' => $user->phone,
-                'email' => $user->email,
-                'address' => $user->address,
-            ],
-            'payment' => [
-                'reference' => $order->code,
-                'description' => 'Payment of purchase total',
-                'amount' => [
-                    'currency' => 'COP',
-                    'total' => $order->purchase_total
-                ]
-            ],
+            'auth' => $authentication->getAuth(),
+            'buyer' => $buyer->getBuyer(),
+            'payment' => $payment->getPayment(),
             'expiration' => Carbon::now()->addDay(),
             'returnUrl' => route('payment.response', $order->code),
             'ipAddress' => $this->ipAddress,
@@ -76,31 +66,13 @@ class PlaceToPayPaymentServices
         ];
     }
 
-    private function getAuth(): array
-    {
-        $nonce = Str::random();
-        $seed = date('c');
-
-        return [
-            'login' => config('placetopay.login'),
-            'tranKey' => base64_encode(
-                hash(
-                    'sha256',
-                    $nonce.$seed.config('placetopay.tranKey'),
-                    true
-                )
-            ),
-            'nonce' => base64_encode($nonce),
-            'seed' => $seed,
-        ];
-    }
-
     public function getRequestInformation(string $code): string
     {
         $order = GetOrderAction::handle($code);
+        $authentication = new Authentication();
 
-        $result = Http::post(config('placetopay.url')."/api/session/$order->request_id", [
-            'auth' => $this->getAuth()
+        $result = Http::post(config('placetopay.url').config('placetopay.route.api').$order->request_id, [
+            'auth' => $authentication->getAuth()
         ]);
 
 
