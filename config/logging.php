@@ -136,6 +136,12 @@ return [
             'path' => storage_path('logs/payment_webcheckout.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
+
+        'create_link_webcheckout' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/create_link_webcheckout.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
     ],
 
 ];

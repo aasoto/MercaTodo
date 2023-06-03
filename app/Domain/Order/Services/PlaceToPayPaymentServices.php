@@ -22,9 +22,18 @@ class PlaceToPayPaymentServices
         $this->ipAddress = $ipAddress;
         $this->userAgent = $userAgent;
 
-        $response = Http::post(config('placetopay.url').config('placetopay.route.api'),
-            $this->createSession($order)
-        );
+        try {
+            $response = Http::post(config('placetopay.url').config('placetopay.route.api'),
+                $this->createSession($order)
+            );
+            Log::channel('create_link_webcheckout')->info('Payment link created successfully in order No.'.$order->id.' with code '.$order->code.' {response} ', [
+                'response' => json_decode($response, true),
+            ]);
+        } catch (\Throwable $th) {
+            Log::channel('create_link_webcheckout')->critical('Can not create new payment link for placetopay in order No. '.$order->id.' with code '.$order->code.' {Throwable}: ', [
+                'Throwable' => json_decode($th, true),
+            ]);
+        }
 
         if ($response->ok()) {
             $order->request_id = $response->json()['requestId'];
