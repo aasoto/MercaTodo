@@ -213,5 +213,12 @@ const getResults = () => {
             :close="false"
             :btn-close="true"
         />
+        <AlertError
+            v-if="success === 'Unexpected error.'"
+            title="Error de servicio externo"
+            text="Intente el proceso de nuevo."
+            :close="false"
+            :btn-close="true"
+        />
     </AuthenticatedLayout>
 </template>

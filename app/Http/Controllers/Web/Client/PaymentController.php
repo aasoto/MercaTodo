@@ -44,4 +44,9 @@ class PaymentController extends Controller
 
         return Redirect::route('showcase.index')->with('success', 'Payment canceled.');
     }
+
+    public function process_error(): RedirectResponse
+    {
+        return Redirect::route('showcase.index')->with('success', 'Unexpected error.');
+    }
 }

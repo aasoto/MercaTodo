@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 
 class PlaceToPayPaymentServices
 {
@@ -52,10 +53,9 @@ class PlaceToPayPaymentServices
                 ->error('['.$response->status().'] Error creating the session for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                     'response' => json_decode($response->body(), true),
                 ]);
+
+            return Redirect::route('payment.error');
         }
-
-        // throw new \Exception($response->body());
-
 
     }
 
