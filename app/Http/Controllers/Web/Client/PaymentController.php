@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Web\Client;
 
+use App\Domain\Order\Actions\GetProductsByOrderAction;
 use App\Domain\Order\Actions\UpdateOrderCanceledAction;
+use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Domain\Order\Services\PlaceToPayPaymentServices;
@@ -14,17 +16,19 @@ use Illuminate\Support\Facades\Redirect;
 class PaymentController extends Controller
 {
     public function update(
+        GetProductsByOrderAction $get_products,
         PlaceToPayPaymentServices $placetopay,
         UpdateRequest $request,
         string $id)
     {
         $order = Order::where('id', $id)->first();
+        $products_data = new StoreOrderData($get_products->handle($order->id));
 
         if ($order->payment_status == 'canceled') {
             $order->pending();
         }
 
-        $placetopay->pay($order, $request->ip(), $request->userAgent());
+        $placetopay->pay($order, $products_data, $request->ip(), $request->userAgent());
 
         return Redirect::route('order.show', $order['id']);
     }
