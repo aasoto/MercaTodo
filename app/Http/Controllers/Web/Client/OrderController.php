@@ -60,7 +60,7 @@ class OrderController extends Controller
         if (count($limitated_stock) == 0) {
             $order = $store_order_action->handle($data);
             $store_order_has_product_action->handle($data, $order);
-            $placetopay->pay($order, $request->ip(), $request->userAgent());
+            $placetopay->pay($order, $data, $request->ip(), $request->userAgent());
         } else {
             return Redirect::route('order.create')
                 ->with('success', 'Order rejected.')

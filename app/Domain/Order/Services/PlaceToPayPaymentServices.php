@@ -4,6 +4,7 @@ namespace App\Domain\Order\Services;
 
 use App\Domain\Order\Actions\GetOrderAction;
 use App\Domain\Order\Actions\OrderUpdateAction;
+use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Services\Entities\Placetopay\Authentication;
 use App\Domain\Order\Services\Entities\Placetopay\Buyer;
 use App\Domain\Order\Services\Entities\Placetopay\Payment;
@@ -18,14 +19,14 @@ class PlaceToPayPaymentServices
 {
     private string $ipAddress, $userAgent;
 
-    public function pay(Model $order, string $ipAddress, string $userAgent)
+    public function pay(Model $order, StoreOrderData $products_order, string $ipAddress, string $userAgent)
     {
         $this->ipAddress = $ipAddress;
         $this->userAgent = $userAgent;
 
         try {
             $response = Http::post(config('placetopay.url').config('placetopay.route.api'),
-                $this->createSession($order)
+                $this->createSession($order, $products_order)
             );
             Log::channel('create_link_webcheckout')->info('Payment link created successfully in order No.'.$order->id.' with code '.$order->code.' {response} ', [
                 'response' => json_decode($response, true),
@@ -59,11 +60,11 @@ class PlaceToPayPaymentServices
 
     }
 
-    private function createSession(Model $order): array
+    private function createSession(Model $order, StoreOrderData $products_order): array
     {
         $authentication = new Authentication();
         $buyer = new Buyer(auth()->user());
-        $payment = new Payment($order);
+        $payment = new Payment($order, $products_order);
 
         return [
             'auth' => $authentication->getAuth(),
