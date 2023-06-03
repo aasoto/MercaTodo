@@ -1,4 +1,5 @@
 <script setup>
+import AlertError from '@/Components/Alerts/AlertError.vue';
 import InfoButton from '@/Components/Buttons/InfoButton.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import Pagination from '@/Components/Pagination.vue';
@@ -162,5 +163,12 @@ const generateNewURLWebcheckout = () => {
                 </div>
             </div>
         </div>
+        <AlertError
+            v-if="success === 'Payment error.'"
+            title="Error de servicio externo"
+            text="Intente el proceso de nuevo."
+            :close="false"
+            :btn-close="true"
+        />
     </AuthenticatedLayout>
 </template>

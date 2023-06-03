@@ -90,12 +90,13 @@ class PlaceToPayPaymentServices
         if ($response->ok()) {
             $status->saveOk();
             return 'ok';
+        } else {
+            Log::channel('payment_webcheckout')
+                ->critical('['.$response->status().'] Error for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                    'response' => json_decode($response->body(), true),
+                ]);
+            return 'error';
         }
 
-        Log::channel('payment_webcheckout')
-            ->critical('['.$response->status().'] Error for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                'response' => json_decode($response->body(), true),
-            ]);
-        throw  new \Exception($response->body());
     }
 }
