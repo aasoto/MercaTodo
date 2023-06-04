@@ -60,4 +60,11 @@ class Order extends Model
             'payment_status' => 'pending'
         ]);
     }
+
+    public function waiting(): void
+    {
+        $this->update([
+            'payment_status' => 'waiting'
+        ]);
+    }
 }

@@ -77,6 +77,9 @@ const generateNewURLWebcheckout = () => {
                     <div v-if="order.payment_status == 'pending'" class="rounded-md bg-yellow-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
                         Estado: PENDIENTE
                     </div>
+                    <div v-if="order.payment_status == 'waiting'" class="rounded-md bg-purple-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                        Estado: PAGO POR CONFIRMAR
+                    </div>
                     <div class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
                         Total: {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                     </div>
@@ -158,6 +161,14 @@ const generateNewURLWebcheckout = () => {
                                 </svg>
                                 Generar nuevo link de pago
                             </InfoButton>
+                            <SuccessButton v-if="order.payment_status == 'waiting'" @click="openWebcheckout(order.url)" class="flex gap-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                    <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
+                                    <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
+                                </svg>
+                                Ver estado de la transacción
+                            </SuccessButton>
+
                         </div>
                     </div>
                 </div>

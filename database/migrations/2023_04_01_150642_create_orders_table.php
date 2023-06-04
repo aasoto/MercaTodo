@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('purchase_date');//fecha de compra
             $table->enum('currency', ['COP', 'USD'])->default('COP');
             $table->string('url')->nullable();
-            $table->enum('payment_status', ['canceled', 'paid', 'pending'])->default('pending');//estado de pago
+            $table->enum('payment_status', ['canceled', 'paid', 'pending', 'waiting'])->default('pending');//estado de pago
             $table->double('purchase_total', 15, 2);
             $table->timestamps();
         });

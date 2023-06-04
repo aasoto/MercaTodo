@@ -18,11 +18,17 @@ class ReportStatus
     public function saveOk(): void
     {
         $status = $this->response->json()['status']['status'];
+        $message = $this->response->json()['status']['message'];
+
         if ($status == 'APPROVED') {
             $this->order->paid();
             $this->paidLog();
         } elseif ($status == 'PENDING') {
-            $this->order->pending();
+            if ($message == 'La petición se encuentra pendiente') {
+                $this->order->waiting();
+            } else {
+                $this->order->pending();
+            }
             $this->pendingLog();
         } elseif ($status == 'REJECTED') {
             $this->order->canceled();
