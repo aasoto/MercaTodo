@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 
 import { useSignedRoleStore } from '@/Store/SignedRole';
 import { useCartStore } from '@/Store/Cart';
@@ -24,7 +24,11 @@ const { assignRole } = useSignedRole;
 assignRole(props.userRole);
 
 const useCart = useCartStore();
-const { find } = useCart;
+const { currentUser, find } = useCart;
+
+if (usePage().props.auth.user) {
+    currentUser(usePage().props.auth.user.id);
+}
 
 const btnCategoryLabel = ref('Categorías');
 
