@@ -298,4 +298,82 @@ class PaymentTest extends TestCase
 
         $this->assertEquals($order->payment_status, 'canceled');
     }
+
+    public function test_redirect_to_error_page_when_the_system_has_not_authorization_to_connect_the_payment_platform(): void
+    {
+        $this->actingAs($this->user);
+        $order = Order::factory()->create([
+            'user_id' => $this->user->getKey(),
+        ]);
+
+        $mock_response = [
+            "status" => [
+                "status" => "FAILED",
+                "reason" => 401,
+                "message" => "Autenticación fallida 101",
+                "date" => "2023-06-05T10:26:44-05:00"
+            ]
+        ];
+
+        Http::fake([
+            config('placetopay.url').'/*' => Http::response($mock_response, 401)
+        ]);
+
+        $this->patchJson(route('payment.update', $order->getKey()), [
+            'id' => $order->getKey(),
+        ])->assertRedirect(route('payment.error', 401));
+    }
+
+    public function test_redirect_to_error_page_when_there_is_an_internal_server_error(): void
+    {
+        $this->actingAs($this->user);
+        $order = Order::factory()->create([
+            'user_id' => $this->user->getKey(),
+        ]);
+
+        Http::fake([
+            config('placetopay.url').'/*' => Http::response(['error' => '500'], 500)
+        ]);
+
+        $this->patchJson(route('payment.update', $order->getKey()), [
+            'id' => $order->getKey(),
+        ])->assertRedirect(route('payment.error', 500));
+    }
+
+    public function test_redirect_to_error_page_when_the_service_is_unavailable(): void
+    {
+        $this->actingAs($this->user);
+        $order = Order::factory()->create([
+            'user_id' => $this->user->getKey(),
+        ]);
+
+        Http::fake([
+            config('placetopay.url').'/*' => Http::response(['error' => '503'], 503)
+        ]);
+
+        $this->patchJson(route('payment.update', $order->getKey()), [
+            'id' => $order->getKey(),
+        ])->assertRedirect(route('payment.error', 503));
+    }
+
+    public function test_can_redirect_to_showcase_page_from_process_error_401(): void
+    {
+        $this->actingAs($this->user)
+            ->get(route('payment.error', 401))
+            ->assertRedirect(route('showcase.index'));
+    }
+
+    public function test_can_redirect_to_showcase_page_from_process_error_500(): void
+    {
+        $this->actingAs($this->user)
+            ->get(route('payment.error', 500))
+            ->assertRedirect(route('showcase.index'));
+    }
+
+    public function test_can_redirect_to_showcase_page_from_process_error_503(): void
+    {
+        $this->actingAs($this->user)
+            ->get(route('payment.error', 503))
+            ->assertRedirect(route('showcase.index'));
+    }
 }
