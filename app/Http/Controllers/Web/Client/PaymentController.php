@@ -42,11 +42,11 @@ class PaymentController extends Controller
         return Redirect::route('order.show', $order['id'])->with('success', $result == 'ok' ?  'Payment completed.' : 'Payment error.');
     }
 
-    public function process_canceled(UpdateOrderCanceledAction $cancel_order, string $code): RedirectResponse
+    public function process_canceled(PlaceToPayPaymentServices $placetopay_payment, string $code): RedirectResponse
     {
-        $cancel_order->handle($code);
+        $result = $placetopay_payment->getRequestInformation($code);
 
-        return Redirect::route('showcase.index')->with('success', 'Payment canceled.');
+        return Redirect::route('showcase.index')->with('success', $result == 'ok' ?  'Payment canceled.' : 'Error.');
     }
 
     public function process_error(): RedirectResponse
