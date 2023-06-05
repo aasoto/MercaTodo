@@ -19,23 +19,18 @@ class PlaceToPayPaymentServices
 {
     private string $ipAddress, $userAgent;
 
-    public function pay(Model $order, StoreOrderData $products_order, string $ipAddress, string $userAgent)
+    public function pay(
+        Model $order,
+        StoreOrderData $products_order,
+        string $ipAddress,
+        string $userAgent)
     {
         $this->ipAddress = $ipAddress;
         $this->userAgent = $userAgent;
 
-        try {
-            $response = Http::post(config('placetopay.url').config('placetopay.route.api'),
+        $response = Http::post(config('placetopay.url').config('placetopay.route.api'),
                 $this->createSession($order, $products_order)
             );
-            Log::channel('create_link_webcheckout')->info('Payment link created successfully in order No.'.$order->id.' with code '.$order->code.' {response} ', [
-                'response' => json_decode($response, true),
-            ]);
-        } catch (\Throwable $th) {
-            Log::channel('create_link_webcheckout')->critical('Can not create new payment link for placetopay in order No. '.$order->id.' with code '.$order->code.' {Throwable}: ', [
-                'Throwable' => json_decode($th, true),
-            ]);
-        }
 
         if ($response->ok()) {
             $order->request_id = $response->json()['requestId'];
@@ -44,20 +39,29 @@ class PlaceToPayPaymentServices
             OrderUpdateAction::handle($order);
 
             Log::channel('response_webcheckout')
-                ->info('['.$response->status().'] Session created successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                ->info('['.$response->status().'][SUCCESS] Session created successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                     'response' => json_decode($response->body(), true),
                 ]);
 
             // redirect()->to($order->url)->send();
-        } else {
+        } elseif ($response->unauthorized()) {
             Log::channel('response_webcheckout')
-                ->error('['.$response->status().'] Error creating the session for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                ->error('['.$response->status().'][UNAUTHORIZED] Error creating the session for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
                     'response' => json_decode($response->body(), true),
                 ]);
-
-            return Redirect::route('payment.error');
+        } elseif ($response->status() === 500) {
+            Log::channel('response_webcheckout')
+                ->error('['.$response->status().'][INTERNAL SERVER ERROR] Error creating the session for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                    'response' => json_decode($response->body(), true),
+                ]);
+        } else {
+            Log::channel('response_webcheckout')
+                ->error('['.$response->status().'][OTHER RESPONSE] Error creating the session for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
+                    'response' => json_decode($response->body(), true),
+                ]);
         }
 
+        return $response->status();
     }
 
     private function createSession(Model $order, StoreOrderData $products_order): array

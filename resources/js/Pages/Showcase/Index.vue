@@ -10,6 +10,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 import NotFoundMessage from "@/Components/NotFoundMessage.vue";
 import AlertError from '@/Components/Alerts/AlertError.vue';
+import AlertWarning from '@/Components/Alerts/AlertWarning.vue';
 
 const props = defineProps({
     filters: Object,
@@ -217,10 +218,24 @@ const getResults = () => {
             :close="false"
             :btn-close="true"
         />
+        <AlertWarning
+            v-if="success === 'Payment unauthorized.'"
+            title="Error de autorización"
+            text="Espere a que los administradores de esta plataforma solucionen."
+            :close="false"
+            :btn-close="true"
+        />
         <AlertError
-            v-if="success === 'Unexpected error.'"
-            title="Error de servicio externo"
-            text="Intente el proceso de nuevo."
+            v-if="success === 'Payment error.'"
+            title="Error del servidor"
+            text="Intente el proceso de nuevo o espere mas tarde."
+            :close="false"
+            :btn-close="true"
+        />
+        <AlertError
+            v-if="success === 'Payment undefined error.'"
+            title="Error desconocido del servidor"
+            text="Intente el proceso de nuevo o espere mas tarde."
             :close="false"
             :btn-close="true"
         />

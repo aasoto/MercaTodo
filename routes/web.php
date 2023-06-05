@@ -135,7 +135,7 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
     Route::middleware(['role:client'])->group( function () {
         Route::get('/payment/response/{code}', [PaymentController::class, 'process_response'])->name('payment.response');
         Route::get('/payment/canceled/{code}', [PaymentController::class, 'process_canceled'])->name('payment.canceled');
-        Route::get('/payment/error', [PaymentController::class, 'process_error'])->name('payment.error');
+        Route::get('/payment/error/{status}', [PaymentController::class, 'process_error'])->name('payment.error');
         Route::patch('/payment/{id}', [PaymentController::class, 'update'])->name('payment.update');
     });
 });

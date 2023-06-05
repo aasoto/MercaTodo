@@ -28,9 +28,13 @@ class PaymentController extends Controller
             $order->pending();
         }
 
-        $placetopay->pay($order, $products_data, $request->ip(), $request->userAgent());
+        $status = $placetopay->pay($order, $products_data, $request->ip(), $request->userAgent());
 
-        return Redirect::route('order.show', $order['id']);
+        if ($status === 200) {
+            return Redirect::route('order.show', $order['id']);
+        } else {
+            return Redirect::route('payment.error', $status);
+        }
     }
 
     public function process_response(PlaceToPayPaymentServices $placetopay_payment, string $code): RedirectResponse
@@ -49,8 +53,20 @@ class PaymentController extends Controller
         return Redirect::route('showcase.index')->with('success', $result == 'ok' ?  'Payment canceled.' : 'Error.');
     }
 
-    public function process_error(): RedirectResponse
+    public function process_error(int $status): RedirectResponse
     {
-        return Redirect::route('showcase.index')->with('success', 'Unexpected error.');
+        switch ($status) {
+            case 401:
+                $message = 'Payment unauthorized.';
+                break;
+            case 500:
+                $message = 'Payment error.';
+                break;
+            default:
+                $message = 'Payment undefined error.';
+                break;
+        }
+
+        return Redirect::route('showcase.index')->with('success', $message);
     }
 }
