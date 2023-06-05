@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers\Web\Client\Payment;
 use App\Domain\Order\Models\Order;
 use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
+use Database\Seeders\OrderHasProductSeeder;
 use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\RoleSeeder;
@@ -83,6 +84,8 @@ class PaymentTest extends TestCase
             'request_id' => 0000,
             'payment_status' => 'canceled',
         ]);
+
+        $this->seed(OrderHasProductSeeder::class);
 
         $mock_response = [
             "status" => [
@@ -375,5 +378,23 @@ class PaymentTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('payment.error', 503))
             ->assertRedirect(route('showcase.index'));
+    }
+
+    public function test_can_report_error_when_process_response_was_not_successfull(): void
+    {
+        $this->actingAs($this->user);
+        $order = Order::factory()->create([
+            'user_id' => $this->user->getKey(),
+            'url' => 'https://checkout-co.placetopay.dev/spa/session/0000/0000',
+            'request_id' => 0000,
+        ]);
+
+        Http::fake([
+            config('placetopay.url').'/*' => Http::response(['error' => '500'], 500)
+        ]);
+
+        $this->get(route('payment.response', $order->code))
+            ->assertRedirect(route('order.show', $order->getKey()))
+            ->assertSessionHasAll(['success' => 'Payment error.']);
     }
 }
