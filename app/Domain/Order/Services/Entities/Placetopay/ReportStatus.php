@@ -4,7 +4,6 @@ namespace App\Domain\Order\Services\Entities\Placetopay;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Log;
 
 class ReportStatus
 {
@@ -20,43 +19,25 @@ class ReportStatus
         $status = $this->response->json()['status']['status'];
         $message = $this->response->json()['status']['message'];
 
+        $logs_report_status = new LogsReportStatus($this->order, $this->response, $this->mode);
+
         if ($status == 'APPROVED') {
             $this->order->paid();
-            $this->paidLog();
+            $logs_report_status->save('APPROVED');
         } elseif ($status == 'PENDING') {
             if ($message == 'La petición se encuentra pendiente') {
                 $this->order->waiting();
             } else {
                 $this->order->pending();
             }
-            $this->pendingLog();
+            $logs_report_status->save('PENDING');
         } elseif ($status == 'REJECTED') {
             $this->order->canceled();
-            $this->canceledLog();
+            $logs_report_status->save('REJECTED');
+        } else {
+            $logs_report_status->save($this->response->json()['status']['status']);
         }
     }
 
-    private function paidLog(): void
-    {
-        Log::channel('payment_webcheckout')
-            ->info('['.$this->response->status().']['.$this->mode.'][APPROVED] Payment reported successfully for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [
-                'response' => json_decode($this->response->body(), true),
-            ]);
-    }
 
-    private function pendingLog(): void
-    {
-        Log::channel('payment_webcheckout')
-            ->warning('['.$this->response->status().']['.$this->mode.'][PENDING] Payment is stil pending for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [
-                'response' => json_decode($this->response->body(), true),
-            ]);
-    }
-
-    private function canceledLog(): void
-    {
-        Log::channel('payment_webcheckout')
-            ->error('['.$this->response->status().']['.$this->mode.'][REJECTED] Payment has been rejected for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [
-                'response' => json_decode($this->response->body(), true),
-            ]);
-    }
 }

@@ -7,6 +7,7 @@ use App\Domain\Order\Actions\OrderUpdateAction;
 use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Services\Entities\Placetopay\Authentication;
 use App\Domain\Order\Services\Entities\Placetopay\Buyer;
+use App\Domain\Order\Services\Entities\Placetopay\LogsPayment;
 use App\Domain\Order\Services\Entities\Placetopay\Payment;
 use App\Domain\Order\Services\Entities\Placetopay\ReportStatus;
 use Carbon\Carbon;
@@ -23,7 +24,7 @@ class PlaceToPayPaymentServices
         Model $order,
         StoreOrderData $products_order,
         string $ipAddress,
-        string $userAgent)
+        string $userAgent): int
     {
         $this->ipAddress = $ipAddress;
         $this->userAgent = $userAgent;
@@ -38,28 +39,11 @@ class PlaceToPayPaymentServices
 
             OrderUpdateAction::handle($order);
 
-            Log::channel('response_webcheckout')
-                ->info('['.$response->status().'][SUCCESS] Session created successfully for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                    'response' => json_decode($response->body(), true),
-                ]);
-
             // redirect()->to($order->url)->send();
-        } elseif ($response->unauthorized()) {
-            Log::channel('response_webcheckout')
-                ->error('['.$response->status().'][UNAUTHORIZED] Error creating the session for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                    'response' => json_decode($response->body(), true),
-                ]);
-        } elseif ($response->status() === 500) {
-            Log::channel('response_webcheckout')
-                ->error('['.$response->status().'][INTERNAL SERVER ERROR] Error creating the session for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                    'response' => json_decode($response->body(), true),
-                ]);
-        } else {
-            Log::channel('response_webcheckout')
-                ->error('['.$response->status().'][OTHER RESPONSE] Error creating the session for the order No.'.$order->id.' with code '.$order->code.' with the response {response}', [
-                    'response' => json_decode($response->body(), true),
-                ]);
         }
+
+        $logs_payment = new LogsPayment($response, $order);
+        $logs_payment->save();
 
         return $response->status();
     }
