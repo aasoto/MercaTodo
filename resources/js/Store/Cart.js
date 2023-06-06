@@ -2,8 +2,15 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 export const useCartStore = defineStore('cart', () => {
+
+    /************** STATE ****************/
     const cart = ref([]);
 
+    if (localStorage.getItem("cartBackup")) {
+        cart.value = JSON.parse(localStorage.getItem("cartBackup"));
+    }
+
+    /************** GETTERS ****************/
     const order = computed(() => {
         return cart.value.map( item => ({
                 ...item,
@@ -28,10 +35,12 @@ export const useCartStore = defineStore('cart', () => {
             price = price + item.totalPrice;
         });
         return price;
-    })
+    });
 
+    /************** ACTIONS ****************/
     const add = (id, name, slug, price, quantity) => {
         cart.value.push({ id, name, slug, price, quantity });
+        localStorage.setItem("cartBackup", JSON.stringify(cart.value));
     }
 
     const find = (id) => {
@@ -44,11 +53,18 @@ export const useCartStore = defineStore('cart', () => {
                 item.quantity = quantity;
             }
         });
+        localStorage.setItem("cartBackup", JSON.stringify(cart.value));
     }
 
     const remove = (id) => {
         const index = cart.value.indexOf(find(id));
         cart.value.splice(index, 1);
+        localStorage.setItem("cartBackup", JSON.stringify(cart.value));
+    }
+
+    const emptyCart = () => {
+        cart.value = [];
+        localStorage.setItem("cartBackup", JSON.stringify(cart.value));
     }
 
     return {
@@ -61,5 +77,6 @@ export const useCartStore = defineStore('cart', () => {
         find,
         update,
         remove,
+        emptyCart,
     };
 });

@@ -1,41 +1,39 @@
 <script setup>
-import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useCartStore } from '@/Store/Cart';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
-    orders: Object,
-    success: String,
+    order: Object,
+    products: Object,
 });
 
-const useCart = useCartStore();
-
-const { emptyCart } = useCart;
-
-if (props.success == 'Order created.') {
-    emptyCart();
+const totalPrice = (price, quantity) => {
+    return price * quantity;
 }
-
-const form = useForm({
-    id: '',
-});
-
-const showOrderDetail = (id) => {
-    form.id = id;
-    form.get(route('order.show', form.id));
-}
-
 </script>
 <template>
-    <Head title="Mis ordenes" />
+    <Head title="Detalle de orden" />
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between items-center">
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Mis ordenes
+                    Detalle de orden No. {{ order.id }}
                 </h2>
+                <div class="flex justify-center items-center gap-3">
+                    <div class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                        Fecha: {{ order.purchase_date }}
+                    </div>
+                    <div v-if="order.payment_status == 'pending'" class="rounded-md bg-yellow-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                        Estado: {{ order.payment_status }}
+                    </div>
+                    <div v-if="order.payment_status == 'paid'" class="rounded-md bg-green-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                        Estado: {{ order.payment_status }}
+                    </div>
+                    <div class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                        Total: {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
+                    </div>
+                </div>
             </div>
         </template>
 
@@ -46,78 +44,62 @@ const showOrderDetail = (id) => {
                         <table class="w-full m-5 rounded-lg">
                             <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
                                 <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
-                                    ID
+                                    Nombre
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Fecha de la compra
+                                    Unidad
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Estado de pago
+                                    Cantidad
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Total de la compra
+                                    Precio unitario
                                 </th>
                                 <th class="rounded-tr-lg py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Acciones
+                                    Precio total
                                 </th>
                             </thead>
                             <tbody>
-                                <tr v-for="order in orders.data" class="border-b border-gray-400">
+                                <tr v-for="product in products.data" class="border-b border-gray-400">
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ order.id }}
+                                        {{ product.name }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ order.purchase_date }}
+                                        {{ product.unit }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ order.payment_status }}
+                                        {{ product.quantity }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white text-right capitalize">
-                                        {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
+                                        {{ product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                                     </td>
-                                    <td class="px-3 py-3 text-black dark:text-white capitalize flex justify-center items-center gap-3">
-                                        <button @click="showOrderDetail(order.id)" class="bg-blue-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
-                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            <span>
-                                                Detalles
-                                            </span>
-                                        </button>
+                                    <td class="px-3 py-3 text-black dark:text-white text-right capitalize">
+                                        {{ totalPrice(product.price, product.quantity).toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                                     </td>
                                 </tr>
                             </tbody>
                             <tfoot class="bg-gray-300 dark:bg-gray-700 rounded-b-lg">
                                 <th class="rounded-bl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
-                                    ID
+                                    Nombre
                                 </th>
                                 <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Fecha de la compra
+                                    Unidad
                                 </th>
                                 <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Estado de pago
+                                    Cantidad
                                 </th>
                                 <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Total de la compra
+                                    Precio unitario
                                 </th>
                                 <th class="rounded-br-lg py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Acciones
+                                    Precio total
                                 </th>
                             </tfoot>
                         </table>
-                        <Pagination class="my-6" :links="orders.links" />
+                        <Pagination class="my-6" :links="products.links" />
                     </div>
                 </div>
             </div>
         </div>
-        <AlertSuccess
-            v-if="success === 'Order created.'"
-            icon="success"
-            title="¡Listo!"
-            text="Orden enviada satisfactoriamente."
-            :close="false"
-            :btn-close="true"
-        />
     </AuthenticatedLayout>
 </template>
