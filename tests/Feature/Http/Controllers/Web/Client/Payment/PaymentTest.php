@@ -397,4 +397,31 @@ class PaymentTest extends TestCase
             ->assertRedirect(route('order.show', $order->getKey()))
             ->assertSessionHasAll(['success' => 'Payment error.']);
     }
+
+    public function test_can_report_unknown_status_in_logs(): void
+    {
+        $this->actingAs($this->user);
+        $order = Order::factory()->create([
+            'user_id' => $this->user->getKey(),
+            'url' => 'https://checkout-co.placetopay.dev/spa/session/0000/0000',
+            'request_id' => 0000,
+        ]);
+
+        $mock_response = [
+            "requestId" => 0000,
+            "status" => [
+                "status" => "APPROVED_PARTIAL",
+                "reason" => "AP",
+                "message" => "La petición aprobada parcialmente.",
+                "date" => "2023-06-04T22:01:16-05:00"
+            ]
+        ];
+
+        Http::fake([
+            config('placetopay.url').'/*' => Http::response($mock_response)
+        ]);
+
+        $this->get(route('payment.response', $order->code))
+            ->assertRedirect(route('order.show', $order->getKey()));
+    }
 }
