@@ -2,21 +2,12 @@
 import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useCartStore } from '@/Store/Cart';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     orders: Object,
     success: String,
 });
-
-const useCart = useCartStore();
-
-const { emptyCart } = useCart;
-
-if (props.success == 'Order created.') {
-    emptyCart();
-}
 
 const form = useForm({
     id: '',
@@ -27,6 +18,30 @@ const showOrderDetail = (id) => {
     form.get(route('order.show', form.id));
 }
 
+const openWebcheckout = (url) => {
+    window.location.replace(url);
+}
+
+const expirationDate = (date) => {
+    let res = new Date(date);
+    res.setDate(res.getDate() + 1);
+
+    const date1 = new Date();
+    const date2 = new Date(res);
+
+    if (date1 < date2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const generateNewURLWebcheckout = (id) => {
+    router.post(route('payment.update', id),{
+        _method: 'patch',
+        id: id,
+    });
+}
 </script>
 <template>
     <Head title="Mis ordenes" />
@@ -70,7 +85,36 @@ const showOrderDetail = (id) => {
                                         {{ order.purchase_date }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ order.payment_status }}
+                                        <div
+                                            v-if="order.payment_status == 'canceled'"
+                                            class="rounded-md px-4 py-2 bg-red-200 text-center font-bold"
+                                        >
+                                            CANCELADO
+                                        </div>
+                                        <div
+                                            v-if="order.payment_status == 'paid'"
+                                            class="rounded-md px-4 py-2 bg-green-200 text-center font-bold"
+                                        >
+                                            PAGADO
+                                        </div>
+                                        <div
+                                            v-if="order.payment_status == 'waiting'"
+                                            class="rounded-md px-4 py-2 bg-purple-300 text-center font-bold"
+                                        >
+                                            PAGO POR CONFIRMAR
+                                        </div>
+                                        <div
+                                            v-if="order.url && (order.payment_status == 'pending')"
+                                            class="rounded-md px-4 py-2 bg-yellow-200 text-center font-bold"
+                                        >
+                                            PENDIENTE
+                                        </div>
+                                        <div
+                                            v-if="!order.url"
+                                            class="rounded-md px-4 py-2 bg-blue-200 text-center font-bold"
+                                        >
+                                            SIN LINK DE PAGO
+                                        </div>
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white text-right capitalize">
                                         {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
@@ -84,6 +128,31 @@ const showOrderDetail = (id) => {
                                             <span>
                                                 Detalles
                                             </span>
+                                        </button>
+                                        <button v-if="(order.payment_status == 'pending') && expirationDate(order.purchase_date) && order.url" @click="openWebcheckout(order.url)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                                <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
+                                                <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
+                                            </svg>
+                                            Pagar orden
+                                        </button>
+                                        <button v-else-if="(order.payment_status == 'pending') || (order.payment_status == 'canceled')" @click="generateNewURLWebcheckout(order.id)" class="bg-cyan-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                                <path fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 00-5.304 0l-4.5 4.5a3.75 3.75 0 001.035 6.037.75.75 0 01-.646 1.353 5.25 5.25 0 01-1.449-8.45l4.5-4.5a5.25 5.25 0 117.424 7.424l-1.757 1.757a.75.75 0 11-1.06-1.06l1.757-1.757a3.75 3.75 0 000-5.304zm-7.389 4.267a.75.75 0 011-.353 5.25 5.25 0 011.449 8.45l-4.5 4.5a5.25 5.25 0 11-7.424-7.424l1.757-1.757a.75.75 0 111.06 1.06l-1.757 1.757a3.75 3.75 0 105.304 5.304l4.5-4.5a3.75 3.75 0 00-1.035-6.037.75.75 0 01-.354-1z" clip-rule="evenodd" />
+                                            </svg>
+                                            <span v-if="!order.url">
+                                                Generar link de pago
+                                            </span>
+                                            <span v-else>
+                                                Generar nuevo link de pago
+                                            </span>
+                                        </button>
+                                        <button v-if="(order.payment_status == 'waiting') && order.url" @click="openWebcheckout(order.url)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                                <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
+                                                <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
+                                            </svg>
+                                            Ver estado transacción
                                         </button>
                                     </td>
                                 </tr>

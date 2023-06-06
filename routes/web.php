@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\Admin\TypeDocumentController;
 use App\Http\Controllers\Web\Admin\UnitController;
 use App\Http\Controllers\Web\Admin\UserController;
 use App\Http\Controllers\Web\Client\OrderController;
+use App\Http\Controllers\Web\Client\PaymentController;
 use App\Http\Controllers\Web\Client\ShowcaseController;
 use App\Http\Controllers\Web\ProfileController;
 use Illuminate\Foundation\Application;
@@ -129,6 +130,13 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::get('/order', [OrderController::class, 'create'])->name('order.create');
         Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
         Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
+    });
+
+    Route::middleware(['role:client'])->group( function () {
+        Route::get('/payment/response/{code}', [PaymentController::class, 'process_response'])->name('payment.response');
+        Route::get('/payment/canceled/{code}', [PaymentController::class, 'process_canceled'])->name('payment.canceled');
+        Route::get('/payment/error/{status}', [PaymentController::class, 'process_error'])->name('payment.error');
+        Route::patch('/payment/{id}', [PaymentController::class, 'update'])->name('payment.update');
     });
 });
 

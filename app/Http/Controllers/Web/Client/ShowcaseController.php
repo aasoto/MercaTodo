@@ -40,8 +40,8 @@ class ShowcaseController extends Controller
                 -> paginate(12)
                 -> withQueryString(),
             'products_categories' => ProductCategory::getFromCache(),
-            'userRole' =>
-                session('user_role') ? session('user_role') : $this->authHasRole(Role::getFromCache()),
+            'success' => session('success'),
+            'userRole' => session('user_role') ? session('user_role') : $this->authHasRole(Role::getFromCache()),
         ]);
     }
 

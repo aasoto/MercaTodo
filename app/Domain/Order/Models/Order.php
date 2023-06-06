@@ -16,7 +16,15 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'purchase_date', 'payment_status', 'purchase_total'];
+    protected $fillable = [
+        'code',
+        'user_id',
+        'purchase_date',
+        'currency',
+        'url',
+        'payment_status',
+        'purchase_total'
+    ];
 
     /**
      * @param Builder $query
@@ -30,5 +38,33 @@ class Order extends Model
     protected static function newFactory(): Factory
     {
         return OrderFactory::new();
+    }
+
+    public function canceled(): void
+    {
+        $this->update([
+            'payment_status' => 'canceled'
+        ]);
+    }
+
+    public function paid(): void
+    {
+        $this->update([
+            'payment_status' => 'paid'
+        ]);
+    }
+
+    public function pending(): void
+    {
+        $this->update([
+            'payment_status' => 'pending'
+        ]);
+    }
+
+    public function waiting(): void
+    {
+        $this->update([
+            'payment_status' => 'waiting'
+        ]);
     }
 }

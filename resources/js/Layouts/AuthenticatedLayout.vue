@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { useSignedRoleStore } from '@/Store/SignedRole';
 
 import Dropdown from '@/Components/Dropdown.vue';
@@ -21,7 +21,12 @@ const { unassignRole } = useSignedRole;
 
 const useCart = useCartStore();
 const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
+const { currentUser, loadCart, logoutCart } = useCart;
 
+if (usePage().props.auth.user) {
+    currentUser(usePage().props.auth.user.id);
+    loadCart();
+}
 </script>
 
 <template>
@@ -161,7 +166,7 @@ const { numberOfProducts, numberQuantityOfProducts } = storeToRefs(useCart);
                                                 >
                                                     Logs
                                                 </a>
-                                                <DropdownLink :href="route('logout')" @click="unassignRole()" method="post" as="button">
+                                                <DropdownLink :href="route('logout')" @click="unassignRole(); logoutCart()" method="post" as="button">
                                                     Cerrar sesión
                                                 </DropdownLink>
                                             </template>

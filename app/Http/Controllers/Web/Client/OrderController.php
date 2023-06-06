@@ -7,6 +7,7 @@ use App\Domain\Order\Actions\StoreOrderHasProductAction;
 use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Models\Order;
 use App\Domain\Order\Models\OrderHasProduct;
+use App\Domain\Order\Services\PlaceToPayPaymentServices;
 use App\Domain\Order\Traits\CheckStock;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\Client\Order\StoreRequest;
@@ -29,6 +30,7 @@ class OrderController extends Controller
                         'purchase_date',
                         'payment_status',
                         'purchase_total',
+                        'url',
                     )
                 -> whereAuthUser()
                 -> orderByDesc('purchase_date')
@@ -48,21 +50,24 @@ class OrderController extends Controller
     public function store(
         StoreRequest $request,
         StoreOrderAction $store_order_action,
-        StoreOrderHasProductAction $store_order_has_product_action): RedirectResponse
+        StoreOrderHasProductAction $store_order_has_product_action,
+        PlaceToPayPaymentServices $placetopay): RedirectResponse
     {
         $data = StoreOrderData::fromRequest($request);
 
         $limitated_stock = $this->solvent_order($data);
 
         if (count($limitated_stock) == 0) {
-            $store_order_has_product_action->handle($data, $store_order_action->handle($data));
+            $order = $store_order_action->handle($data);
+            $store_order_has_product_action->handle($data, $order);
+            $placetopay->pay($order, $data, $request->ip(), $request->userAgent());
         } else {
             return Redirect::route('order.create')
                 ->with('success', 'Order rejected.')
                 ->with('limitatedStock', json_encode($limitated_stock));
         }
 
-        return Redirect::route('order.index')->with('success', 'Order created.');
+        return Redirect::route('order.show', $order->id)->with('success', 'Order created.');
     }
 
     public function show(string $id): Response
@@ -74,6 +79,7 @@ class OrderController extends Controller
                         'purchase_date',
                         'payment_status',
                         'purchase_total',
+                        'url',
                     )
                 -> where('id', $id)
                 -> first(),
@@ -88,6 +94,7 @@ class OrderController extends Controller
                 -> join('units', 'products.unit', 'units.code')
                 -> whereMatchOrder($id)
                 -> paginate(10),
+            'success' => session('success'),
         ]);
     }
 }

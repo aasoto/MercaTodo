@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 
 import { useSignedRoleStore } from '@/Store/SignedRole';
 import { useCartStore } from '@/Store/Cart';
@@ -9,11 +9,14 @@ import { useCartStore } from '@/Store/Cart';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 import NotFoundMessage from "@/Components/NotFoundMessage.vue";
+import AlertError from '@/Components/Alerts/AlertError.vue';
+import AlertWarning from '@/Components/Alerts/AlertWarning.vue';
 
 const props = defineProps({
     filters: Object,
     products: Object,
     products_categories: Object,
+    success: String,
     userRole: String,
 });
 
@@ -22,7 +25,11 @@ const { assignRole } = useSignedRole;
 assignRole(props.userRole);
 
 const useCart = useCartStore();
-const { find } = useCart;
+const { currentUser, find } = useCart;
+
+if (usePage().props.auth.user) {
+    currentUser(usePage().props.auth.user.id);
+}
 
 const btnCategoryLabel = ref('Categorías');
 
@@ -175,7 +182,7 @@ const getResults = () => {
                                     />
                                 </svg>
                             </div>
-                            <div v-if="product.stock == 0" class="relative h-12 w-12 bg-black/40 flex items-center justify-center rounded-md text-white">
+                            <div v-if="product.stock == 0" class="relative h-12 w-max px-2 bg-black/40 flex items-center justify-center rounded-md text-white">
                                 AGOTADO
                             </div>
                         </div>
@@ -204,5 +211,33 @@ const getResults = () => {
             </div>
             <Pagination class="my-6" :links="products.links" />
         </div>
+        <AlertError
+            v-if="success === 'Payment canceled.'"
+            title="¡Proceso de pago cancelado!"
+            text="Si desea retormar el proceso de nuevo, busque en la pestaña de ordenes el pedido que canceló, este debe aparecer con el estado de cancelado. En caso de que tenga varios pedidos pendentes puede buscarlos por la fecha de compra o simplemente cliqueando en el botón de detalles de la orden para ver los articulos que hay en ella, recuerde que el link de compra tiene un duración de 24 horas, si el link está expirado deberá generar un nuevo."
+            :close="false"
+            :btn-close="true"
+        />
+        <AlertWarning
+            v-if="success === 'Payment unauthorized.'"
+            title="Error de autorización"
+            text="Espere a que los administradores de esta plataforma solucionen."
+            :close="false"
+            :btn-close="true"
+        />
+        <AlertError
+            v-if="success === 'Payment error.'"
+            title="Error del servidor"
+            text="Intente el proceso de nuevo o espere mas tarde."
+            :close="false"
+            :btn-close="true"
+        />
+        <AlertError
+            v-if="success === 'Payment undefined error.'"
+            title="Error desconocido del servidor"
+            text="Intente el proceso de nuevo o espere mas tarde."
+            :close="false"
+            :btn-close="true"
+        />
     </AuthenticatedLayout>
 </template>

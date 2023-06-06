@@ -17,6 +17,7 @@ use Database\Seeders\UnitSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -87,7 +88,10 @@ class OrderTest extends TestCase
 
     public function test_can_save_new_order(): void
     {
-        $products = Product::select('id', 'name', 'slug', 'price')->inRandomOrder()->take(5)->get();
+        $products = Product::select('id', 'name', 'slug', 'price')
+            ->inRandomOrder()
+            ->take(5)
+            ->get();
 
         $order = array();
         $purchase_total = 0;
@@ -104,20 +108,36 @@ class OrderTest extends TestCase
             $purchase_total = $purchase_total + $product['price'];
         }
 
+        $request_id = 1213;
+        $url = "https://checkout-co.placetopay.dev/spa/session/1213/1234";
+        $mock_response = [
+            "status" => [
+                "status" => "OK",
+                "reason" => "PC",
+                "message" => "La petición se ha procesado correctamente",
+                "date" => "2023-06-02T16:09:39-05:00"
+            ],
+            "requestId" => $request_id,
+            "processUrl" => $url
+        ];
+
+        Http::fake([config('placetopay.url').'/*' => Http::response($mock_response)]);
+
         $response = $this->actingAs($this->user)
             -> post(route('order.store'), [
                 'products' => $order,
             ]);
 
-        $response->assertRedirect(route('order.index'))
+        $order = Order::select('id')->orderByDesc('id')->first();
+
+        $response->assertRedirect(route('order.show', $order->id))
         ->assertSessionHasAll(['success' => 'Order created.']);
 
         $this->assertDatabaseHas('orders', [
-            'purchase_date' => date('Y-m-d'),
-            'purchase_total' => $purchase_total,
+            'purchase_total' => round($purchase_total, 2),
+            'request_id' => strval($request_id),
+            'url' => $url,
         ]);
-
-        $order = Order::select('id')->orderByDesc('id')->first();
 
         foreach ($products as $key => $product) {
             $this->assertDatabaseHas('order_has_products', [
