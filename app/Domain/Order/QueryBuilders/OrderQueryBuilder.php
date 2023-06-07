@@ -2,8 +2,15 @@
 
 namespace App\Domain\Order\QueryBuilders;
 
+use App\Domain\Order\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @method static Order join(...$parameters)
+ * @method static Order orderByDesc(...$parameters)
+ * @method static Order pending()
+ * @method static Order select(...$parameters)
+ */
 class OrderQueryBuilder extends Builder
 {
     public function whereAuthUser(): self

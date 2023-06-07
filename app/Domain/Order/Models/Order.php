@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 
 /**
+ * @method static Order join(...$parameters)
+ * @method static Order orderByDesc(...$parameters)
+ * @method static Order pending()
  * @method static Order select(...$parameters)
  * @method static OrderQueryBuilder query()
  */

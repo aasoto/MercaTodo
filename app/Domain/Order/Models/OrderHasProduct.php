@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 
 /**
+ * @method static OrderHasProduct join(...$parameters)
  * @method static OrderHasProduct select(...$parameters)
  * @method static OrderHasProductQueryBuilder query()
  */

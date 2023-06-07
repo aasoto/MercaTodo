@@ -2,13 +2,13 @@
 
 namespace App\Domain\Order\Services\Entities\Placetopay;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domain\Order\Models\Order;
 use Illuminate\Http\Client\Response;
 
 class ReportStatus
 {
     public function __construct(
-        public Model $order,
+        public Order $order,
         public Response $response,
         public string $mode = 'MANUAL',
     )
