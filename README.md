@@ -2,10 +2,26 @@
  
 # MercaTodo
 
-## Developed with this tecnologies
+## Mainly developed with the following tecnologies
 | [![logo-laravel.png](https://i.postimg.cc/sg3ch6qs/logo-laravel.png)](https://postimg.cc/sv07Fc3N) | [![logo-inertia.png](https://i.postimg.cc/1zdRFdWd/logo-inertia.png)](https://postimg.cc/cKQNyFG7) | [![logo-vue.png](https://i.postimg.cc/90nh7wFj/logo-vue.png)](https://postimg.cc/D4LHVZXC) | [![logo-tailwindcss.png](https://i.postimg.cc/0jQC4bGj/logo-tailwindcss.png)](https://postimg.cc/Q9259NyZ) |
 | :-------------: |:-------------:|:-------------:|:-------------:|
 | **10.0** | **1.0.0** | **3.2.41** | **3.2.1** |
+
+### Read more about the tecnologies
+
+- **[Laravel](https://laravel.com/)**
+- **[Inertia.js](https://inertiajs.com)**
+- **[Vue.js](https://vuejs.org)**
+- **[Pinia](https://pinia.vuejs.org)**
+- **[Vite](https://vitejs.dev)**
+- **[Tailwindcss](https://tailwindcss.com)**
+- **[CKEditor](https://ckeditor.com)**
+- **[PHP](https://www.php.net/manual/es/intro-whatis.php)**
+- **[PHPUnit](https://phpunit.de)**
+- **[FakerPHP](https://fakerphp.github.io)**
+- **[PHPStan](https://phpstan.org)**
+- **[LaraStan](https://github.com/nunomaduro/larastan)**
+- **[Spatie - Laravel Permission](https://spatie.be/docs/laravel-permission/v5/introduction)**
 
 ## Installation
 
