@@ -46,42 +46,60 @@ const deleteProduct = () => {
 }
 
 const search = ref(props.filters.search);
-
-watch(search, value => {
-    router.get('/products', {search: value}, {
-        preserveState: true,
-        replace: true,
-    });
-});
-
 const category = ref(props.filters.category);
-
-watch(category, value => {
-    router.get('/products', {category: value}, {
-        preserveState: true,
-        replace: true,
-    });
-});
-
-const setCategory = (productCategory) => {
-    category.value = productCategory;
-}
-
 const availability = ref(props.filters.availability);
 
+watch(search, value => {
+    getResults();
+});
+
+watch(category, value => {
+    getResults();
+});
+
+const btnCategoryText = ref('Categoría');
+const setCategory = (productCategory) => {
+    if (productCategory) {
+        category.value = productCategory;
+        btnCategoryText.value = productCategory;
+    } else {
+        category.value = '';
+        btnCategoryText.value = 'Categoría';
+    }
+}
+
 watch(availability, value => {
-    router.get('/products', {availability: value}, {
+    getResults();
+});
+
+const btnAvailabilityText = ref('Disponilidad');
+
+const setAvailability = (value) => {
+    switch (value) {
+        case 'enabled':
+            availability.value = true;
+            btnAvailabilityText.value = 'Habilitados';
+            break;
+        case 'disabled':
+            availability.value = false;
+            btnAvailabilityText.value = 'Inhabilitados';
+            break;
+        default:
+            availability.value = '';
+            btnAvailabilityText.value = 'Disponilidad';
+            break;
+    }
+}
+
+const getResults = () => {
+    router.get('/products', {
+        search: search.value,
+        category: category.value,
+        availability: availability.value
+    }, {
         preserveState: true,
         replace: true,
     });
-});
-
-const setAvailability = (value) => {
-    if (value) {
-        availability.value = true;
-    } else {
-        availability.value = false;
-    }
 }
 </script>
 
@@ -93,14 +111,39 @@ const setAvailability = (value) => {
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                     Listado de productos
                 </h2>
-                <Link :href="route('unit.index')">
+                <div class="relative group col-span-2">
                     <button
-                        class="text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-md group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
+                        id="dropdownDefaultButton"
+                        class="w-80 text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
                         type="button"
                     >
-                        Unidades de productos
+                        Gestión de dependencias
+                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
                     </button>
-                </Link>
+                    <!-- Dropdown menu -->
+                    <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-80 dark:bg-gray-700 transition duration-200">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                            <li>
+                                <Link
+                                    :href="route('product_category.index')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer"
+                                >
+                                    Categorías
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    :href="route('unit.index')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer"
+                                >
+                                    Unidades
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </template>
 
@@ -127,7 +170,7 @@ const setAvailability = (value) => {
                                     class="text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex items-center shadow-none group-hover:shadow transition duration-200"
                                     type="button"
                                 >
-                                    Categorías
+                                    <span v-html="btnCategoryText" class="capitalize"></span>
                                     <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
@@ -135,6 +178,11 @@ const setAvailability = (value) => {
                                 <!-- Dropdown menu -->
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                        <li>
+                                            <span @click="setCategory()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                Todas
+                                            </span>
+                                        </li>
                                         <li v-for="product_category in products_categories">
                                             <span @click="setCategory(product_category.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
                                                 {{ product_category.name }}
@@ -150,7 +198,7 @@ const setAvailability = (value) => {
                                     class="text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex items-center shadow-none group-hover:shadow transition duration-200"
                                     type="button"
                                 >
-                                    Disponibilidad
+                                    <span v-html="btnAvailabilityText"></span>
                                     <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
@@ -159,12 +207,17 @@ const setAvailability = (value) => {
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                                         <li>
-                                            <span @click="setAvailability(true)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                            <span @click="setAvailability()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                Todos
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span @click="setAvailability('enabled')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
                                                 Habilitado
                                             </span>
                                         </li>
                                         <li>
-                                            <span @click="setAvailability(false)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                            <span @click="setAvailability('disabled')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
                                                 Inhabilitado
                                             </span>
                                         </li>

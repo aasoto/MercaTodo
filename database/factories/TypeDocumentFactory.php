@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Domain\User\Models\TypeDocument;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,6 +15,8 @@ class TypeDocumentFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = TypeDocument::class;
+
     public function definition(): array
     {
         return [

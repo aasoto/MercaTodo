@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\State;
+use App\Domain\User\Models\State;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,8 +20,13 @@ class StateFactory extends Factory
 
     public function definition(): array
     {
+        do {
+            $state = fake()->state();
+            $found = State::select('id')->where('name', $state)->get();
+        } while (count($found) != 0);
+
         return [
-            'name' => fake()->state(),
+            'name' => $state,
         ];
     }
 }
