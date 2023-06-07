@@ -47,6 +47,9 @@ class PlaceToPayPaymentServices
         return $response->status();
     }
 
+    /**
+     * @return array<mixed>
+     */
     private function createSession(Order $order, StoreOrderData $products_order): array
     {
         $authentication = new Authentication();

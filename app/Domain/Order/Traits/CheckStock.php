@@ -7,6 +7,9 @@ use App\Domain\Product\Models\Product;
 
 trait CheckStock
 {
+    /**
+     * @return array<mixed>
+     */
     public function solvent_order(StoreOrderData $data): array
     {
         $limitated_stock = array();

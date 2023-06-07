@@ -7,6 +7,10 @@ use App\Domain\Product\Models\Product;
 
 class GetProductsByOrderAction
 {
+    /**
+     * @param string $order_id
+     * @return array<mixed>
+     */
     public function handle(string $order_id): array
     {
         $products_by_order = OrderHasProduct::select('product_id', 'quantity', 'price')

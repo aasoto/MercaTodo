@@ -9,6 +9,9 @@ class Buyer
     )
     {}
 
+    /**
+     * @return array<mixed>
+     */
     public function getBuyer(): array
     {
         return [

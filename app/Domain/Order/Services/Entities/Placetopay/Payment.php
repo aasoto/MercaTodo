@@ -14,6 +14,9 @@ class Payment
     )
     {}
 
+    /**
+     * @return array<mixed>
+     */
     public function getPayment(): array
     {
         return [
@@ -24,6 +27,9 @@ class Payment
         ];
     }
 
+    /**
+     * @return array<mixed>
+     */
     private function amount(): array
     {
         return [
@@ -32,6 +38,9 @@ class Payment
         ];
     }
 
+    /**
+     * @return array<mixed>
+     */
     private function items(): array
     {
         $items = array();

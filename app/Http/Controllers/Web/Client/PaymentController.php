@@ -19,7 +19,7 @@ class PaymentController extends Controller
         GetProductsByOrderAction $get_products,
         PlaceToPayPaymentServices $placetopay,
         UpdateRequest $request,
-        string $id)
+        string $id): RedirectResponse
     {
         /**
          * @var Order $order

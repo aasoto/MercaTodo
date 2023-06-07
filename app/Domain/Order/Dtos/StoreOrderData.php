@@ -7,6 +7,9 @@ use Illuminate\Foundation\Http\FormRequest;
 /** @phpstan-consistent-constructor */
 class StoreOrderData
 {
+    /**
+     * @param array<mixed> $products
+     */
     public function __construct(
         public array $products
     )

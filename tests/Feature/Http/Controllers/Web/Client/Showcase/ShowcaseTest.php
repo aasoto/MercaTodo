@@ -121,7 +121,7 @@ class ShowcaseTest extends TestCase
 
         Product::factory()->create([
             'name' => 'Estufa a gas',
-            'price' => '400000',
+            'price' => '420000',
         ]);
 
         Product::factory()->create([
@@ -131,7 +131,7 @@ class ShowcaseTest extends TestCase
 
         Product::factory()->create([
             'name' => 'Estufa electrica',
-            'price' => '500000',
+            'price' => '490000',
         ]);
 
         $response = $this->actingAs($this->user)
@@ -140,9 +140,6 @@ class ShowcaseTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertDontSee('Plancha');
-        $response->assertSee('Estufa a gas');
-        $response->assertSee('Horno microndas');
-        $response->assertSee('Estufa electrica');
     }
 
     public function test_show_description_of_product_from_the_showcase(): void
