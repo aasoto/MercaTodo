@@ -19,10 +19,13 @@ class StoreOrderHasProductAction
                 'price' => $value['price'],
             ]);
 
-            $current_stock = Product::select('stock')->where('id', $value['id'])->first();
+            /**
+             * @var Product $product
+             */
+            $product = Product::select('stock')->where('id', $value['id'])->first();
 
             Product::where('id', $value['id'])->update([
-                'stock' => intval($current_stock['stock']) - $value['quantity'],
+                'stock' => intval($product['stock']) - $value['quantity'],
             ]);
         }
 

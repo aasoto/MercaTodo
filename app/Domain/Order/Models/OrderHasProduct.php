@@ -4,12 +4,14 @@ namespace App\Domain\Order\Models;
 
 use App\Domain\Order\QueryBuilders\OrderHasProductQueryBuilder;
 use Database\Factories\OrderHasProductFactory;
-use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
 /**
+ * @method static OrderHasProduct join(...$parameters)
+ * @method static OrderHasProduct select(...$parameters)
  * @method static OrderHasProductQueryBuilder query()
  */
 class OrderHasProduct extends Model

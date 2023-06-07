@@ -9,6 +9,9 @@ class Authentication
 {
     use TranKey;
 
+    /**
+     * @return array<mixed>
+     */
     public function getAuth(): array
     {
         $nonce = Str::random();

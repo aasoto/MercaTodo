@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GetOrderAction
 {
-    public static function handle(string $code): Model
+    public static function handle(string $code): Model|null
     {
         return Order::query()->where('code', $code)->first();
     }

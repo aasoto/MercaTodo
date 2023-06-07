@@ -5,23 +5,22 @@ namespace App\Domain\Order\Services;
 use App\Domain\Order\Actions\GetOrderAction;
 use App\Domain\Order\Actions\OrderUpdateAction;
 use App\Domain\Order\Dtos\StoreOrderData;
+use App\Domain\Order\Models\Order;
 use App\Domain\Order\Services\Entities\Placetopay\Authentication;
 use App\Domain\Order\Services\Entities\Placetopay\Buyer;
 use App\Domain\Order\Services\Entities\Placetopay\LogsPayment;
 use App\Domain\Order\Services\Entities\Placetopay\Payment;
 use App\Domain\Order\Services\Entities\Placetopay\ReportStatus;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
 
 class PlaceToPayPaymentServices
 {
     private string $ipAddress, $userAgent;
 
     public function pay(
-        Model $order,
+        Order $order,
         StoreOrderData $products_order,
         string $ipAddress,
         string $userAgent): int
@@ -48,7 +47,10 @@ class PlaceToPayPaymentServices
         return $response->status();
     }
 
-    private function createSession(Model $order, StoreOrderData $products_order): array
+    /**
+     * @return array<mixed>
+     */
+    private function createSession(Order $order, StoreOrderData $products_order): array
     {
         $authentication = new Authentication();
         $buyer = new Buyer(auth()->user());
@@ -68,6 +70,9 @@ class PlaceToPayPaymentServices
 
     public function getRequestInformation(string $code): string
     {
+        /**
+         * @var Order $order
+         */
         $order = GetOrderAction::handle($code);
         $authentication = new Authentication();
 

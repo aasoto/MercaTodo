@@ -3,17 +3,20 @@
 namespace App\Domain\Order\Services\Entities\Placetopay;
 
 use App\Domain\Order\Dtos\StoreOrderData;
-use Illuminate\Database\Eloquent\Model;
+use App\Domain\Order\Models\Order;
 
 class Payment
 {
     public function __construct(
-        public Model $order,
+        public Order $order,
         public StoreOrderData $products_order,
         public string $currency = 'COP',
     )
     {}
 
+    /**
+     * @return array<mixed>
+     */
     public function getPayment(): array
     {
         return [
@@ -24,6 +27,9 @@ class Payment
         ];
     }
 
+    /**
+     * @return array<mixed>
+     */
     private function amount(): array
     {
         return [
@@ -32,6 +38,9 @@ class Payment
         ];
     }
 
+    /**
+     * @return array<mixed>
+     */
     private function items(): array
     {
         $items = array();

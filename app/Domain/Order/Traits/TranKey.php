@@ -4,7 +4,7 @@ namespace App\Domain\Order\Traits;
 
 trait TranKey {
 
-    public function getTranKey($nonce, $seed): string
+    public function getTranKey(string $nonce, string $seed): string
     {
         return base64_encode(
             hash(

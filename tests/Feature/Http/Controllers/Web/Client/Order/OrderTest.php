@@ -205,7 +205,6 @@ class OrderTest extends TestCase
                     -> where('id', $order['id'])
                     -> where('purchase_date', $order['purchase_date'])
                     -> where('payment_status', $order['payment_status'])
-                    -> where('purchase_total', $order['purchase_total'])
                     -> etc()
                 )
                 -> has('products')

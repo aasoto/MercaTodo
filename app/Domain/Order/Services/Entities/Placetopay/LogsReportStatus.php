@@ -2,14 +2,14 @@
 
 namespace App\Domain\Order\Services\Entities\Placetopay;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Domain\Order\Models\Order;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Log;
 
 class LogsReportStatus
 {
     public function __construct(
-        private Model $order,
+        private Order $order,
         private Response $response,
         private string $mode = 'MANUAL',
     )
