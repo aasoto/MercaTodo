@@ -1,4 +1,4 @@
-[![merca-todo-logo-mini.png](https://i.postimg.cc/63GZ4nhd/merca-todo-logo-mini.png)](https://postimg.cc/DJn0tWHZ)
+[![merca-todo-logo-mini.png](https://i.postimg.cc/2SgCTSLx/merca-todo-logo-mini.png)](https://postimg.cc/VJByk1RS)
  
 # MercaTodo
 
