@@ -2,12 +2,10 @@
 
 namespace App\Domain\Order\Services\Entities\Placetopay;
 
-use Illuminate\Contracts\Auth\Authenticatable;
-
 class Buyer
 {
     public function __construct(
-        public Authenticatable $user,
+        public mixed $user,
     )
     {}
 

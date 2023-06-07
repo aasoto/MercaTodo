@@ -21,6 +21,9 @@ class PaymentController extends Controller
         UpdateRequest $request,
         string $id)
     {
+        /**
+         * @var Order $order
+         */
         $order = Order::where('id', $id)->first();
         $products_data = new StoreOrderData($get_products->handle($order->id));
 

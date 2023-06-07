@@ -33,6 +33,9 @@ class consultSession extends Command
 
         $authentication = new Authentication();
 
+        /**
+         * @var Order $order
+         */
         foreach ($orders as $order) {
             $response = Http::post(config('placetopay.url').config('placetopay.route.api').$order->request_id, [
                 'auth' => $authentication->getAuth(),

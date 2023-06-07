@@ -67,6 +67,9 @@ class PlaceToPayPaymentServices
 
     public function getRequestInformation(string $code): string
     {
+        /**
+         * @var Order $order
+         */
         $order = GetOrderAction::handle($code);
         $authentication = new Authentication();
 

@@ -58,6 +58,9 @@ class OrderController extends Controller
         $limitated_stock = $this->solvent_order($data);
 
         if (count($limitated_stock) == 0) {
+            /**
+             * @var Order $order
+             */
             $order = $store_order_action->handle($data);
             $store_order_has_product_action->handle($data, $order);
             $placetopay->pay($order, $data, $request->ip(), $request->userAgent());
