@@ -14,6 +14,10 @@ trait CheckStock
     {
         $limitated_stock = array();
         foreach ($data->products as $key => $value) {
+
+            /**
+             * @var Product $stock_available
+             */
             $stock_available = Product::select('stock')->where('id', $value['id'])->first();
             if ($value['quantity'] > $stock_available['stock']) {
                 array_push($limitated_stock, [

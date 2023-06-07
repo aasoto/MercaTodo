@@ -31,7 +31,12 @@ class PaymentController extends Controller
             $order->pending();
         }
 
-        $status = $placetopay->pay($order, $products_data, $request->ip(), $request->userAgent());
+        $status = $placetopay->pay(
+            $order,
+            $products_data,
+            $request->ip() ? $request->ip() : '',
+            $request->userAgent() ? $request->userAgent() : ''
+        );
 
         if ($status === 200) {
             return Redirect::route('order.show', $order['id']);
@@ -44,6 +49,9 @@ class PaymentController extends Controller
     {
         $result = $placetopay_payment->getRequestInformation($code);
 
+        /**
+         * @var Order $order
+         */
         $order = Order::select('id')->where('code', $code)->first();
 
         return Redirect::route('order.show', $order['id'])->with('success', $result == 'ok' ?  'Payment completed.' : 'Payment error.');

@@ -20,6 +20,9 @@ class GetProductsByOrderAction
         $products_data = array();
 
         foreach ($products_by_order as $key => $value) {
+            /**
+             * @var Product $product
+             */
             $product = Product::select('name')->where('id', $value['product_id'])->first();
 
             array_push($products_data, [
