@@ -4,6 +4,7 @@ namespace App\Domain\Order\Dtos;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** @phpstan-consistent-constructor */
 class StoreOrderData
 {
     public function __construct(
