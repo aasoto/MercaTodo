@@ -2,7 +2,7 @@
  
 # MercaTodo
 
-## Developed with the frameworks
+## Developed with this tecnologies
 | [![logo-laravel.png](https://i.postimg.cc/sg3ch6qs/logo-laravel.png)](https://postimg.cc/sv07Fc3N) | [![logo-inertia.png](https://i.postimg.cc/1zdRFdWd/logo-inertia.png)](https://postimg.cc/cKQNyFG7) | [![logo-vue.png](https://i.postimg.cc/90nh7wFj/logo-vue.png)](https://postimg.cc/D4LHVZXC) | [![logo-tailwindcss.png](https://i.postimg.cc/0jQC4bGj/logo-tailwindcss.png)](https://postimg.cc/Q9259NyZ) |
 | :-------------: |:-------------:|:-------------:|:-------------:|
 | **10.0** | **1.0.0** | **3.2.41** | **3.2.1** |
