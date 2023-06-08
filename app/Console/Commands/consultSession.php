@@ -29,7 +29,9 @@ class consultSession extends Command
      */
     public function handle(): void
     {
-        $orders = Order::where('payment_status', 'pending')->get();
+        $orders = Order::where('payment_status', 'pending')
+            ->orWhere('payment_status', 'waiting')
+            ->get();
 
         $authentication = new Authentication();
 
