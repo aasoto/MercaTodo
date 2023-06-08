@@ -18,8 +18,8 @@ const showOrderDetail = (id) => {
     form.get(route('order.show', form.id));
 }
 
-const openWebcheckout = (url) => {
-    window.location.replace(url);
+const openWebcheckout = (code) => {
+    router.get(route('payment.show', code));
 }
 
 const expirationDate = (date) => {
@@ -148,7 +148,7 @@ const generateNewURLWebcheckout = (id) => {
                                                 Detalles
                                             </span>
                                         </button>
-                                        <button v-if="(order.payment_status == 'pending') && expirationDate(order.updated_at) && order.url" @click="openWebcheckout(order.url)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
+                                        <button v-if="(order.payment_status == 'pending') && expirationDate(order.updated_at) && order.url" @click="openWebcheckout(order.code)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                 <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
                                                 <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
@@ -166,7 +166,7 @@ const generateNewURLWebcheckout = (id) => {
                                                 Generar nuevo link de pago
                                             </span>
                                         </button>
-                                        <button v-if="(order.payment_status == 'waiting') && order.url" @click="openWebcheckout(order.url)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
+                                        <button v-if="(order.payment_status == 'waiting') && order.url" @click="openWebcheckout(order.code)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                 <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
                                                 <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />

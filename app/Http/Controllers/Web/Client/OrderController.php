@@ -27,6 +27,7 @@ class OrderController extends Controller
             'orders' => Order::query()
                 -> select(
                         'id',
+                        'code',
                         'purchase_date',
                         'payment_date',
                         'payment_status',
@@ -86,6 +87,7 @@ class OrderController extends Controller
             'order' => Order::query()
                 -> select(
                         'id',
+                        'code',
                         'purchase_date',
                         'payment_status',
                         'purchase_total',
