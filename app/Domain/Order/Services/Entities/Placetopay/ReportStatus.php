@@ -24,7 +24,7 @@ class ReportStatus
         $logs_report_status = new LogsReportStatus($this->order, $this->response, $this->mode);
 
         if ($status == 'APPROVED') {
-            $this->order->paid($this->response->json()['status']['date']);
+            $this->order->paid();
 
             (new UpdateOrderAction)->handle(
                 UpdateOrderData::fromResult($this->response->json()['status']['date']),
