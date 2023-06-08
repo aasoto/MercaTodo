@@ -131,6 +131,11 @@ class PaymentTest extends TestCase
                 "reason" => "00",
                 "message" => "La petición ha sido aprobada exitosamente",
                 "date" => "2023-06-04T12:04:01-05:00"
+            ],
+            'payment' => [
+                0 => [
+                    'reference' => $order->code,
+                ]
             ]
         ];
 
