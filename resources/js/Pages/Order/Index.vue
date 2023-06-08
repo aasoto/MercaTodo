@@ -36,6 +36,19 @@ const expirationDate = (date) => {
     }
 }
 
+const dateGMT_5 = (date) => {
+    let res = new Date(date);
+    res.setHours(res.getHours() - 5);
+
+    const year = res.getFullYear();
+    const month = res.getMonth() + 1;
+    const day = res.getDate();
+    const hours = res.getHours();
+    const minutes = res.getMinutes();
+    const seconds = res.getSeconds();
+    return year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds;
+}
+
 const generateNewURLWebcheckout = (id) => {
     router.post(route('payment.update', id),{
         _method: 'patch',
@@ -67,6 +80,9 @@ const generateNewURLWebcheckout = (id) => {
                                     Fecha de la compra
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Fecha del pago
+                                </th>
+                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
                                     Estado de pago
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
@@ -82,7 +98,10 @@ const generateNewURLWebcheckout = (id) => {
                                         {{ order.id }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ order.purchase_date }}
+                                        {{ dateGMT_5(order.purchase_date) }}
+                                    </td>
+                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
+                                        {{ order.payment_date ? dateGMT_5(order.payment_date) : '' }}
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
                                         <div
@@ -163,6 +182,9 @@ const generateNewURLWebcheckout = (id) => {
                                 </th>
                                 <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
                                     Fecha de la compra
+                                </th>
+                                <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
+                                    Fecha del pago
                                 </th>
                                 <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
                                     Estado de pago

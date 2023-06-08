@@ -2,6 +2,8 @@
 
 namespace App\Domain\Order\Services\Entities\Placetopay;
 
+use App\Domain\Order\Actions\UpdateOrderAction;
+use App\Domain\Order\Dtos\UpdateOrderData;
 use App\Domain\Order\Models\Order;
 use Illuminate\Http\Client\Response;
 
@@ -22,8 +24,15 @@ class ReportStatus
         $logs_report_status = new LogsReportStatus($this->order, $this->response, $this->mode);
 
         if ($status == 'APPROVED') {
-            $this->order->paid();
+            $this->order->paid($this->response->json()['status']['date']);
+
+            (new UpdateOrderAction)->handle(
+                UpdateOrderData::fromResult($this->response->json()['status']['date']),
+                $this->response->json()['payment'][0]['reference']
+            );
+
             $logs_report_status->save('APPROVED');
+
         } elseif ($status == 'PENDING') {
             if ($message == 'La petición se encuentra pendiente') {
                 $this->order->waiting();
