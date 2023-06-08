@@ -43,6 +43,21 @@ class PaymentTest extends TestCase
         $this->user = User::factory()->create()->assignRole('client');
     }
 
+    public function test_can_redirect_to_placetopay_webcheckout(): void
+    {
+        $this->actingAs($this->user);
+        $order = Order::factory()->create([
+            'user_id' => $this->user->getKey(),
+            'url' => 'https://checkout-co.placetopay.dev/spa/session/1213/1234',
+            'request_id' => 1213,
+        ]);
+
+        $response = $this->get(route('payment.show', $order->code));
+
+        $response->assertRedirect()
+            ->assertRedirectContains($order->url);
+    }
+
     public function test_can_create_new_session(): void
     {
         $this->actingAs($this->user);
