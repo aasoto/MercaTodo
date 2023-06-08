@@ -44,11 +44,7 @@ if (usePage().props.auth.user) {
                                     <MercaTodoLogoWhite class="hidden dark:block h-9 w-auto"/>
                                 </Link>
                             </div>
-                            <div v-if="!$page.props.auth.user" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('root')" :active="route().current('root')">
-                                    Inicio
-                                </NavLink>
-                            </div>
+
                             <!-- Navigation Links -->
                             <template v-if="role == 'admin'">
                                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -67,7 +63,7 @@ if (usePage().props.auth.user) {
                                     </NavLink>
                                 </div>
                             </template>
-                            <template v-if="role == 'client'">
+                            <template v-else-if="role == 'client'">
                                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                     <NavLink :href="route('showcase.index')" :active="route().current('showcase.index')">
                                         Vitrina
@@ -79,6 +75,11 @@ if (usePage().props.auth.user) {
                                     </NavLink>
                                 </div>
                             </template>
+                            <div v-else class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('root')" :active="route().current('root')">
+                                    Inicio
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="flex gap-5">
