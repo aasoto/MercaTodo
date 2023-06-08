@@ -29,7 +29,7 @@
 
 ```sh
 git clone https://github.com/aasoto/MercaTodo.git merca-todo
-cd mercado-todo
+cd merca-todo
 ```
 
 2. Install PHP dependencies:
