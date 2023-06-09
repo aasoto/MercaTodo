@@ -129,6 +129,12 @@ const generateNewURLWebcheckout = (id) => {
                                             PENDIENTE
                                         </div>
                                         <div
+                                            v-if="order.payment_status == 'verify_bank'"
+                                            class="rounded-md px-4 py-2 bg-orange-300 text-center font-bold"
+                                        >
+                                            VERIFICAR CON SU BANCO
+                                        </div>
+                                        <div
                                             v-if="!order.url"
                                             class="rounded-md px-4 py-2 bg-blue-200 text-center font-bold"
                                         >

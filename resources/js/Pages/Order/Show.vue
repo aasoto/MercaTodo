@@ -83,6 +83,9 @@ const generateNewURLWebcheckout = () => {
                     <div v-if="order.payment_status == 'waiting'" class="rounded-md bg-purple-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
                         Estado: PAGO POR CONFIRMAR
                     </div>
+                    <div v-if="order.payment_status == 'verify_bank'" class="rounded-md bg-orange-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                        Estado: VERIFICAR TRANSACCIÓN CON SU ENTIDAD BANCARIA
+                    </div>
                     <div class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
                         Total: {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                     </div>
