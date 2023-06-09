@@ -213,6 +213,14 @@ class PaymentTest extends TestCase
                 "reason" => "PE",
                 "message" => "La petición se encuentra pendiente",
                 "date" => "2023-06-04T14:57:16-05:00"
+            ],
+            "payment" => [
+                0 => [
+                    "status" => [
+                        "status" => "PENDING",
+                        "message" => "Transacción pendiente de validación",
+                    ]
+                ]
             ]
         ];
 
@@ -257,6 +265,45 @@ class PaymentTest extends TestCase
         $order = $order->fresh();
 
         $this->assertEquals($order->payment_status, 'pending');
+    }
+
+    public function test_can_report_rejected_transaction_in_pending_payment(): void
+    {
+        $this->actingAs($this->user);
+        $order = Order::factory()->create([
+            'user_id' => $this->user->getKey(),
+            'url' => 'https://checkout-co.placetopay.dev/spa/session/0000/0000',
+            'request_id' => 0000,
+        ]);
+
+        $mock_response = [
+            "requestId" => 0000,
+            "status" => [
+                "status" => "PENDING",
+                "reason" => "PE",
+                "message" => "La petición se encuentra pendiente",
+                "date" => "2023-06-04T14:57:16-05:00"
+            ],
+            "payment" => [
+                0 => [
+                    "status" => [
+                        "status" => "REJECTED",
+                        "message" => "Transacción pendiente. Por favor consulte con su entidad financiera si el débito fue realizado",
+                    ]
+                ]
+            ]
+        ];
+
+        Http::fake([config('placetopay.url').'/*' => Http::response($mock_response)]);
+
+        $this->getJson(route('payment.response', $order->code))
+            ->assertRedirectContains('order/'.$order->getKey());
+
+        $this->assertEquals($order->payment_status, 'pending');
+
+        $order = $order->fresh();
+
+        $this->assertEquals($order->payment_status, 'verify_bank');
     }
 
     public function test_can_change_payment_status_when_the_webcheckout_link_has_expired(): void
