@@ -7,6 +7,9 @@ use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Domain\Order\Services\PlaceToPayPaymentServices;
+use App\Domain\Product\Actions\UpdateProductAction;
+use App\Domain\Product\Dtos\UpdateProductData;
+use App\Domain\Product\Models\Product;
 use App\Http\Requests\Web\Client\Payment\UpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -68,9 +71,39 @@ class PaymentController extends Controller
         return Redirect::route('order.show', $order['id'])->with('success', $result == 'ok' ?  'Payment completed.' : 'Payment error.');
     }
 
-    public function process_canceled(PlaceToPayPaymentServices $placetopay_payment, string $code): RedirectResponse
+    public function process_canceled(
+        PlaceToPayPaymentServices $placetopay_payment,
+        UpdateProductAction $update_product_action,
+        string $code): RedirectResponse
     {
         $result = $placetopay_payment->getRequestInformation($code);
+
+        /**
+         * @var Order $order
+         */
+        $order = Order::where('code', $code)->first();
+        foreach ($order->products as $key => $value) {
+            /**
+             * @var Product $product
+             */
+            $product = $value->product;
+            $update_product_data = new UpdateProductData(
+                $product->name,
+                $product->slug,
+                strval($product->products_category_id),
+                $product->barcode,
+                $product->description,
+                strval($product->price),
+                $product->unit,
+                strval($product->stock + $value->quantity),
+                null,
+                null,
+                null,
+                $product->availability,
+            );
+
+            $update_product_action->handle($update_product_data, strval($product->id), '[]');
+        }
 
         return Redirect::route('showcase.index')->with('success', $result == 'ok' ?  'Payment canceled.' : 'Error.');
     }
