@@ -23,11 +23,14 @@ class GetProductsByOrderAction
             /**
              * @var Product $product
              */
-            $product = Product::select('name')->where('id', $value['product_id'])->first();
+            $product = Product::where('id', $value['product_id'])->first();
 
             array_push($products_data, [
+                'id' => $product['id'],
                 'name' => $product['name'],
+                'slug' => $product['slug'],
                 'quantity' => $value['quantity'],
+                'price' => $value['price'],
                 'totalPrice' => $value['quantity'] * $value['price'],
             ]);
         }

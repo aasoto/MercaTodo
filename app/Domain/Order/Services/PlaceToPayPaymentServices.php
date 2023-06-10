@@ -37,8 +37,6 @@ class PlaceToPayPaymentServices
             $order->url = $response->json()['processUrl'];
 
             OrderUpdateAction::handle($order);
-
-            // redirect()->to($order->url)->send();
         }
 
         $logs_payment = new LogsPayment($response, $order);

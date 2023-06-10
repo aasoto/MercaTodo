@@ -28,7 +28,10 @@ class ReportStatus
             $this->order->paid();
 
             (new UpdateOrderAction)->handle(
-                UpdateOrderData::fromResult($this->response->json()['status']['date']),
+                UpdateOrderData::fromResult(
+                    $this->response->json()['status']['date'],
+                    $this->response->json()['payment'][0]['amount']['from']['total'],
+                ),
                 $this->response->json()['payment'][0]['reference']
             );
 

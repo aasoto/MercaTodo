@@ -3,10 +3,16 @@
 namespace App\Http\Controllers\Web\Client;
 
 use App\Domain\Order\Actions\GetProductsByOrderAction;
+use App\Domain\Order\Actions\UpdateOrderAction;
+use App\Domain\Order\Actions\UpdateOrderHasProductAction;
 use App\Domain\Order\Dtos\StoreOrderData;
+use App\Domain\Order\Dtos\UpdateOrderData;
+use App\Domain\Order\Dtos\UpdateOrderHasProductData;
 use App\Domain\Order\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Domain\Order\Services\PlaceToPayPaymentServices;
+use App\Domain\Order\Traits\Cart;
+use App\Domain\Order\Traits\CheckStock;
 use App\Domain\Product\Actions\UpdateProductAction;
 use App\Domain\Product\Dtos\UpdateProductData;
 use App\Domain\Product\Models\Product;
@@ -19,6 +25,8 @@ use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class PaymentController extends Controller
 {
+    use Cart, CheckStock;
+
     public function show(string $code): HttpFoundationResponse
     {
         /**
@@ -33,6 +41,8 @@ class PaymentController extends Controller
         GetProductsByOrderAction $get_products,
         PlaceToPayPaymentServices $placetopay,
         UpdateRequest $request,
+        UpdateOrderHasProductAction $update_order_has_product_action,
+        UpdateOrderAction $update_order_action,
         string $id): RedirectResponse
     {
         /**
@@ -42,7 +52,36 @@ class PaymentController extends Controller
         $products_data = new StoreOrderData($get_products->handle($order->id));
 
         if ($order->payment_status == 'canceled') {
-            $order->pending();
+
+            if (isset($request->validated()['products'])) {
+                $purchase_total = 0;
+                foreach ($request->validated()['products'] as $key => $value) {
+                    $product_data = new UpdateOrderHasProductData(
+                        $request->validated()['id'],
+                        $value['id'],
+                        $value['quantity'],
+                        $value['price'],
+                    );
+                    $purchase_total = $purchase_total + $value['totalPrice'];
+
+                    $update_order_has_product_action->handle($product_data);
+                }
+                $order_data = new UpdateOrderData(null, $purchase_total);
+                $update_order_action->handle($order_data, $order['code']);
+            }
+
+            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart($order))));
+
+            if (count($limitated_stock) == 0) {
+                $order->pending();
+            } else {
+                return Redirect::route('order.create')
+                    ->with('success', 'Order rejected.')
+                    ->with('cancel', 'Restore order.')
+                    ->with('limitatedStock', json_encode($limitated_stock))
+                    ->with('cartData', json_encode($products_data))
+                    ->with('orderId', $order->id);
+            }
         }
 
         $status = $placetopay->pay(
@@ -53,7 +92,11 @@ class PaymentController extends Controller
         );
 
         if ($status === 200) {
-            return Redirect::route('order.show', $order['id']);
+            return Redirect::route('order.show', $order['id'])
+            ->with('success',
+                $request->validated()['products'] ?
+                'Payment link updated.' : ''
+            );
         } else {
             return Redirect::route('payment.error', $status);
         }

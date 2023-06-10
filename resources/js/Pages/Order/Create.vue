@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useCartStore } from '@/Store/Cart';
 import { ref } from 'vue';
@@ -8,15 +8,24 @@ import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import InfoButton from '@/Components/Buttons/InfoButton.vue';
 import InputError from '@/Components/InputError.vue';
 import { watch } from 'vue';
+import { reactive } from 'vue';
 
 const props = defineProps({
+    cancel: String,
+    cartData: String,
     limitatedStock: String,
+    orderId: String,
     success: String,
 });
 
 const useCart = useCartStore();
 const { order, totalPriceOrder } = storeToRefs(useCart);
-const { remove, update } = useCart;
+const { restore, remove, update } = useCart;
+
+if (props.cancel == 'Restore order.') {
+    const cart = JSON.parse(props.cartData);
+    restore(cart.products);
+}
 
 const productsLimitated = ref();
 
@@ -42,6 +51,23 @@ watch(order, value => {
 
 const saveOrder = () => {
     formSave.post(route('order.store'));
+}
+
+const formUpdate = reactive({
+    id: props.orderId,
+    products: order.value,
+});
+
+watch(order, value => {
+    formUpdate.products = value;
+});
+
+const updateOrder = () => {
+    router.post(route('payment.update', formUpdate.id),{
+        _method: 'patch',
+        id: formUpdate.id,
+        products: formUpdate.products,
+    });
 }
 
 const errorAlert = ref(false);
@@ -191,11 +217,17 @@ const increment = (productId, productQuantity) => {
                                 </tfoot>
                             </table>
                             <div class="flex justify-end items-center gap-5">
-                                <InfoButton @click="saveOrder()" class="flex gap-4">
+                                <InfoButton v-if="!cancel" @click="saveOrder()" class="flex gap-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                         <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
                                     </svg>
                                     Confirmar orden
+                                </InfoButton>
+                                <InfoButton v-else @click="updateOrder()" class="flex gap-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
+                                    </svg>
+                                    Actualizar orden
                                 </InfoButton>
                             </div>
                         </div>

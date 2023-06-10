@@ -45,7 +45,10 @@ class OrderController extends Controller
     public function create(): Response
     {
         return Inertia::render('Order/Create', [
+            'cancel' => session('cancel'),
+            'cartData' => session('cartData'),
             'limitatedStock' => session('limitatedStock'),
+            'orderId' => session('orderId'),
             'success' => session('success'),
         ]);
     }

@@ -50,6 +50,15 @@ export const useCartStore = defineStore('cart', () => {
         localStorage.setItem("cartBackup"+current_user_id.value, JSON.stringify(cart.value));
     }
 
+    const restore = (cartData) => {
+        cart.value = [];
+        cartData.forEach( item => {
+            const {id, name, slug, price, quantity} = item;
+            cart.value.push({ id, name, slug, price, quantity });
+        });
+        localStorage.setItem("cartBackup"+current_user_id.value, JSON.stringify(cart.value));
+    }
+
     const find = (id) => {
         return cart.value.find((item) => item.id === id);
     }
@@ -87,6 +96,7 @@ export const useCartStore = defineStore('cart', () => {
         currentUser,
         loadCart,
         add,
+        restore,
         find,
         update,
         remove,

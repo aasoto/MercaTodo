@@ -18,7 +18,7 @@ const useCart = useCartStore();
 
 const { emptyCart } = useCart;
 
-if (props.success == 'Order created.') {
+if (props.success == 'Order created.' || props.success == 'Payment link updated.') {
     emptyCart();
 }
 
