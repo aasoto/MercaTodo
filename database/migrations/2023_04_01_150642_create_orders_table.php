@@ -16,10 +16,11 @@ return new class extends Migration
             $table->text('code')->unique();
             $table->string('request_id')->nullable();
             $table->foreignId("user_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->timestamp('purchase_date');//fecha de compra
+            $table->dateTime('purchase_date');
             $table->enum('currency', ['COP', 'USD'])->default('COP');
             $table->string('url')->nullable();
-            $table->enum('payment_status', ['canceled', 'paid', 'pending', 'waiting'])->default('pending');//estado de pago
+            $table->enum('payment_status', ['canceled', 'paid', 'pending', 'waiting', 'verify_bank'])->default('pending');//estado de pago
+            $table->dateTime('payment_date')->nullable();
             $table->double('purchase_total', 15, 2);
             $table->timestamps();
         });

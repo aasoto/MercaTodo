@@ -157,6 +157,16 @@ const removeFromCart = () => {
                             class="text-lg text-black dark:text-white"
                             v-html="product.description"
                         ></div>
+                        <div class="rounded-lg border-2 border-gray-500 w-full px-10 py-4 text-center text-gray-500 text-xl font-semibold">
+                            Quedan
+                            <span v-if="product.stock <= 5" class="font-bold text-red-500">
+                                {{' ' + product.stock + ' ' }}
+                            </span>
+                            <span v-else class="font-bold text-gray-700">
+                                {{ ' ' + product.stock + ' ' }}
+                            </span>
+                            {{ product.unit + ' ' }} en stock.
+                        </div>
                         <div v-if="role == 'client' && product.stock > 0" class="flex justify-center items-center gap-5">
                             <div class="flex flex-col justify-center items-center">
                                 <label for="btnIncrement" class="font-bold text-3xl">
