@@ -4,6 +4,7 @@ namespace App\Domain\Order\Actions;
 
 use App\Domain\Order\Models\OrderHasProduct;
 use App\Domain\Order\Dtos\UpdateOrderHasProductData;
+use App\Domain\Product\Models\Product;
 
 class UpdateOrderHasProductAction
 {
@@ -15,5 +16,14 @@ class UpdateOrderHasProductAction
                 'quantity' => $data->quantity,
                 'price' => $data->price,
             ]);
+
+        /**
+         * @var Product $product
+         */
+        $product = Product::select('stock')->where('id', $data->product_id)->first();
+
+        Product::where('id', $data->product_id)->update([
+            'stock' => intval($product['stock']) - $data->quantity,
+        ]);
     }
 }

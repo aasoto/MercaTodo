@@ -43,6 +43,7 @@ class PaymentController extends Controller
         UpdateRequest $request,
         UpdateOrderHasProductAction $update_order_has_product_action,
         UpdateOrderAction $update_order_action,
+        UpdateProductAction $update_product_action,
         string $id): RedirectResponse
     {
         /**
@@ -73,6 +74,28 @@ class PaymentController extends Controller
             $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart($order))));
 
             if (count($limitated_stock) == 0) {
+                foreach ($order->products as $key => $value) {
+                    /**
+                     * @var Product $product
+                     */
+                    $product = $value->product;
+                    $update_product_data = new UpdateProductData(
+                        $product->name,
+                        $product->slug,
+                        strval($product->products_category_id),
+                        $product->barcode,
+                        $product->description,
+                        strval($product->price),
+                        $product->unit,
+                        strval($product->stock - $value->quantity),
+                        null,
+                        null,
+                        null,
+                        $product->availability,
+                    );
+
+                    $update_product_action->handle($update_product_data, strval($product->id), '[]');
+                }
                 $order->pending();
             } else {
                 return Redirect::route('order.create')
@@ -94,7 +117,7 @@ class PaymentController extends Controller
         if ($status === 200) {
             return Redirect::route('order.show', $order['id'])
             ->with('success',
-                $request->validated()['products'] ?
+                isset($request->validated()['products']) ?
                 'Payment link updated.' : ''
             );
         } else {
