@@ -112,3 +112,5 @@ To run the MercaTodo tests, run:
 ```
 php artisan test
 ```
+Current coverage: **98.1%**
+- **[See code current coverage report](https://soft-stardust-f90554.netlify.app/)**
