@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Web\Client;
 
 use App\Domain\Order\Actions\GetProductsByOrderAction;
-use App\Domain\Order\Actions\UpdateOrderCanceledAction;
 use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Models\Order;
 use App\Http\Controllers\Controller;
@@ -12,9 +11,21 @@ use App\Http\Requests\Web\Client\Payment\UpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class PaymentController extends Controller
 {
+    public function show(string $code): HttpFoundationResponse
+    {
+        /**
+         * @var Order $order
+         */
+        $order = Order::select('url')->where('code', $code)->first();
+
+        return Inertia::location($order['url']);
+    }
+
     public function update(
         GetProductsByOrderAction $get_products,
         PlaceToPayPaymentServices $placetopay,

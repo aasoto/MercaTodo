@@ -1,6 +1,13 @@
 [![merca-todo-logo-mini.png](https://i.postimg.cc/2SgCTSLx/merca-todo-logo-mini.png)](https://postimg.cc/VJByk1RS)
  
 # MercaTodo
+## Description
+
+>MercaTodo is a system that allows the sale of products from different categories online.
+>
+>The system has two types of users, administrator and client. The administrator role allows you to manage user accounts, in addition to managing the store's products. On the other hand, the role of the client can see a showcase of products, place orders and check the status of the orders.
+>
+>To register on the platform, the interested party must click on the register button located at the top of the navigation bar and from there they can use the store and start purchasing products.
 
 ## Mainly developed with the following tecnologies
 | [![logo-laravel.png](https://i.postimg.cc/sg3ch6qs/logo-laravel.png)](https://postimg.cc/sv07Fc3N) | [![logo-inertia.png](https://i.postimg.cc/1zdRFdWd/logo-inertia.png)](https://postimg.cc/cKQNyFG7) | [![logo-vue.png](https://i.postimg.cc/90nh7wFj/logo-vue.png)](https://postimg.cc/D4LHVZXC) | [![logo-tailwindcss.png](https://i.postimg.cc/0jQC4bGj/logo-tailwindcss.png)](https://postimg.cc/Q9259NyZ) |
@@ -29,7 +36,7 @@
 
 ```sh
 git clone https://github.com/aasoto/MercaTodo.git merca-todo
-cd mercado-todo
+cd merca-todo
 ```
 
 2. Install PHP dependencies:
@@ -105,3 +112,5 @@ To run the MercaTodo tests, run:
 ```
 php artisan test
 ```
+Current coverage: **98.1%**
+- **[See code current coverage report](https://soft-stardust-f90554.netlify.app/)**

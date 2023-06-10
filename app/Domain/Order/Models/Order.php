@@ -83,4 +83,11 @@ class Order extends Model
             'payment_status' => 'waiting'
         ]);
     }
+
+    public function verify_bank(): void
+    {
+        $this->update([
+            'payment_status' => 'verify_bank'
+        ]);
+    }
 }

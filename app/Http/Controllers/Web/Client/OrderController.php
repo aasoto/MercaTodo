@@ -27,10 +27,13 @@ class OrderController extends Controller
             'orders' => Order::query()
                 -> select(
                         'id',
+                        'code',
                         'purchase_date',
+                        'payment_date',
                         'payment_status',
                         'purchase_total',
                         'url',
+                        'updated_at',
                     )
                 -> whereAuthUser()
                 -> orderByDesc('purchase_date')
@@ -84,10 +87,12 @@ class OrderController extends Controller
             'order' => Order::query()
                 -> select(
                         'id',
+                        'code',
                         'purchase_date',
                         'payment_status',
                         'purchase_total',
                         'url',
+                        'updated_at',
                     )
                 -> where('id', $id)
                 -> first(),
