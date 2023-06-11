@@ -92,6 +92,7 @@ class OrderController extends Controller
                         'payment_status',
                         'purchase_total',
                         'url',
+                        'created_at',
                         'updated_at',
                     )
                 -> where('id', $id)

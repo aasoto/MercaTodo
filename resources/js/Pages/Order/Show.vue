@@ -55,6 +55,11 @@ const generateNewURLWebcheckout = () => {
         id: form.id,
     });
 }
+
+const localDate = (date) => {
+    const dt = new Date(date);
+    return dt.toLocaleString();
+}
 </script>
 <template>
     <Head title="Detalle de orden" />
@@ -66,7 +71,7 @@ const generateNewURLWebcheckout = () => {
                 </h2>
                 <div class="flex justify-center items-center gap-3">
                     <div class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Fecha: {{ order.purchase_date }}
+                        Fecha: {{ localDate(order.created_at) }}
                     </div>
                     <div v-if="order.payment_status == 'canceled'" class="rounded-md bg-red-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
                         Estado: CANCELADO
@@ -87,7 +92,7 @@ const generateNewURLWebcheckout = () => {
                         Estado: VERIFICAR TRANSACCIÓN CON SU ENTIDAD BANCARIA
                     </div>
                     <div class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Total: {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
+                        Total orden: {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                     </div>
                 </div>
             </div>
@@ -109,10 +114,10 @@ const generateNewURLWebcheckout = () => {
                                     Cantidad
                                 </th>
                                 <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Precio unitario
+                                    Valor unitario
                                 </th>
                                 <th class="rounded-tr-lg py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Precio total
+                                    Valor total
                                 </th>
                             </thead>
                             <tbody>
@@ -145,10 +150,10 @@ const generateNewURLWebcheckout = () => {
                                     Cantidad
                                 </th>
                                 <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Precio unitario
+                                    Valor unitario
                                 </th>
                                 <th class="rounded-br-lg py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Precio total
+                                    Valor total
                                 </th>
                             </tfoot>
                         </table>

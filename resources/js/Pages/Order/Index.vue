@@ -71,7 +71,7 @@ const generateNewURLWebcheckout = (id) => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-10">
                     <div class="flex flex-col justify-center items-center">
-                        <table v-if="orders" class="w-full m-5 rounded-lg">
+                        <table v-if="orders.data.length != 0" class="w-full m-5 rounded-lg">
                             <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
                                 <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
                                     ID

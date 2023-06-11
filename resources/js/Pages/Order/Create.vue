@@ -101,13 +101,13 @@ const increment = (productId, productQuantity) => {
                                         Articulo
                                     </th>
                                     <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                        Precio
+                                        Valor unitario
                                     </th>
                                     <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
                                         Cantidad
                                     </th>
                                     <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                        Precio total
+                                        Valor total
                                     </th>
                                     <th class="rounded-tr-lg py-3 text-black dark:text-white text-lg font-bold text-center">
                                         Acciones
@@ -180,7 +180,7 @@ const increment = (productId, productQuantity) => {
                                 </tbody>
                                 <tfoot class="bg-gray-300 dark:bg-gray-700 rounded-b-lg">
                                     <th colspan="3" class="rounded-bl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-right">
-                                        Precio total
+                                        Total orden
                                     </th>
                                     <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-right">
                                         {{ totalPriceOrder.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
