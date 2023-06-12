@@ -10,6 +10,7 @@ import { ref } from 'vue';
 
 const props = defineProps({
     order: Object,
+    paymentMethods: Object,
     products: Object,
     success: String,
 });
@@ -47,13 +48,31 @@ if (date1 < date2) {
 
 const form = useForm({
     id: props.order.id,
+    payment_method: '',
 });
 
+const btnPaymentMethodLabel = ref('Metodo de pago');
+const showAlertPaymentMethod = ref(false);
+
+const setPaymentMethod = (code, name) => {
+    if (code === 'NONE') {
+        form.payment_method = '';
+    } else {
+        form.payment_method = code;
+    }
+    btnPaymentMethodLabel.value = name;
+}
+
 const generateNewURLWebcheckout = () => {
-    router.post(route('payment.update', form.id),{
-        _method: 'patch',
-        id: form.id,
-    });
+    if (form.payment_method == '') {
+        showAlertPaymentMethod.value = true;
+    } else {
+        router.post(route('payment.update', form.id),{
+            _method: 'patch',
+            id: form.id,
+            payment_method: form.payment_method,
+        });
+    }
 }
 
 const localDate = (date) => {
@@ -100,7 +119,7 @@ const localDate = (date) => {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-10">
+                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg px-10">
                     <div class="flex flex-col justify-center items-center">
                         <table class="w-full m-5 rounded-lg">
                             <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
@@ -159,6 +178,35 @@ const localDate = (date) => {
                         </table>
                         <Pagination class="my-6" :links="products.links" />
                         <div class="w-full flex justify-end items-center gap-5 mb-5">
+                            <div v-if="(order.payment_status == 'pending' && !order.url) || order.payment_status == 'canceled'" class="relative group">
+                                <button
+                                    id="dropdownDefaultButton"
+                                    class="w-full text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
+                                    type="button"
+                                >
+                                    <span v-html="btnPaymentMethodLabel" class="capitalize"></span>
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <!-- Dropdown menu -->
+                                <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
+                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                        <li>
+                                            <span @click="setPaymentMethod('NONE', 'Metodo de pago')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                Ninguno
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                        <li v-for="paymentMethod in paymentMethods">
+                                            <span @click="setPaymentMethod(paymentMethod.code, paymentMethod.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                {{ paymentMethod.name }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                             <SuccessButton v-if="(canPay == true) && (order.payment_status == 'pending') && order.url" @click="openWebcheckout(order.code)" class="flex gap-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                     <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
@@ -191,6 +239,14 @@ const localDate = (date) => {
             text="Intente el proceso de nuevo."
             :close="false"
             :btn-close="true"
+        />
+        <AlertError
+            v-if="showAlertPaymentMethod === true"
+            title="Sin metodo de pago"
+            text="Seleccione un metodo de pago"
+            :close="false"
+            :btn-close="true"
+            @click="() => showAlertPaymentMethod = false"
         />
     </AuthenticatedLayout>
 </template>

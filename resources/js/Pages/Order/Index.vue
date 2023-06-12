@@ -1,11 +1,14 @@
 <script setup>
+import AlertError from '@/Components/Alerts/AlertError.vue';
 import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const props = defineProps({
     orders: Object,
+    paymentMethods: Object,
     success: String,
 });
 
@@ -49,11 +52,31 @@ const dateGMT_5 = (date) => {
     return year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds;
 }
 
+const btnPaymentMethodLabel = ref('Metodo de pago');
+const paymentMethod = ref('');
+const showAlertPaymentMethod = ref(false);
+const regenerateLinkId = ref('');
+
+const setPaymentMethod = (code, name, id) => {
+    if (code === 'NONE') {
+        paymentMethod.value = '';
+    } else {
+        paymentMethod.value = code;
+        regenerateLinkId.value = id;
+    }
+    btnPaymentMethodLabel.value = name;
+}
+
 const generateNewURLWebcheckout = (id) => {
-    router.post(route('payment.update', id),{
-        _method: 'patch',
-        id: id,
-    });
+    if (paymentMethod.value == '') {
+        showAlertPaymentMethod.value = true;
+    } else {
+        router.post(route('payment.update', id),{
+            _method: 'patch',
+            id: id,
+            payment_method: paymentMethod.value,
+        });
+    }
 }
 </script>
 <template>
@@ -106,37 +129,37 @@ const generateNewURLWebcheckout = (id) => {
                                     <td class="px-3 py-3 text-black dark:text-white capitalize">
                                         <div
                                             v-if="order.payment_status == 'canceled'"
-                                            class="rounded-md px-4 py-2 bg-red-200 text-center font-bold"
+                                            class="rounded-md px-2 py-2 bg-red-200 text-center font-bold"
                                         >
                                             CANCELADO
                                         </div>
                                         <div
                                             v-if="order.payment_status == 'paid'"
-                                            class="rounded-md px-4 py-2 bg-green-200 text-center font-bold"
+                                            class="rounded-md px-2 py-2 bg-green-200 text-center font-bold"
                                         >
                                             PAGADO
                                         </div>
                                         <div
                                             v-if="order.payment_status == 'waiting'"
-                                            class="rounded-md px-4 py-2 bg-purple-300 text-center font-bold"
+                                            class="rounded-md px-2 py-2 bg-purple-300 text-center font-bold"
                                         >
                                             PAGO POR CONFIRMAR
                                         </div>
                                         <div
                                             v-if="order.url && (order.payment_status == 'pending')"
-                                            class="rounded-md px-4 py-2 bg-yellow-200 text-center font-bold"
+                                            class="rounded-md px-2 py-2 bg-yellow-200 text-center font-bold"
                                         >
                                             PENDIENTE
                                         </div>
                                         <div
                                             v-if="order.payment_status == 'verify_bank'"
-                                            class="rounded-md px-4 py-2 bg-orange-300 text-center font-bold"
+                                            class="rounded-md px-2 py-2 bg-orange-300 text-center font-bold"
                                         >
                                             VERIFICAR CON SU BANCO
                                         </div>
                                         <div
                                             v-if="!order.url"
-                                            class="rounded-md px-4 py-2 bg-blue-200 text-center font-bold"
+                                            class="rounded-md px-2 py-2 bg-blue-200 text-center font-bold"
                                         >
                                             SIN LINK DE PAGO
                                         </div>
@@ -154,6 +177,35 @@ const generateNewURLWebcheckout = (id) => {
                                                 Detalles
                                             </span>
                                         </button>
+                                        <div v-if="(order.payment_status == 'pending' && !order.url) || order.payment_status == 'canceled'" class="relative group">
+                                            <button
+                                                id="dropdownDefaultButton"
+                                                class="w-full text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-md group-hover:rounded-t group-hover:rounded-b-none px-4 py-1 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
+                                                type="button"
+                                            >
+                                                <span v-html="regenerateLinkId == order.id ? btnPaymentMethodLabel : 'Metodo de pago'" class="capitalize"></span>
+                                                <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                            </button>
+                                            <!-- Dropdown menu -->
+                                            <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
+                                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                                    <li>
+                                                        <span @click="setPaymentMethod('NONE', 'Metodo de pago', order.id)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                            Ninguno
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                                    <li v-for="paymentMethod in paymentMethods">
+                                                        <span @click="setPaymentMethod(paymentMethod.code, paymentMethod.name, order.id)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                            {{ paymentMethod.name }}
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                         <button v-if="(order.payment_status == 'pending') && expirationDate(order.updated_at) && order.url" @click="openWebcheckout(order.code)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                 <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
@@ -161,7 +213,7 @@ const generateNewURLWebcheckout = (id) => {
                                             </svg>
                                             Pagar orden
                                         </button>
-                                        <button v-else-if="(order.payment_status == 'pending') || (order.payment_status == 'canceled')" @click="generateNewURLWebcheckout(order.id)" class="bg-cyan-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
+                                        <button v-else-if="(order.payment_status == 'pending' || order.payment_status == 'canceled') && paymentMethod && (regenerateLinkId == order.id)" @click="generateNewURLWebcheckout(order.id)" class="bg-cyan-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                 <path fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 00-5.304 0l-4.5 4.5a3.75 3.75 0 001.035 6.037.75.75 0 01-.646 1.353 5.25 5.25 0 01-1.449-8.45l4.5-4.5a5.25 5.25 0 117.424 7.424l-1.757 1.757a.75.75 0 11-1.06-1.06l1.757-1.757a3.75 3.75 0 000-5.304zm-7.389 4.267a.75.75 0 011-.353 5.25 5.25 0 011.449 8.45l-4.5 4.5a5.25 5.25 0 11-7.424-7.424l1.757-1.757a.75.75 0 111.06 1.06l-1.757 1.757a3.75 3.75 0 105.304 5.304l4.5-4.5a3.75 3.75 0 00-1.035-6.037.75.75 0 01-.354-1z" clip-rule="evenodd" />
                                             </svg>
@@ -218,6 +270,14 @@ const generateNewURLWebcheckout = (id) => {
             text="Orden enviada satisfactoriamente."
             :close="false"
             :btn-close="true"
+        />
+        <AlertError
+            v-if="showAlertPaymentMethod === true"
+            title="Sin metodo de pago"
+            text="Seleccione un metodo de pago"
+            :close="false"
+            :btn-close="true"
+            @click="() => showAlertPaymentMethod = false"
         />
     </AuthenticatedLayout>
 </template>
