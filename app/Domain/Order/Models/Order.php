@@ -56,6 +56,13 @@ class Order extends Model
         return OrderFactory::new();
     }
 
+    public function approved_partial(): void
+    {
+        $this->update([
+            'payment_status' => 'approved_partial'
+        ]);
+    }
+
     public function canceled(): void
     {
         $this->update([
@@ -67,6 +74,13 @@ class Order extends Model
     {
         $this->update([
             'payment_status' => 'paid'
+        ]);
+    }
+
+    public function partial_expired(): void
+    {
+        $this->update([
+            'payment_status' => 'partial_expired'
         ]);
     }
 

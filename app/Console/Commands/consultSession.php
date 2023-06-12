@@ -32,6 +32,8 @@ class consultSession extends Command
         $orders = Order::where('payment_status', 'pending')
             ->orWhere('payment_status', 'waiting')
             ->orWhere('payment_status', 'verify_bank')
+            ->orWhere('payment_status', 'approved_partial')
+            ->orWhere('payment_status', 'partial_expired')
             ->get();
 
         $authentication = new Authentication();
