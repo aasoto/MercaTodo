@@ -158,6 +158,18 @@ const generateNewURLWebcheckout = (id) => {
                                             VERIFICAR CON SU BANCO
                                         </div>
                                         <div
+                                            v-if="order.payment_status == 'approved_partial'"
+                                            class="rounded-md px-2 py-2 bg-amber-300 text-center font-bold"
+                                        >
+                                            PAGO INCOMPLETO
+                                        </div>
+                                        <div
+                                            v-if="order.payment_status == 'partial_expired'"
+                                            class="rounded-md px-2 py-2 bg-zinc-300 text-center font-bold"
+                                        >
+                                            PAGO EXPIRADO
+                                        </div>
+                                        <div
                                             v-if="!order.url"
                                             class="rounded-md px-2 py-2 bg-blue-200 text-center font-bold"
                                         >
@@ -206,12 +218,17 @@ const generateNewURLWebcheckout = (id) => {
                                                 </ul>
                                             </div>
                                         </div>
-                                        <button v-if="(order.payment_status == 'pending') && expirationDate(order.updated_at) && order.url" @click="openWebcheckout(order.code)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
+                                        <button v-if="(order.payment_status == 'pending' || order.payment_status == 'approved_partial') && expirationDate(order.updated_at) && order.url" @click="openWebcheckout(order.code)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                                 <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
                                                 <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
                                             </svg>
-                                            Pagar orden
+                                            <span v-if="order.payment_status == 'pending'">
+                                                Pagar orden
+                                            </span>
+                                            <span v-else>
+                                                Completar pago
+                                            </span>
                                         </button>
                                         <button v-else-if="(order.payment_status == 'pending' || order.payment_status == 'canceled') && paymentMethod && (regenerateLinkId == order.id)" @click="generateNewURLWebcheckout(order.id)" class="bg-cyan-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">

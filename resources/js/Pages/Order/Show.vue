@@ -110,6 +110,12 @@ const localDate = (date) => {
                     <div v-if="order.payment_status == 'verify_bank'" class="rounded-md bg-orange-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
                         Estado: VERIFICAR TRANSACCIÓN CON SU ENTIDAD BANCARIA
                     </div>
+                    <div v-if="order.payment_status == 'approved_partial'" class="rounded-md bg-amber-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                        Estado: PAGO INCOMPLETO
+                    </div>
+                    <div v-if="order.payment_status == 'partial_expired'" class="rounded-md bg-zinc-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                        Estado: PAGO EXPIRADO
+                    </div>
                     <div class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
                         Total orden: {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                     </div>
@@ -207,12 +213,17 @@ const localDate = (date) => {
                                     </ul>
                                 </div>
                             </div>
-                            <SuccessButton v-if="(canPay == true) && (order.payment_status == 'pending') && order.url" @click="openWebcheckout(order.code)" class="flex gap-4">
+                            <SuccessButton v-if="(canPay == true) && (order.payment_status == 'pending'  || order.payment_status == 'approved_partial') && order.url" @click="openWebcheckout(order.code)" class="flex gap-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                     <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
                                     <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
                                 </svg>
-                                Pagar
+                                <span v-if="order.payment_status == 'pending'">
+                                    Pagar orden
+                                </span>
+                                <span v-else>
+                                    Completar pago
+                                </span>
                             </SuccessButton>
                             <InfoButton v-else-if="(order.payment_status == 'pending')  || (order.payment_status == 'canceled')" @click="generateNewURLWebcheckout()" class="flex gap-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
