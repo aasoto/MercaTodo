@@ -7,6 +7,7 @@ use App\Domain\Order\Actions\StoreOrderHasProductAction;
 use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Models\Order;
 use App\Domain\Order\Models\OrderHasProduct;
+use App\Domain\Order\Models\PaymentMethod;
 use App\Domain\Order\Services\PlaceToPayPaymentServices;
 use App\Domain\Order\Traits\CheckStock;
 use App\Http\Controllers\Controller;
@@ -38,6 +39,7 @@ class OrderController extends Controller
                 -> whereAuthUser()
                 -> orderByDesc('purchase_date')
                 -> paginate(10),
+            'paymentMethods' => PaymentMethod::getFromCache(),
             'success' => session('success'),
         ]);
     }
@@ -46,6 +48,7 @@ class OrderController extends Controller
     {
         return Inertia::render('Order/Create', [
             'limitatedStock' => session('limitatedStock'),
+            'paymentMethods' => PaymentMethod::getFromCache(),
             'success' => session('success'),
         ]);
     }
@@ -97,6 +100,7 @@ class OrderController extends Controller
                     )
                 -> where('id', $id)
                 -> first(),
+            'paymentMethods' => PaymentMethod::getFromCache(),
             'products' => OrderHasProduct::query()
                 -> select(
                         'products.name',

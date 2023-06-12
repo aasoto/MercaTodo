@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Web\Client\Order;
 
+use App\Domain\Order\Models\PaymentMethod;
 use App\Domain\Product\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -31,6 +32,7 @@ class StoreRequest extends FormRequest
             'products.*.price'          => ['required', 'numeric'],
             'products.*.quantity'       => ['required', 'integer'],
             'products.*.totalPrice'     => ['required', 'numeric'],
+            'payment_method'            => ['required', 'string'],
         ];
     }
 }
