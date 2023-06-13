@@ -86,7 +86,7 @@ class OrderTest extends TestCase
         );
     }
 
-    public function test_can_save_new_order(): void
+    public function test_can_save_new_order_with_payment_method_normal(): void
     {
         $products = Product::select('id', 'name', 'slug', 'price')
             ->inRandomOrder()
@@ -126,6 +126,71 @@ class OrderTest extends TestCase
         $response = $this->actingAs($this->user)
             -> post(route('order.store'), [
                 'products' => $order,
+                'payment_method' => 'NORMAL'
+            ]);
+
+        $order = Order::select('id')->orderByDesc('id')->first();
+
+        $response->assertRedirect(route('order.show', $order->id))
+        ->assertSessionHasAll(['success' => 'Order created.']);
+
+        $this->assertDatabaseHas('orders', [
+            'purchase_total' => round($purchase_total, 2),
+            'request_id' => strval($request_id),
+            'url' => $url,
+        ]);
+
+        foreach ($products as $key => $product) {
+            $this->assertDatabaseHas('order_has_products', [
+                'order_id' => $order['id'],
+                'product_id' => $product['id'],
+                'quantity' => 1,
+                'price' => $product['price'],
+            ]);
+        }
+    }
+
+    public function test_can_save_new_order_with_payment_method_allow_partial(): void
+    {
+        $products = Product::select('id', 'name', 'slug', 'price')
+            ->inRandomOrder()
+            ->take(5)
+            ->get();
+
+        $order = array();
+        $purchase_total = 0;
+        foreach ($products as $key => $product) {
+            array_push($order, [
+                'id' => $product['id'],
+                'name' => $product['name'],
+                'slug' => $product['slug'],
+                'price' => $product['price'],
+                'quantity' => 1,
+                'totalPrice' => $product['price'],
+            ]);
+
+            $purchase_total = $purchase_total + $product['price'];
+        }
+
+        $request_id = 1213;
+        $url = "https://checkout-co.placetopay.dev/spa/session/1213/1234";
+        $mock_response = [
+            "status" => [
+                "status" => "OK",
+                "reason" => "PC",
+                "message" => "La petición se ha procesado correctamente",
+                "date" => "2023-06-02T16:09:39-05:00"
+            ],
+            "requestId" => $request_id,
+            "processUrl" => $url
+        ];
+
+        Http::fake([config('placetopay.url').'/*' => Http::response($mock_response)]);
+
+        $response = $this->actingAs($this->user)
+            -> post(route('order.store'), [
+                'products' => $order,
+                'payment_method' => 'ALLOW_PARTIAL'
             ]);
 
         $order = Order::select('id')->orderByDesc('id')->first();
@@ -179,6 +244,7 @@ class OrderTest extends TestCase
         $response = $this->actingAs($this->user)
             -> post(route('order.store'), [
                 'products' => $order,
+                'payment_method' => 'NORMAL'
             ]);
 
         $response->assertRedirect(route('order.create'))

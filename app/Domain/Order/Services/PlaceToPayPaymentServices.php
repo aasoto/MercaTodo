@@ -60,7 +60,7 @@ class PlaceToPayPaymentServices
             'auth' => $authentication->getAuth(),
             'buyer' => $buyer->getBuyer(),
             'payment' => $payment->getPayment(),
-            'expiration' => Carbon::now()->addMinutes(6),
+            'expiration' => Carbon::now()->addDay(),
             'returnUrl' => route('payment.response', $order->code),
             'cancelUrl' => route('payment.canceled', $order->code),
             'ipAddress' => $this->ipAddress,
