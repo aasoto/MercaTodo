@@ -25,7 +25,7 @@ class PaymentMethodSeeder extends Seeder
 
         PaymentMethod::create([
             'code' => 'RECURRING',
-            'name' => 'Pago pago recurrente',
+            'name' => 'Pago recurrente',
         ]);
     }
 }
