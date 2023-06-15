@@ -107,16 +107,16 @@ php artisan key:generate
 > * Open the command console prefered it can be CMD, PowerShell y Git Bash.
 > * Locate yourself in the root of your system and run the following command:
 > ```sh
-cd C:\xampp\mysql\bin
->```
+> cd C:\xampp\mysql\bin
+> ```
 > * Access the MySQL command line
 >```sh
-mysql -u root -p
+> mysql -u root -p
 >```
 > * If your databases has password, type it or, if it hasn't push enter.
 > * Create database
 >```sh
-create database merca_todo
+> create database merca_todo
 >```
 > The Other option of create database if you are using XAMPP as PHP development environment is using phpMyAdmin, who comes by default with the installation of XAMPP. 
 > * To access phpMyAdmin you need to open the XAMPP control panel, then activate the MySQL service by clicking the start button, then when the background of the letters turns green and the PID and port have been assigned, you must click on the button Admin in the same row of MySQL. [How to create a database with phpMyAdmin?](https://www.youtube.com/watch?v=k9yJR_ZJbvI)
@@ -155,13 +155,13 @@ php artisan serve
 To run the MercaTodo tests you can use one of these commands:
 
 > ```
-php artisan test
+> php artisan test
 > ```
 > ```
-vendor/bin/phpunit
+> vendor/bin/phpunit
 > ```
 > ```
-vendor/bin/phpunit --testdox
+> vendor/bin/phpunit --testdox
 > ```
 
 Current coverage: **98.1%**
