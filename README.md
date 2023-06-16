@@ -34,6 +34,8 @@
 ## Prepare your development environment
 The MercaTodo web application was developed using the following tools, so it is recommended to install it using this configuration:
 
+> *Installing the following configuration is not mandatory, but you should make sure that the development tools you are using locally can support this project. In case of an error during installation you should seek help based on your environment. __This application was developed using Windows as operating system__.*
+
 * ### [XAMPP](https://www.apachefriends.org/)
 This is the most popular PHP development environment. XAMPP is a completely free and easy to install Apache distribution that contains [MariaDB](https://mariadb.org/), [PHP](https://www.php.net/manual/en/intro-whatis.php) and [Perl](https://www.perl.org). The XAMPP installation package has been designed to be incredibly easy to install and use.
 >[Download version of development of this application.](https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.1.6/)
@@ -53,6 +55,9 @@ Node.js is a cross-platform, open-source server environment that can run on Wind
 >>
 >> **npm**
 >> is a package manager for the JavaScript programming language maintained by npm, Inc. npm is the default package manager for the JavaScript runtime environment Node.js. [Read more.](https://docs.npmjs.com/about-npm)
+
+## How can I read this code properly?
+You can use one of these free code editors like [Visual Studio Code](https://code.visualstudio.com/), [Sublime Text](https://www.sublimetext.com/), [etc](https://www.hostinger.com/tutorials/best-code-editors). or a full IDE like [PHPStorm](https://www.jetbrains.com/phpstorm/).
 
 ## Installation
 
