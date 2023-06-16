@@ -56,38 +56,37 @@ Node.js is a cross-platform, open-source server environment that can run on Wind
 
 ## Installation
 
-1. Clone the repo locally:
+1. [Clone the GitHub repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) locally:
 
 ```sh
 git clone https://github.com/aasoto/MercaTodo.git merca-todo
 cd merca-todo
 ```
 
-2. Install PHP dependencies:
+2. [Install PHP dependencies](https://getcomposer.org/doc/01-basic-usage.md):
 
 ```sh
 composer install
 ```
 
-3. Install NPM dependencies:
+3. [Install npm dependencies](https://docs.npmjs.com/cli/v8/commands/npm-install):
 
 ```sh
 npm install
 ```
 
-4. Chose the mode of work with vite.
+4. Chose the mode of work with [vite](https://vitejs.dev/).
 
-> - You can run the development mode:
+> - You can run the [development mode](https://laravel.com/docs/10.x/vite#running-vite)
+>```sh
+>npm run dev
+>```
+>- Or build the [assets](https://laravel.com/docs/10.x/vite#running-vite)
+>```sh
+>npm run build
+>```
 
-```sh
-npm run dev
-```
->- Or build the assets
-```sh
-npm run build
-```
-
-5. Setup configuration:
+5. [Setup configuration](https://laravel.com/docs/10.x/configuration#environment-configuration):
 
 ```sh
 cp .env.example .env
@@ -104,7 +103,7 @@ php artisan key:generate
 > **Example**
 >
 > If you have XAMPP installed as a PHP development environment do the following steps for create the MySQL database by command console.
-> * Open the command console prefered it can be CMD, PowerShell y Git Bash.
+> * Open the command console CMD.
 > * Locate yourself in the root of your system and run the following command:
 > ```sh
 > cd C:\xampp\mysql\bin
@@ -116,24 +115,18 @@ php artisan key:generate
 > * If your databases has password, type it or, if it hasn't push enter.
 > * Create database
 >```sh
-> create database merca_todo
+> create database merca_todo;
 >```
 > The Other option of create database if you are using XAMPP as PHP development environment is using phpMyAdmin, who comes by default with the installation of XAMPP. 
 > * To access phpMyAdmin you need to open the XAMPP control panel, then activate the MySQL service by clicking the start button, then when the background of the letters turns green and the PID and port have been assigned, you must click on the button Admin in the same row of MySQL. [How to create a database with phpMyAdmin?](https://www.youtube.com/watch?v=k9yJR_ZJbvI)
 >
-8. Run database migrations:
+8. Run database [migrations](https://laravel.com/docs/10.x/migrations#running-migrations) and [seeders](https://laravel.com/docs/10.x/seeding#running-seeders):
 
 ```sh
-php artisan migrate
+php artisan migrate --seed
 ```
 
-9. Run database seeder:
-
-```sh
-php artisan db:seed
-```
-
-10. Run the dev server (the output will give the address):
+9. Run the dev server (the output will give the address):
 
 ```sh
 php artisan serve
@@ -150,6 +143,8 @@ php artisan serve
 >>- **Password:** 12345678
 
 ## Running tests
+These tests has been made with [PHPUnit](https://phpunit.de/); you can learn more about the assertions reading [How can I test a Laravel application?](https://laravel.com/docs/10.x/testing) or [How to tests Endpoints with Inertia.js?](https://inertiajs.com/testing)
+
 * For run the tests make you sure that you have created a database called *test*, if you have not please create it, you can follow the example given at the step **7** when we created the database.
 
 To run the MercaTodo tests you can use one of these commands:
@@ -171,6 +166,15 @@ To generate the coverage views in HTML, use the following command, remember that
 ```sh
 vendor/bin/phpunit --coverage-html tests/coverage
 ```
+
+## Search bugs with [PHPStan](https://phpstan.org/)
+Find bugs before they reach production. PHPStan scans your whole codebase and looks for both obvious & tricky bugs. Even in those rarely executed if statements that certainly aren't covered by tests. You can run it on your machine and in CI to prevent those bugs ever reaching your customers in production. [Learn more about it.](https://phpstan.org/user-guide/getting-started)
+
+If you want to measure the quality of the code run this command:
+```sh
+vendor/bin/phpstan analyse -level [choose level from 0 to 9]
+```
+[Learn more about PHPStan levels](https://phpstan.org/user-guide/rule-levels)
 
 ## Additional settings
 
