@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Client;
 
 use App\Domain\Order\Actions\GetProductsByOrderAction;
+use App\Domain\Order\Actions\RemoveProductOfOrder;
 use App\Domain\Order\Actions\UpdateOrderAction;
 use App\Domain\Order\Actions\UpdateOrderHasProductAction;
 use App\Domain\Order\Dtos\StoreOrderData;
@@ -41,60 +42,66 @@ class PaymentController extends Controller
         GetProductsByOrderAction $get_products,
         PlaceToPayPaymentServices $placetopay,
         UpdateRequest $request,
-        UpdateOrderHasProductAction $update_order_has_product_action,
         UpdateOrderAction $update_order_action,
         UpdateProductAction $update_product_action,
+        RemoveProductOfOrder $remove_product_of_order,
         string $id): RedirectResponse
     {
         /**
          * @var Order $order
          */
         $order = Order::where('id', $id)->first();
-        $products_data = new StoreOrderData($get_products->handle($order->id));
+
+        if (isset($request->validated()['products'])) {
+            $products_data = new StoreOrderData($get_products->handle($order->id, true, $request->validated()['products']));
+        } else {
+            $products_data = new StoreOrderData($get_products->handle($order->id, false, null));
+        }
 
         if ($order->payment_status == 'canceled') {
 
             if (isset($request->validated()['products'])) {
-                $purchase_total = 0;
-                foreach ($request->validated()['products'] as $key => $value) {
-                    $product_data = new UpdateOrderHasProductData(
-                        $request->validated()['id'],
-                        $value['id'],
-                        $value['quantity'],
-                        $value['price'],
-                    );
-                    $purchase_total = $purchase_total + $value['totalPrice'];
-
-                    $update_order_has_product_action->handle($product_data);
-                }
-                $order_data = new UpdateOrderData(null, $purchase_total);
-                $update_order_action->handle($order_data, $order['code']);
+                $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(true, $products_data->products))));
+            }else {
+                $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(false, $order))));
             }
 
-            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart($order))));
-
             if (count($limitated_stock) == 0) {
+
+                if (isset($request->validated()['products'])) {
+                    $purchase_total = 0;
+                    foreach ($request->validated()['products'] as $key => $value) {
+                        $purchase_total = $purchase_total + $value['totalPrice'];
+                    }
+                    $order_data = new UpdateOrderData(null, $purchase_total);
+                    $update_order_action->handle($order_data, $order['code']);
+                }
+
                 foreach ($order->products as $key => $value) {
                     /**
                      * @var Product $product
                      */
                     $product = $value->product;
-                    $update_product_data = new UpdateProductData(
-                        $product->name,
-                        $product->slug,
-                        strval($product->products_category_id),
-                        $product->barcode,
-                        $product->description,
-                        strval($product->price),
-                        $product->unit,
-                        strval($product->stock - $value->quantity),
-                        null,
-                        null,
-                        null,
-                        $product->availability,
-                    );
+                    if ($product->stock != 0) {
+                        $update_product_data = new UpdateProductData(
+                            $product->name,
+                            $product->slug,
+                            strval($product->products_category_id),
+                            $product->barcode,
+                            $product->description,
+                            strval($product->price),
+                            $product->unit,
+                            strval($product->stock - $value->quantity),
+                            null,
+                            null,
+                            null,
+                            $product->availability,
+                        );
+                        $update_product_action->handle($update_product_data, strval($product->id), '[]');
+                    } else {
+                        $remove_product_of_order->handle($order->id, $product->id);
+                    }
 
-                    $update_product_action->handle($update_product_data, strval($product->id), '[]');
                 }
                 $order->pending();
             } else {
