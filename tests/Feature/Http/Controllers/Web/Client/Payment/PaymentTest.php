@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Web\Client\Payment;
 
 use App\Domain\Order\Models\Order;
+use App\Domain\Product\Models\Product;
 use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\OrderHasProductSeeder;
@@ -100,8 +101,6 @@ class PaymentTest extends TestCase
             'payment_status' => 'canceled',
         ]);
 
-        $this->seed(OrderHasProductSeeder::class);
-
         $mock_response = [
             "status" => [
                 "status" => "OK",
@@ -115,8 +114,18 @@ class PaymentTest extends TestCase
 
         Http::fake([config('placetopay.url').'/*' => Http::response($mock_response)]);
 
+        $product = Product::inRandomOrder()->first();
+
         $this->patchJson(route('payment.update', $order->getKey()), [
             'id' => $order->getKey(),
+            'products' => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price'=> $product->price,
+                'quantity'=> 1,
+                'totalPrice'=> $product->price,
+            ]
         ])->assertRedirectContains('order/'.$order->getKey());
 
         $this->assertEquals($order->url, 'https://checkout-co.placetopay.dev/spa/session/0000/0000');
@@ -150,6 +159,11 @@ class PaymentTest extends TestCase
             'payment' => [
                 0 => [
                     'reference' => $order->code,
+                    'amount' => [
+                        'from' => [
+                            'total' => $order->purchase_total,
+                        ]
+                    ]
                 ]
             ]
         ];
