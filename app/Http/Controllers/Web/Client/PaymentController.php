@@ -12,6 +12,7 @@ use App\Domain\Order\Dtos\UpdateOrderHasProductData;
 use App\Domain\Order\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Domain\Order\Services\PlaceToPayPaymentServices;
+use App\Domain\Order\Services\RestoreStockProductsService;
 use App\Domain\Order\Traits\Cart;
 use App\Domain\Order\Traits\CheckStock;
 use App\Domain\Product\Actions\UpdateProductAction;
@@ -39,12 +40,8 @@ class PaymentController extends Controller
     }
 
     public function update(
-        GetProductsByOrderAction $get_products,
         PlaceToPayPaymentServices $placetopay,
         UpdateRequest $request,
-        UpdateOrderAction $update_order_action,
-        UpdateProductAction $update_product_action,
-        RemoveProductOfOrder $remove_product_of_order,
         string $id): RedirectResponse
     {
         /**
@@ -52,57 +49,20 @@ class PaymentController extends Controller
          */
         $order = Order::where('id', $id)->first();
 
-        if (isset($request->validated()['products'])) {
-            $products_data = new StoreOrderData($get_products->handle($order->id, true, $request->validated()['products']));
-        } else {
-            $products_data = new StoreOrderData($get_products->handle($order->id, false, null));
-        }
+        $restore_stock_products = new RestoreStockProductsService($order, $request);
+
+        $products_data = $restore_stock_products->get_products();
 
         if ($order->payment_status == 'canceled') {
 
-            if (isset($request->validated()['products'])) {
-                $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(true, $products_data->products))));
-            }else {
-                $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(false, $order))));
-            }
+            $limitated_stock = $restore_stock_products->insolvent_products($products_data);
 
             if (count($limitated_stock) == 0) {
 
-                if (isset($request->validated()['products'])) {
-                    $purchase_total = 0;
-                    foreach ($request->validated()['products'] as $key => $value) {
-                        $purchase_total = $purchase_total + $value['totalPrice'];
-                    }
-                    $order_data = new UpdateOrderData(null, $purchase_total);
-                    $update_order_action->handle($order_data, $order['code']);
-                }
+                $restore_stock_products->update_order();
 
-                foreach ($order->products as $key => $value) {
-                    /**
-                     * @var Product $product
-                     */
-                    $product = $value->product;
-                    if ($product->stock != 0) {
-                        $update_product_data = new UpdateProductData(
-                            $product->name,
-                            $product->slug,
-                            strval($product->products_category_id),
-                            $product->barcode,
-                            $product->description,
-                            strval($product->price),
-                            $product->unit,
-                            strval($product->stock - $value->quantity),
-                            null,
-                            null,
-                            null,
-                            $product->availability,
-                        );
-                        $update_product_action->handle($update_product_data, strval($product->id), '[]');
-                    } else {
-                        $remove_product_of_order->handle($order->id, $product->id);
-                    }
+                $restore_stock_products->update_orders_products_decrement_stock();
 
-                }
                 $order->pending();
             } else {
                 return Redirect::route('order.create')
@@ -146,7 +106,6 @@ class PaymentController extends Controller
 
     public function process_canceled(
         PlaceToPayPaymentServices $placetopay_payment,
-        UpdateProductAction $update_product_action,
         string $code): RedirectResponse
     {
         $result = $placetopay_payment->getRequestInformation($code);
@@ -155,28 +114,9 @@ class PaymentController extends Controller
          * @var Order $order
          */
         $order = Order::where('code', $code)->first();
-        foreach ($order->products as $key => $value) {
-            /**
-             * @var Product $product
-             */
-            $product = $value->product;
-            $update_product_data = new UpdateProductData(
-                $product->name,
-                $product->slug,
-                strval($product->products_category_id),
-                $product->barcode,
-                $product->description,
-                strval($product->price),
-                $product->unit,
-                strval($product->stock + $value->quantity),
-                null,
-                null,
-                null,
-                $product->availability,
-            );
 
-            $update_product_action->handle($update_product_data, strval($product->id), '[]');
-        }
+        (new RestoreStockProductsService($order, null))
+            ->update_orders_products_increment_stock();
 
         return Redirect::route('showcase.index')->with('success', $result == 'ok' ?  'Payment canceled.' : 'Error.');
     }
