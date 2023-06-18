@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Web\Client\Payment;
 
+use App\Domain\Product\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -22,8 +24,15 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id'                => ['required', 'integer'],
-            'payment_method'    => ['required', 'string'],
+            'id'                        => ['required', 'integer'],
+            'payment_method'            => ['required', 'string'],
+            'products'                  => ['nullable', 'array'],
+            'products.*.id'             => ['nullable', 'integer', Rule::exists(Product::class)],
+            'products.*.name'           => ['nullable', 'string', 'max:100'],
+            'products.*.slug'           => ['nullable', 'string', 'max:100'],
+            'products.*.price'          => ['nullable', 'numeric'],
+            'products.*.quantity'       => ['nullable', 'integer'],
+            'products.*.totalPrice'     => ['nullable', 'numeric'],
         ];
     }
 }

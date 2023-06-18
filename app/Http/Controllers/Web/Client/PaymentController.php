@@ -3,10 +3,21 @@
 namespace App\Http\Controllers\Web\Client;
 
 use App\Domain\Order\Actions\GetProductsByOrderAction;
+use App\Domain\Order\Actions\RemoveProductOfOrder;
+use App\Domain\Order\Actions\UpdateOrderAction;
+use App\Domain\Order\Actions\UpdateOrderHasProductAction;
 use App\Domain\Order\Dtos\StoreOrderData;
+use App\Domain\Order\Dtos\UpdateOrderData;
+use App\Domain\Order\Dtos\UpdateOrderHasProductData;
 use App\Domain\Order\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Domain\Order\Services\PlaceToPayPaymentServices;
+use App\Domain\Order\Services\RestoreStockProductsService;
+use App\Domain\Order\Traits\Cart;
+use App\Domain\Order\Traits\CheckStock;
+use App\Domain\Product\Actions\UpdateProductAction;
+use App\Domain\Product\Dtos\UpdateProductData;
+use App\Domain\Product\Models\Product;
 use App\Http\Requests\Web\Client\Payment\UpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,6 +27,8 @@ use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class PaymentController extends Controller
 {
+    use Cart, CheckStock;
+
     public function show(string $code): HttpFoundationResponse
     {
         /**
@@ -27,7 +40,6 @@ class PaymentController extends Controller
     }
 
     public function update(
-        GetProductsByOrderAction $get_products,
         PlaceToPayPaymentServices $placetopay,
         UpdateRequest $request,
         string $id): RedirectResponse
@@ -36,13 +48,30 @@ class PaymentController extends Controller
          * @var Order $order
          */
         $order = Order::where('id', $id)->first();
-        $products_data = new StoreOrderData(
-            $get_products->handle($order->id),
-            $request->input('payment_method')
-        );
+
+        $restore_stock_products = new RestoreStockProductsService($order, $request);
+
+        $products_data = $restore_stock_products->get_products();
 
         if ($order->payment_status == 'canceled') {
-            $order->pending();
+
+            $limitated_stock = $restore_stock_products->insolvent_products($products_data);
+
+            if (count($limitated_stock) == 0) {
+
+                $restore_stock_products->update_order();
+
+                $restore_stock_products->update_orders_products_decrement_stock();
+
+                $order->pending();
+            } else {
+                return Redirect::route('order.create')
+                    ->with('success', 'Order rejected.')
+                    ->with('cancel', 'Restore order.')
+                    ->with('limitatedStock', json_encode($limitated_stock))
+                    ->with('cartData', json_encode($products_data))
+                    ->with('orderId', $order->id);
+            }
         }
 
         $status = $placetopay->pay(
@@ -53,7 +82,11 @@ class PaymentController extends Controller
         );
 
         if ($status === 200) {
-            return Redirect::route('order.show', $order['id']);
+            return Redirect::route('order.show', $order['id'])
+            ->with('success',
+                isset($request->validated()['products']) ?
+                'Payment link updated.' : ''
+            );
         } else {
             return Redirect::route('payment.error', $status);
         }
@@ -71,9 +104,19 @@ class PaymentController extends Controller
         return Redirect::route('order.show', $order['id'])->with('success', $result == 'ok' ?  'Payment completed.' : 'Payment error.');
     }
 
-    public function process_canceled(PlaceToPayPaymentServices $placetopay_payment, string $code): RedirectResponse
+    public function process_canceled(
+        PlaceToPayPaymentServices $placetopay_payment,
+        string $code): RedirectResponse
     {
         $result = $placetopay_payment->getRequestInformation($code);
+
+        /**
+         * @var Order $order
+         */
+        $order = Order::where('code', $code)->first();
+
+        (new RestoreStockProductsService($order, null))
+            ->update_orders_products_increment_stock();
 
         return Redirect::route('showcase.index')->with('success', $result == 'ok' ?  'Payment canceled.' : 'Error.');
     }

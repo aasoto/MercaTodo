@@ -8,6 +8,7 @@ use Database\Factories\OrderFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -27,6 +28,7 @@ use Illuminate\Database\Query\Builder;
  * @method static Order pending()
  * @method static Order select(...$parameters)
  * @method static OrderQueryBuilder query()
+ * @method Order products()
  */
 class Order extends Model
 {
@@ -103,5 +105,10 @@ class Order extends Model
         $this->update([
             'payment_status' => 'verify_bank'
         ]);
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(OrderHasProduct::class);
     }
 }

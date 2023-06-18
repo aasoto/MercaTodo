@@ -11,25 +11,46 @@ class GetProductsByOrderAction
      * @param string $order_id
      * @return array<mixed>
      */
-    public function handle(string $order_id): array
+    public function handle(string $order_id, bool $has_products, ?array $products): array
     {
-        $products_by_order = OrderHasProduct::select('product_id', 'quantity', 'price')
-            ->where('order_id', $order_id)
-            ->get();
-
         $products_data = array();
 
-        foreach ($products_by_order as $key => $value) {
-            /**
-             * @var Product $product
-             */
-            $product = Product::select('name')->where('id', $value['product_id'])->first();
+        if (!$has_products) {
+            $products_by_order = OrderHasProduct::select('product_id', 'quantity', 'price')
+                ->where('order_id', $order_id)
+                ->get();
 
-            array_push($products_data, [
-                'name' => $product['name'],
-                'quantity' => $value['quantity'],
-                'totalPrice' => $value['quantity'] * $value['price'],
-            ]);
+            foreach ($products_by_order as $key => $value) {
+                /**
+                 * @var Product $product
+                 */
+                $product = Product::where('id', $value['product_id'])->first();
+
+                array_push($products_data, [
+                    'id' => $product['id'],
+                    'name' => $product['name'],
+                    'slug' => $product['slug'],
+                    'quantity' => $value['quantity'],
+                    'price' => $value['price'],
+                    'totalPrice' => $value['quantity'] * $value['price'],
+                ]);
+            }
+        } else {
+            foreach ($products as $key => $value) {
+                /**
+                 * @var Product $product
+                 */
+                $product = Product::where('id', $value['id'])->first();
+
+                array_push($products_data, [
+                    'id' => $product['id'],
+                    'name' => $product['name'],
+                    'slug' => $product['slug'],
+                    'quantity' => $value['quantity'],
+                    'price' => $value['price'],
+                    'totalPrice' => $value['quantity'] * $value['price'],
+                ]);
+            }
         }
 
         return $products_data;

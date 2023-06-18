@@ -61,6 +61,11 @@ class ConsoleTest extends TestCase
             'payment' => [
                 0 => [
                     'reference' => $this->order->code,
+                    'amount' => [
+                        'from' => [
+                            'total' => $this->order->purchase_total,
+                        ]
+                    ]
                 ]
             ]
         ];

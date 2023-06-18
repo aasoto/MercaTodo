@@ -3,10 +3,12 @@
 namespace App\Domain\Order\Models;
 
 use App\Domain\Order\QueryBuilders\OrderHasProductQueryBuilder;
+use App\Domain\Product\Models\Product;
 use Database\Factories\OrderHasProductFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -32,5 +34,15 @@ class OrderHasProduct extends Model
     protected static function newFactory(): Factory
     {
         return OrderHasProductFactory::new();
+    }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

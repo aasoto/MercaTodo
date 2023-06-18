@@ -6,11 +6,12 @@ namespace App\Domain\Order\Dtos;
 class UpdateOrderData
 {
     public function __construct(
-        public string $payment_date,
+        public string|null $payment_date,
+        public string $purchase_total,
     )
     {}
 
-    public static function fromResult(string $date): self
+    public static function fromResult(string $date, string $purchase_total): self
     {
         /**
          * @var int|null $timestamp
@@ -19,6 +20,7 @@ class UpdateOrderData
 
         return new static(
             payment_date: date('Y-m-d H:i:s', $timestamp),
+            purchase_total: $purchase_total,
         );
     }
 }
