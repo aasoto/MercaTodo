@@ -23,9 +23,5 @@ class PaymentMethodSeeder extends Seeder
             'name' => 'Pago mixto',
         ]);
 
-        PaymentMethod::create([
-            'code' => 'RECURRING',
-            'name' => 'Pago recurrente',
-        ]);
     }
 }
