@@ -23,6 +23,7 @@ class Payment
             'reference' => $this->order->code,
             'description' => 'Payment of purchase total',
             'amount' => $this->amount(),
+            'allowPartial' => $this->allowPartial($this->products_order->payment_method),
             'items' => $this->items(),
         ];
     }
@@ -53,5 +54,10 @@ class Payment
             ]);
         }
         return $items;
+    }
+
+    private function allowPartial(string $method): bool
+    {
+        return $method == 'ALLOW_PARTIAL' ? true : false;
     }
 }

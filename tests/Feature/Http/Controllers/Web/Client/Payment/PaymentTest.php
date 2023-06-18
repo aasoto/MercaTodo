@@ -79,6 +79,7 @@ class PaymentTest extends TestCase
 
         $this->patchJson(route('payment.update', $order->getKey()), [
             'id' => $order->getKey(),
+            'payment_method' => 'NORMAL',
         ])->assertRedirectContains('order/'.$order->getKey());
 
         $this->assertEquals($order->url, '');
@@ -117,6 +118,7 @@ class PaymentTest extends TestCase
 
         $this->patchJson(route('payment.update', $order->getKey()), [
             'id' => $order->getKey(),
+            'payment_method' => 'NORMAL',
         ])->assertRedirectContains('order/'.$order->getKey());
 
         $this->assertEquals($order->url, 'https://checkout-co.placetopay.dev/spa/session/0000/0000');
@@ -391,6 +393,7 @@ class PaymentTest extends TestCase
 
         $this->patchJson(route('payment.update', $order->getKey()), [
             'id' => $order->getKey(),
+            'payment_method' => 'NORMAL',
         ])->assertRedirect(route('payment.error', 401));
     }
 
@@ -407,6 +410,7 @@ class PaymentTest extends TestCase
 
         $this->patchJson(route('payment.update', $order->getKey()), [
             'id' => $order->getKey(),
+            'payment_method' => 'NORMAL',
         ])->assertRedirect(route('payment.error', 500));
     }
 
@@ -423,6 +427,7 @@ class PaymentTest extends TestCase
 
         $this->patchJson(route('payment.update', $order->getKey()), [
             'id' => $order->getKey(),
+            'payment_method' => 'NORMAL',
         ])->assertRedirect(route('payment.error', 503));
     }
 
@@ -477,7 +482,7 @@ class PaymentTest extends TestCase
         $mock_response = [
             "requestId" => 0000,
             "status" => [
-                "status" => "APPROVED_PARTIAL",
+                "status" => "APPROVED_PART",
                 "reason" => "AP",
                 "message" => "La petición aprobada parcialmente.",
                 "date" => "2023-06-04T22:01:16-05:00"
@@ -490,5 +495,69 @@ class PaymentTest extends TestCase
 
         $this->get(route('payment.response', $order->code))
             ->assertRedirect(route('order.show', $order->getKey()));
+    }
+
+    public function test_can_report_approval_partial_in_allow_partial_payment(): void
+    {
+        $this->actingAs($this->user);
+        $order = Order::factory()->create([
+            'user_id' => $this->user->getKey(),
+            'url' => 'https://checkout-co.placetopay.dev/spa/session/0000/0000',
+            'request_id' => 0000,
+        ]);
+
+        $mock_response = [
+            "requestId" => 0000,
+            "status" => [
+                "status" => "APPROVED_PARTIAL",
+                "reason" => "P0",
+                "message" => "La petición está parcialmente aprobada",
+                "date" => "2023-06-12T18:24:03-05:00",
+            ]
+        ];
+
+
+        Http::fake([config('placetopay.url').'/*' => Http::response($mock_response)]);
+
+        $this->getJson(route('payment.response', $order->code))
+            ->assertRedirectContains('order/'.$order->getKey());
+
+        $this->assertEquals($order->payment_status, 'pending');
+
+        $order = $order->fresh();
+
+        $this->assertEquals($order->payment_status, 'approved_partial');
+    }
+
+    public function test_can_report_partial_expired_in_allow_partial_payment(): void
+    {
+        $this->actingAs($this->user);
+        $order = Order::factory()->create([
+            'user_id' => $this->user->getKey(),
+            'url' => 'https://checkout-co.placetopay.dev/spa/session/0000/0000',
+            'request_id' => 0000,
+        ]);
+
+        $mock_response = [
+            "requestId" => 0000,
+            "status" => [
+                "status" => "PARTIAL_EXPIRED",
+                "reason" => "PX",
+                "message" => "La petición esta expirada o cancelada y se han realizado pagos",
+                "date" => "2023-06-12T18:24:05-05:00"
+            ]
+        ];
+
+
+        Http::fake([config('placetopay.url').'/*' => Http::response($mock_response)]);
+
+        $this->getJson(route('payment.response', $order->code))
+            ->assertRedirectContains('order/'.$order->getKey());
+
+        $this->assertEquals($order->payment_status, 'pending');
+
+        $order = $order->fresh();
+
+        $this->assertEquals($order->payment_status, 'partial_expired');
     }
 }

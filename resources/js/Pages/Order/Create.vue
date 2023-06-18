@@ -1,16 +1,19 @@
 <script setup>
-import { storeToRefs } from 'pinia';
+import { ref, watch } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
+import { storeToRefs } from 'pinia';
 import { useCartStore } from '@/Store/Cart';
-import { ref } from 'vue';
-import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
+
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
 import InfoButton from '@/Components/Buttons/InfoButton.vue';
 import InputError from '@/Components/InputError.vue';
-import { watch } from 'vue';
+import AlertError from '@/Components/Alerts/AlertError.vue';
 
 const props = defineProps({
     limitatedStock: String,
+    paymentMethods: Object,
     success: String,
 });
 
@@ -34,14 +37,31 @@ const showProduct = (slug) => {
 }
 const formSave = useForm({
     products: order.value,
+    payment_method: '',
 });
 
 watch(order, value => {
     formSave.products = value;
 });
 
+const btnPaymentMethodLabel = ref('Metodo de pago');
+const showAlertPaymentMethod = ref(false);
+
+const setPaymentMethod = (code, name) => {
+    if (code === 'NONE') {
+        formSave.payment_method = '';
+    } else {
+        formSave.payment_method = code;
+    }
+    btnPaymentMethodLabel.value = name;
+}
+
 const saveOrder = () => {
-    formSave.post(route('order.store'));
+    if (formSave.payment_method == '') {
+        showAlertPaymentMethod.value = true;
+    } else {
+        formSave.post(route('order.store'));
+    }
 }
 
 const errorAlert = ref(false);
@@ -85,7 +105,7 @@ const increment = (productId, productQuantity) => {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-10">
+                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg px-10">
                     <div class="flex flex-col justify-center items-center">
                         <div v-if="errorAlert" class="bg-red-200 rounded-md w-full text-red-700 text-center py-3 mt-3">
                             Ha ocurrido un error al agregar este producto {{ errorInfo }}
@@ -95,6 +115,37 @@ const increment = (productId, productQuantity) => {
                         </div>
                         <div v-if="order[0]" class="w-full py-5">
                             <InputError class="mt-2" :message="formSave.errors.products" />
+                            <div class="flex justify-end items-center gap-5">
+                                <div class="relative group">
+                                    <button
+                                        id="dropdownDefaultButton"
+                                        class="w-full text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
+                                        type="button"
+                                    >
+                                        <span v-html="btnPaymentMethodLabel" class="capitalize"></span>
+                                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <!-- Dropdown menu -->
+                                    <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
+                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                            <li>
+                                                <span @click="setPaymentMethod('NONE', 'Metodo de pago')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                    Ninguno
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                            <li v-for="paymentMethod in paymentMethods">
+                                                <span @click="setPaymentMethod(paymentMethod.code, paymentMethod.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
+                                                    {{ paymentMethod.name }}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                             <table class="w-full m-5 rounded-lg">
                                 <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
                                     <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
@@ -206,5 +257,13 @@ const increment = (productId, productQuantity) => {
                 </div>
             </div>
         </div>
+        <AlertError
+            v-if="showAlertPaymentMethod === true"
+            title="Sin metodo de pago"
+            text="Seleccione un metodo de pago"
+            :close="false"
+            :btn-close="true"
+            @click="() => showAlertPaymentMethod = false"
+        />
     </AuthenticatedLayout>
 </template>

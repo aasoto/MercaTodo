@@ -11,7 +11,8 @@ class StoreOrderData
      * @param array<mixed> $products
      */
     public function __construct(
-        public array $products
+        public array $products,
+        public string $payment_method,
     )
     {}
 
@@ -19,6 +20,7 @@ class StoreOrderData
     {
         return new static(
             products: $request->input('products'),
+            payment_method: $request->input('payment_method'),
         );
     }
 }

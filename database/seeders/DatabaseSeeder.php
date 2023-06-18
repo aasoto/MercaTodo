@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ProductCategorySeeder::class,
             UnitSeeder::class,
             ProductSeeder::class,
+            PaymentMethodSeeder::class,
             OrderSeeder::class,
             OrderHasProductSeeder::class,
         ]);

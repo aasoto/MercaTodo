@@ -36,7 +36,10 @@ class PaymentController extends Controller
          * @var Order $order
          */
         $order = Order::where('id', $id)->first();
-        $products_data = new StoreOrderData($get_products->handle($order->id));
+        $products_data = new StoreOrderData(
+            $get_products->handle($order->id),
+            $request->input('payment_method')
+        );
 
         if ($order->payment_status == 'canceled') {
             $order->pending();

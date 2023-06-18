@@ -27,6 +27,12 @@ class LogsReportStatus
             case 'REJECTED':
                 $this->canceled();
                 break;
+            case 'APPROVED_PARTIAL':
+                $this->approved_partial();
+                break;
+            case 'PARTIAL_EXPIRED':
+                $this->partial_expired();
+                break;
             default:
                 $this->default_status($this->response->json()['status']['status']);
                 break;
@@ -53,6 +59,22 @@ class LogsReportStatus
     {
         Log::channel('payment_webcheckout')
             ->error('['.$this->response->status().']['.$this->mode.'][REJECTED] Payment has been rejected for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [
+                'response' => json_decode($this->response->body(), true),
+            ]);
+    }
+
+    private function approved_partial(): void
+    {
+        Log::channel('payment_webcheckout')
+            ->warning('['.$this->response->status().']['.$this->mode.'][APPROVED_PARTIAL] for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [
+                'response' => json_decode($this->response->body(), true),
+            ]);
+    }
+
+    private function partial_expired(): void
+    {
+        Log::channel('payment_webcheckout')
+            ->error('['.$this->response->status().']['.$this->mode.'][PARTIAL_EXPIRED] for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [
                 'response' => json_decode($this->response->body(), true),
             ]);
     }
