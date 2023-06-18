@@ -47,7 +47,7 @@ class OrderHasProductsModelTest extends TestCase
 
         $this->order = Order::factory()->create([
             'user_id' => $this->user->id,
-            'purchase_total' => $this->product_1->price + $this->product_2->price,
+            'purchase_total' => round($this->product_1->price + $this->product_2->price, 2),
         ]);
 
         OrderHasProduct::factory()->create([
