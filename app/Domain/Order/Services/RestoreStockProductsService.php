@@ -31,9 +31,9 @@ class RestoreStockProductsService
         $get_products = new GetProductsByOrderAction();
 
         if (isset($this->request->validated()['products'])) {
-            $products_data = new StoreOrderData($get_products->handle($this->order->id, true, $this->request->validated()['products']));
+            $products_data = new StoreOrderData($get_products->handle($this->order->id, true, $this->request->validated()['products']), $this->request->validated()['payment_method']);
         } else {
-            $products_data = new StoreOrderData($get_products->handle($this->order->id, false, null));
+            $products_data = new StoreOrderData($get_products->handle($this->order->id, false, null), $this->request->validated()['payment_method']);
         }
 
         return $products_data;
@@ -42,9 +42,9 @@ class RestoreStockProductsService
     public function insolvent_products(StoreOrderData $products_data): array
     {
         if (isset($this->request->validated()['products'])) {
-            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(true, $products_data->products))));
+            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(true, $products_data->products), $this->request->validated()['payment_method'])));
         }else {
-            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(false, $this->order))));
+            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(false, $this->order), $this->request->validated()['payment_method'])));
         }
 
         return $limitated_stock;

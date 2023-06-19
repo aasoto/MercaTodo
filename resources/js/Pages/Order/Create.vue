@@ -1,9 +1,8 @@
 <script setup>
 import { reactive, ref, watch } from 'vue';
+import { Head, router, useForm } from '@inertiajs/vue3';
 
 import { storeToRefs } from 'pinia';
-import { Head, router, useForm } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useCartStore } from '@/Store/Cart';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

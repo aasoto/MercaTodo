@@ -84,6 +84,7 @@ class RestoreStockProductsTest extends TestCase
 
         $this->actingAs($this->user)->patchJson(route('payment.update', $this->order->getKey()), [
             'id' => $this->order->getKey(),
+            'payment_method' => 'NORMAL',
         ])->assertRedirectContains('order/'.$this->order->getKey());
 
         $this->assertEquals($this->order->url, 'https://checkout-co.placetopay.dev/spa/session/1213/1234');
@@ -126,6 +127,7 @@ class RestoreStockProductsTest extends TestCase
 
         $this->actingAs($this->user)->patchJson(route('payment.update', $this->order->getKey()), [
             'id' => $this->order->getKey(),
+            'payment_method' => 'NORMAL',
         ])->assertRedirectContains(route('order.create'))
             ->assertSessionHasAll([
                 'success' => 'Order rejected.',
@@ -178,6 +180,7 @@ class RestoreStockProductsTest extends TestCase
 
         $this->actingAs($this->user)->patchJson(route('payment.update', $this->order->getKey()), [
             'id' => $this->order->getKey(),
+            'payment_method' => 'NORMAL',
             'products' => $cart,
         ])->assertRedirectContains('order/'.$this->order->getKey());
 
