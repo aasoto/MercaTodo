@@ -5,6 +5,9 @@ import { Head, router, useForm } from '@inertiajs/vue3';
 import { storeToRefs } from 'pinia';
 import { useCartStore } from '@/Store/Cart';
 
+import { CheckIcon, EyeIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { ChevronDownIcon, MinusIcon, PlusIcon } from '@heroicons/vue/24/solid';
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 import InfoButton from '@/Components/Buttons/InfoButton.vue';
@@ -148,9 +151,7 @@ const increment = (productId, productQuantity) => {
                                         type="button"
                                     >
                                         <span v-html="btnPaymentMethodLabel" class="capitalize"></span>
-                                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
+                                        <ChevronDownIcon class="w-4 h-4 ml-2"/>
                                     </button>
                                     <!-- Dropdown menu -->
                                     <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
@@ -206,14 +207,7 @@ const increment = (productId, productQuantity) => {
                                         </td>
                                         <td class="px-3 py-3 text-black dark:text-white flex justify-center items-center gap-3">
                                             <button @click="decrement(item.id, item.quantity)" class="rounded-md p-1 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24"
-                                                    fill="currentColor"
-                                                    class="w-6 h-6"
-                                                >
-                                                    <path fill-rule="evenodd" d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
-                                                </svg>
+                                                <MinusIcon class="w-6 h-6"/>
                                             </button>
                                             <span class="font-bold text-lg text-gray-900 dark:text-white">
                                                 <div>
@@ -226,14 +220,7 @@ const increment = (productId, productQuantity) => {
                                                 </template>
                                             </span>
                                             <button @click="increment(item.id, item.quantity)" class="rounded-md p-1 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24"
-                                                    fill="currentColor"
-                                                    class="w-6 h-6"
-                                                >
-                                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
-                                                </svg>
+                                                <PlusIcon class="w-6 h-6"/>
                                             </button>
                                         </td>
                                         <td class="px-3 py-3 text-black dark:text-white text-right">
@@ -241,15 +228,10 @@ const increment = (productId, productQuantity) => {
                                         </td>
                                         <td class="px-3 py-3 text-black dark:text-white flex justify-center items-center gap-2">
                                             <button @click="showProduct(item.slug)" class="bg-blue-600 rounded-md text-white p-1">
-                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
+                                                <EyeIcon class="w-4 h-4"/>
                                             </button>
                                             <button @click="remove(item.id)" class="bg-red-600 rounded-md text-white p-1">
-                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                </svg>
+                                                <TrashIcon class="w-4 h-4"/>
                                             </button>
                                         </td>
                                     </tr>
@@ -268,15 +250,11 @@ const increment = (productId, productQuantity) => {
                             </table>
                             <div class="flex justify-end items-center gap-5">
                                 <InfoButton v-if="!cancel" @click="saveOrder()" class="flex gap-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
-                                    </svg>
+                                    <CheckIcon class="w-6 h-6"/>
                                     Confirmar orden
                                 </InfoButton>
                                 <InfoButton v-else @click="updateOrder()" class="flex gap-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
-                                    </svg>
+                                    <CheckIcon class="w-6 h-6"/>
                                     Actualizar orden
                                 </InfoButton>
                             </div>

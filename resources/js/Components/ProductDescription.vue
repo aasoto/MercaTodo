@@ -1,10 +1,13 @@
 <script setup>
 import { ref } from 'vue';
+import { Link } from '@inertiajs/vue3';
+
 import { storeToRefs } from 'pinia';
 import { useSignedRoleStore } from '@/Store/SignedRole';
 import { useCartStore } from "@/Store/Cart";
-import AlertSuccess from './Alerts/AlertSuccess.vue';
-import { Link } from '@inertiajs/vue3';
+
+import { TrashIcon } from '@heroicons/vue/24/outline';
+import { MinusIcon, PlusIcon, ShoppingCartIcon } from '@heroicons/vue/24/solid';
 
 // Props
 const props = defineProps({
@@ -177,14 +180,7 @@ const removeFromCart = () => {
                                         @click="decrement()"
                                         class="rounded-md px-3 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200"
                                     >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="currentColor"
-                                            class="w-6 h-6"
-                                        >
-                                            <path fill-rule="evenodd" d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
-                                        </svg>
+                                        <MinusIcon class="w-6 h-6"/>
                                     </button>
                                     <h3 class="font-bold text-3xl mx-3">
                                         {{ quantity }}
@@ -193,14 +189,7 @@ const removeFromCart = () => {
                                         @click="increment()"
                                         class="rounded-md px-3 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-transparent text-gray-900 dark:text-white font-bold border-none dark:border border-transparent dark:border-white scale-100 hover:scale-105 transition duration-200"
                                     >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="currentColor"
-                                            class="w-6 h-6"
-                                        >
-                                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
-                                        </svg>
+                                        <PlusIcon class="w-6 h-6"/>
                                     </button>
                                 </div>
                             </div>
@@ -217,14 +206,10 @@ const removeFromCart = () => {
                                         Añadir al carrito
                                     </template>
                                 </span>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                    <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
-                                </svg>
+                                <ShoppingCartIcon class="w-6 h-6"/>
                             </button>
                             <button v-if="find(product.id)" @click="removeFromCart()" class="rounded-md px-5 py-3 bg-gray-200 text-gray-800 scale-100 hover:scale-105 transition duration-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                </svg>
+                                <TrashIcon class="w-6 h-6"/>
                             </button>
                         </div>
                         <div v-if="success" class="bg-green-200 rounded-md w-full text-green-700 text-center py-3">
