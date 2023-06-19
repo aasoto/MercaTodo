@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Domain\Order\Models\Order;
+use App\Domain\Order\Services\Contracts\Placetopay\Endpoints;
 use App\Domain\Order\Services\Entities\Placetopay\Authentication;
 use App\Domain\Order\Services\Entities\Placetopay\ReportStatus;
 use Illuminate\Console\Command;
@@ -40,7 +41,7 @@ class consultSession extends Command
          * @var Order $order
          */
         foreach ($orders as $order) {
-            $response = Http::post(config('placetopay.url').config('placetopay.route.api').$order->request_id, [
+            $response = Http::post(config('placetopay.url').Endpoints::API_SESSION.$order->request_id, [
                 'auth' => $authentication->getAuth(),
             ]);
 
