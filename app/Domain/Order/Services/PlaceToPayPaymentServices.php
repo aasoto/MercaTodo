@@ -6,6 +6,7 @@ use App\Domain\Order\Actions\GetOrderAction;
 use App\Domain\Order\Actions\OrderUpdateAction;
 use App\Domain\Order\Dtos\StoreOrderData;
 use App\Domain\Order\Models\Order;
+use App\Domain\Order\Services\Contracts\Placetopay\Endpoints;
 use App\Domain\Order\Services\Entities\Placetopay\Authentication;
 use App\Domain\Order\Services\Entities\Placetopay\Buyer;
 use App\Domain\Order\Services\Entities\Placetopay\LogsPayment;
@@ -28,7 +29,7 @@ class PlaceToPayPaymentServices
         $this->ipAddress = $ipAddress;
         $this->userAgent = $userAgent;
 
-        $response = Http::post(config('placetopay.url').config('placetopay.route.api'),
+        $response = Http::post(config('placetopay.url').Endpoints::API_SESSION,
                 $this->createSession($order, $products_order)
             );
 
@@ -74,7 +75,7 @@ class PlaceToPayPaymentServices
         $order = GetOrderAction::handle($code);
         $authentication = new Authentication();
 
-        $response = Http::post(config('placetopay.url').config('placetopay.route.api').$order->request_id, [
+        $response = Http::post(config('placetopay.url').Endpoints::API_SESSION.$order->request_id, [
             'auth' => $authentication->getAuth()
         ]);
 

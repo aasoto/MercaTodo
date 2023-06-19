@@ -16,6 +16,7 @@ class Buyer
     {
         return [
             'document' => $this->user->number_document,
+            'documentType' => $this->user->type_document,
             'name' => $this->user->first_name.' '.$this->user->second_name,
             'surname' => $this->user->surname.' '.$this->user->second_surname,
             'mobile' => $this->user->phone,
