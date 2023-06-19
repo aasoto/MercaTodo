@@ -19,18 +19,38 @@ class TypeDocumentSeeder extends Seeder
         ]);
 
         TypeDocument::create([
-            'code' => 'PAS',
+            'code' => 'CE',
+            'name' => 'Cédula de extranjería'
+        ]);
+
+        TypeDocument::create([
+            'code' => 'TI',
+            'name' => 'Tarjeta de identidad'
+        ]);
+
+        TypeDocument::create([
+            'code' => 'NIT',
+            'name' => 'Número de de Identificación Tributaria'
+        ]);
+
+        TypeDocument::create([
+            'code' => 'RUT',
+            'name' => 'Registro único tributario'
+        ]);
+
+        TypeDocument::create([
+            'code' => 'PPN',
             'name' => 'Pasaporte'
         ]);
 
         TypeDocument::create([
-            'code' => 'CE',
-            'name' => 'Cédula de Extranjería'
+            'code' => 'TAX',
+            'name' => 'TAX'
         ]);
 
         TypeDocument::create([
-            'code' => 'O',
-            'name' => 'Otro'
+            'code' => 'LIC',
+            'name' => 'Labeler Identification Code'
         ]);
     }
 }
