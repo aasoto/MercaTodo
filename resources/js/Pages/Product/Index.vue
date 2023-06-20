@@ -11,6 +11,8 @@ import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 import AlertQuestion from '@/Components/Alerts/AlertQuestion.vue';
 import LoadingModal from '@/Components/LoadingModal.vue';
 import NotFoundMessage from '@/Components/NotFoundMessage.vue';
+import { CheckIcon, ChevronDownIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+import { EyeIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 const props = defineProps({
     filters: Object,
@@ -118,9 +120,7 @@ const getResults = () => {
                         type="button"
                     >
                         Gestión de dependencias
-                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
+                        <ChevronDownIcon class="w-4 h-4 ml-2"/>
                     </button>
                     <!-- Dropdown menu -->
                     <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-80 dark:bg-gray-700 transition duration-200">
@@ -171,9 +171,7 @@ const getResults = () => {
                                     type="button"
                                 >
                                     <span v-html="btnCategoryText" class="capitalize"></span>
-                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
+                                    <ChevronDownIcon class="w-4 h-4 ml-2"/>
                                 </button>
                                 <!-- Dropdown menu -->
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
@@ -199,9 +197,7 @@ const getResults = () => {
                                     type="button"
                                 >
                                     <span v-html="btnAvailabilityText"></span>
-                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
+                                    <ChevronDownIcon class="w-4 h-4 ml-2"/>
                                 </button>
                                 <!-- Dropdown menu -->
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
@@ -267,32 +263,20 @@ const getResults = () => {
                                         {{ product.stock }}
                                     </td>
                                     <td class="px-3 py-3">
-                                        <svg v-if="product.availability" class="w-8 h-8 text-green-600 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
-                                        </svg>
-                                        <svg v-else class="w-8 h-8 text-red-600 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
-                                        </svg>
+                                        <CheckIcon v-if="product.availability" class="w-8 h-8 text-green-600 mx-auto"/>
+                                        <XMarkIcon v-else class="w-8 h-8 text-red-600 mx-auto"/>
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white flex justify-center items-center gap-2">
                                         <button @click="showProduct(product.slug)" class="bg-blue-600 rounded-md text-white p-1">
-                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
+                                            <EyeIcon class="w-4 h-4"/>
                                         </button>
                                         <Link :href="route('product.edit', product.slug)">
                                             <button class="bg-yellow-400 rounded-md text-black p-1">
-                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
-                                                    <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
-                                                </svg>
+                                                <PencilSquareIcon class="w-4 h-4"/>
                                             </button>
                                         </Link>
                                         <button @click="showAlertDelete(product.slug)" class="bg-red-600 rounded-md text-white p-1">
-                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                            </svg>
+                                            <TrashIcon class="w-4 h-4"/>
                                         </button>
                                     </td>
                                 </tr>

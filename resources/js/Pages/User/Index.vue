@@ -1,11 +1,15 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { ref, watch } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+
+import { ChevronDownIcon, PencilSquareIcon } from '@heroicons/vue/24/solid';
+
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
+import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
+import NotFoundMessage from '@/Components/NotFoundMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
-import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
-import { ref, watch } from 'vue';
-import NotFoundMessage from '@/Components/NotFoundMessage.vue';
 
 const props = defineProps({
     filters: Object,
@@ -57,9 +61,7 @@ const setEnabled = (value) => {
                         type="button"
                     >
                         Gestión de dependencias
-                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
+                        <ChevronDownIcon class="w-4 h-4 ml-2"/>
                     </button>
                     <!-- Dropdown menu -->
                     <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-80 dark:bg-gray-700 transition duration-200">
@@ -119,9 +121,7 @@ const setEnabled = (value) => {
                                     <span>
                                         Habilitado
                                     </span>
-                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
+                                    <ChevronDownIcon class="w-4 h-4 ml-2"/>
                                 </button>
                                 <!-- Dropdown menu -->
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full md:w-44 dark:bg-gray-700 transition duration-200">
@@ -148,9 +148,7 @@ const setEnabled = (value) => {
                                     <span>
                                         Rol
                                     </span>
-                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
+                                    <ChevronDownIcon class="w-4 h-4 ml-2"/>
                                 </button>
                                 <!-- Dropdown menu -->
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full md:w-44 dark:bg-gray-700 transition duration-200">
@@ -232,10 +230,7 @@ const setEnabled = (value) => {
                                     <td class="px-3 py-3 text-black dark:text-white flex justify-center items-center">
                                         <Link :href="route('user.edit', user.id)">
                                             <button class="bg-yellow-400 rounded-md text-black p-1">
-                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
-                                                    <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
-                                                </svg>
+                                                <PencilSquareIcon class="w-4 h-4"/>
                                             </button>
                                         </Link>
                                     </td>
