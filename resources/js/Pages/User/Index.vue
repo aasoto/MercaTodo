@@ -11,6 +11,7 @@ import BasicBodyPage from '@/Components/Body/BasicBodyPage.vue';
 import BasicTable from '@/Components/Tables/BasicTable.vue';
 import BtnSmWarning from "@/Components/Buttons/BtnSmWarning.vue";
 import DropdownButtonStrict from '@/Components/Buttons/DropdownButtonStrict.vue';
+import DropdownLink from '@/Components/Buttons/DropdownLink.vue';
 import NotFoundMessage from '@/Components/NotFoundMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
@@ -63,31 +64,16 @@ const tableTitles = ['Num. documento', 'Nombres', 'Correo electronico', 'Ciudad'
                 <TitlePage>
                     Listado de usuarios
                 </TitlePage>
-                <DropdownButtonStrict btn-label="Gestión de dependencias">
-                    <li>
-                        <Link
-                            :href="route('city.index')"
-                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer"
-                        >
-                            Ciudades
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            :href="route('state.index')"
-                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer"
-                        >
-                            Estados
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            :href="route('type_document.index')"
-                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-                        >
-                            Tipo de documento
-                        </Link>
-                    </li>
+                <DropdownButtonStrict btn-label="Gestión de dependencias" class="col-span-1">
+                    <DropdownLink :href="route('city.index')">
+                        Ciudades
+                    </DropdownLink>
+                    <DropdownLink :href="route('state.index')">
+                        Estados
+                    </DropdownLink>
+                    <DropdownLink :href="route('type_document.index')">
+                        Tipo de documento
+                    </DropdownLink>
                 </DropdownButtonStrict>
             </div>
         </template>

@@ -6,7 +6,7 @@ const props = defineProps({
 });
 </script>
 <template>
-    <div class="col-span-1 relative group">
+    <div class="relative group">
         <button
             id="dropdownDefaultButton"
             class="w-full text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"

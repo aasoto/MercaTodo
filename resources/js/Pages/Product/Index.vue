@@ -5,14 +5,26 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
-import Pagination from '@/Components/Pagination.vue';
-import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
+import { EyeIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { CheckIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+
 import AlertQuestion from '@/Components/Alerts/AlertQuestion.vue';
+import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
+import BasicTable from '@/Components/Tables/BasicTable.vue';
+import BasicBodyPage from '@/Components/Body/BasicBodyPage.vue';
+import BtnSmDanger from '@/Components/Buttons/BtnSmDanger.vue';
+import BtnSmPrimary from '@/Components/Buttons/BtnSmPrimary.vue';
+import BtnSmWarning from '@/Components/Buttons/BtnSmWarning.vue';
+import DropdownButtonStrict from '@/Components/Buttons/DropdownButtonStrict.vue';
+import DropdownItem from '@/Components/Buttons/DropdownItem.vue';
+import DropdownLink from '@/Components/Buttons/DropdownLink.vue';
 import LoadingModal from '@/Components/LoadingModal.vue';
 import NotFoundMessage from '@/Components/NotFoundMessage.vue';
-import { CheckIcon, ChevronDownIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/solid';
-import { EyeIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import Pagination from '@/Components/Pagination.vue';
+import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
+import TableCol from '@/Components/Tables/Basic/TableCol.vue';
+import TableRow from '@/Components/Tables/Basic/TableRow.vue';
+import TitlePage from '@/Components/TitlePage.vue';
 
 const props = defineProps({
     filters: Object,
@@ -34,7 +46,6 @@ const resetAlertDelete = () => {
 const showAlertDelete = (slug) => {
     alertDelete.value = true;
     form.slug = slug;
-    console.log(alertDelete.value, form.slug);
 }
 
 const showProduct = (slug) => {
@@ -43,7 +54,6 @@ const showProduct = (slug) => {
 }
 
 const deleteProduct = () => {
-    console.log(form.slug);
     form.delete(route('product.destroy', form.slug));
 }
 
@@ -103,6 +113,8 @@ const getResults = () => {
         replace: true,
     });
 }
+
+const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Habilitado', 'Acciones'];
 </script>
 
 <template>
@@ -110,208 +122,98 @@ const getResults = () => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                <TitlePage>
                     Listado de productos
-                </h2>
-                <div class="relative group col-span-2">
-                    <button
-                        id="dropdownDefaultButton"
-                        class="w-80 text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
-                        type="button"
-                    >
-                        Gestión de dependencias
-                        <ChevronDownIcon class="w-4 h-4 ml-2"/>
-                    </button>
-                    <!-- Dropdown menu -->
-                    <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-80 dark:bg-gray-700 transition duration-200">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                            <li>
-                                <Link
-                                    :href="route('product_category.index')"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer"
-                                >
-                                    Categorías
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    :href="route('unit.index')"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer"
-                                >
-                                    Unidades
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                </TitlePage>
+                <DropdownButtonStrict btn-label="Gestión de dependencias">
+                    <DropdownLink :href="route('product_category.index')">
+                        Categorías
+                    </DropdownLink>
+                    <DropdownLink :href="route('unit.index')">
+                        Unidades
+                    </DropdownLink>
+                </DropdownButtonStrict>
             </div>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-10">
-                    <div class="flex flex-col justify-center items-center">
-                        <div class="w-full mt-5 grid grid-cols-12 gap-4">
-                            <Link :href="route('product.create')" class="col-span-3">
-                                <SuccessButton class="w-full">Agregar productos</SuccessButton>
-                            </Link>
-                            <div class="col-span-5">
-                                <input
-                                    v-model="search"
-                                    type="text"
-                                    class="w-full px-5 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
-                                    placeholder="Buscar..."
-                                >
-                            </div>
-                            <div class="relative group col-span-2">
-
-                                <button
-                                    id="dropdownDefaultButton"
-                                    class="text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex items-center shadow-none group-hover:shadow transition duration-200"
-                                    type="button"
-                                >
-                                    <span v-html="btnCategoryText" class="capitalize"></span>
-                                    <ChevronDownIcon class="w-4 h-4 ml-2"/>
-                                </button>
-                                <!-- Dropdown menu -->
-                                <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
-                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                        <li>
-                                            <span @click="setCategory()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                                Todas
-                                            </span>
-                                        </li>
-                                        <li v-for="product_category in products_categories">
-                                            <span @click="setCategory(product_category.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                                {{ product_category.name }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="relative group col-span-2">
-
-                                <button
-                                    id="dropdownDefaultButton"
-                                    class="text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none w-44 px-5 py-3 text-center inline-flex items-center shadow-none group-hover:shadow transition duration-200"
-                                    type="button"
-                                >
-                                    <span v-html="btnAvailabilityText"></span>
-                                    <ChevronDownIcon class="w-4 h-4 ml-2"/>
-                                </button>
-                                <!-- Dropdown menu -->
-                                <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-44 dark:bg-gray-700 transition duration-200">
-                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                        <li>
-                                            <span @click="setAvailability()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                                Todos
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span @click="setAvailability('enabled')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                                Habilitado
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span @click="setAvailability('disabled')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                                Inhabilitado
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <table v-if="products.data.length > 0" class="w-full m-5 rounded-lg">
-                            <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
-                                <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
-                                    Articulo
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Categoría
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Precio
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Unidad
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Stock
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Habilitado
-                                </th>
-                                <th class="rounded-tr-lg py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Acciones
-                                </th>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b border-gray-400" v-for="product in products.data">
-                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ product.name }}
-                                    </td>
-                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ product.category }}
-                                    </td>
-                                    <td class="px-3 py-3 text-black dark:text-white text-right">
-                                        {{ product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
-                                    </td>
-                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ product.unit }}
-                                    </td>
-                                    <td class="px-3 py-3 text-black dark:text-white">
-                                        {{ product.stock }}
-                                    </td>
-                                    <td class="px-3 py-3">
-                                        <CheckIcon v-if="product.availability" class="w-8 h-8 text-green-600 mx-auto"/>
-                                        <XMarkIcon v-else class="w-8 h-8 text-red-600 mx-auto"/>
-                                    </td>
-                                    <td class="px-3 py-3 text-black dark:text-white flex justify-center items-center gap-2">
-                                        <button @click="showProduct(product.slug)" class="bg-blue-600 rounded-md text-white p-1">
-                                            <EyeIcon class="w-4 h-4"/>
-                                        </button>
-                                        <Link :href="route('product.edit', product.slug)">
-                                            <button class="bg-yellow-400 rounded-md text-black p-1">
-                                                <PencilSquareIcon class="w-4 h-4"/>
-                                            </button>
-                                        </Link>
-                                        <button @click="showAlertDelete(product.slug)" class="bg-red-600 rounded-md text-white p-1">
-                                            <TrashIcon class="w-4 h-4"/>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-                            <tfoot class="bg-gray-300 dark:bg-gray-700 rounded-b-lg">
-                                <th class="rounded-bl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
-                                    Articulo
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Categoría
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Precio
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Unidad
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Stock
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Habilitado
-                                </th>
-                                <th class="rounded-br-lg py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Acciones
-                                </th>
-                            </tfoot>
-                        </table>
-                        <NotFoundMessage v-else class="m-5"/>
-                        <Pagination class="my-6" :links="products.links" />
+        <BasicBodyPage>
+            <div class="flex flex-col justify-center items-center">
+                <div class="w-full mt-5 grid grid-cols-12 gap-4">
+                    <Link :href="route('product.create')" class="col-span-3">
+                        <SuccessButton class="w-full">Agregar productos</SuccessButton>
+                    </Link>
+                    <div class="col-span-5">
+                        <input
+                            v-model="search"
+                            type="text"
+                            class="w-full px-5 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            placeholder="Buscar..."
+                        >
                     </div>
+                    <DropdownButtonStrict :btn-label="btnCategoryText" class="col-span-2">
+                        <DropdownItem @click="setCategory()">
+                            Todas
+                        </DropdownItem>
+                        <DropdownItem
+                            v-for="product_category in products_categories"
+                            @click="setCategory(product_category.name)"
+                            :key="product_category.id"
+                        >
+                            {{ product_category.name }}
+                        </DropdownItem>
+                    </DropdownButtonStrict>
+                    <DropdownButtonStrict :btn-label="btnAvailabilityText" class="col-span-2">
+                        <DropdownItem @click="setAvailability()">
+                            Todas
+                        </DropdownItem>
+                        <DropdownItem @click="setAvailability('enabled')">
+                            Habilitado
+                        </DropdownItem>
+                        <DropdownItem @click="setAvailability('disabled')">
+                            Inhabilitado
+                        </DropdownItem>
+                    </DropdownButtonStrict>
                 </div>
+                <BasicTable v-if="products.data.length > 0" :titles="tableTitles">
+                    <TableRow v-for="product in products.data">
+                        <TableCol class="capitalize">
+                            {{ product.name }}
+                        </TableCol>
+                        <TableCol class="capitalize">
+                            {{ product.category }}
+                        </TableCol>
+                        <TableCol class="text-right">
+                            {{ product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
+                        </TableCol>
+                        <TableCol class="capitalize">
+                            {{ product.unit }}
+                        </TableCol>
+                        <TableCol>
+                            {{ product.stock }}
+                        </TableCol>
+                        <TableCol>
+                            <CheckIcon v-if="product.availability" class="w-8 h-8 text-green-600 mx-auto"/>
+                            <XMarkIcon v-else class="w-8 h-8 text-red-600 mx-auto"/>
+                        </TableCol>
+                        <TableCol class="flex justify-center items-center gap-2">
+                            <BtnSmPrimary @click="showProduct(product.slug)">
+                                <EyeIcon class="w-4 h-4"/>
+                            </BtnSmPrimary>
+                            <Link :href="route('product.edit', product.slug)">
+                                <BtnSmWarning>
+                                    <PencilSquareIcon class="w-4 h-4"/>
+                                </BtnSmWarning>
+                            </Link>
+                            <BtnSmDanger @click="showAlertDelete(product.slug)">
+                                <TrashIcon class="w-4 h-4"/>
+                            </BtnSmDanger>
+                        </TableCol>
+                    </TableRow>
+                </BasicTable>
+                <NotFoundMessage v-else class="m-5"/>
+                <Pagination class="my-6" :links="products.links" />
             </div>
-        </div>
+        </BasicBodyPage>
         <AlertSuccess
             v-if="success === 'Product created.'"
             title="¡Bien Hecho!"
