@@ -188,7 +188,7 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                         <TableCol class="capitalize">
                             {{ product.unit }}
                         </TableCol>
-                        <TableCol>
+                        <TableCol class="text-center">
                             {{ product.stock }}
                         </TableCol>
                         <TableCol>
