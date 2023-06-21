@@ -6,14 +6,17 @@ import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { useSignedRoleStore } from '@/Store/SignedRole';
 import { useCartStore } from '@/Store/Cart';
 
-import { ChevronDownIcon, ShoppingCartIcon } from '@heroicons/vue/24/solid';
+import { ShoppingCartIcon } from '@heroicons/vue/24/solid';
 
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import Pagination from '@/Components/Pagination.vue';
-import NotFoundMessage from "@/Components/NotFoundMessage.vue";
 import AlertError from '@/Components/Alerts/AlertError.vue';
 import AlertWarning from '@/Components/Alerts/AlertWarning.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import DropdownButtonFlexible from '@/Components/Buttons/DropdownButtonFlexible.vue';
+import DropdownItem from '@/Components/Buttons/DropdownItem.vue';
+import DropdownItemBox from '@/Components/Buttons/DropdownItemBox.vue';
+import NotFoundMessage from "@/Components/NotFoundMessage.vue";
+import Pagination from '@/Components/Pagination.vue';
+import TitlePage from '@/Components/TitlePage.vue';
 
 const props = defineProps({
     filters: Object,
@@ -100,9 +103,9 @@ const getResults = () => {
         <template #header>
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div class="col-span-1 flex justify-center items-center">
-                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    <TitlePage>
                         Vitrina de productos
-                    </h2>
+                    </TitlePage>
                 </div>
                 <div class="col-span-2">
                     <input
@@ -112,21 +115,21 @@ const getResults = () => {
                         placeholder="Buscar..."
                     >
                 </div>
-                <DropdownButtonFlexible :btn-label="btnCategoryLabel">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                        <li>
-                            <span @click="setCategory('Categorías')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                Ninguna
-                            </span>
-                        </li>
-                    </ul>
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                        <li v-for="product_category in products_categories">
-                            <span @click="setCategory(product_category.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                {{ product_category.name }}
-                            </span>
-                        </li>
-                    </ul>
+                <DropdownButtonFlexible :btn-label="btnCategoryLabel" class="col-span-1">
+                    <DropdownItemBox>
+                        <DropdownItem @click="setCategory('Categorías')">
+                            Ninguna
+                        </DropdownItem>
+                    </DropdownItemBox>
+                    <DropdownItemBox>
+                        <DropdownItem
+                            v-for="product_category in products_categories"
+                            @click="setCategory(product_category.name)"
+                            :key="product_category.id"
+                        >
+                            {{ product_category.name }}
+                        </DropdownItem>
+                    </DropdownItemBox>
                 </DropdownButtonFlexible>
 
                 <div class="col-span-1 flex justify-center items-center gap-2">
