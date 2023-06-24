@@ -4,6 +4,7 @@ use App\Http\Controllers\Web\Admin\CityController;
 use App\Http\Controllers\Web\Admin\DashboardController;
 use App\Http\Controllers\Web\Admin\ProductCategoryController;
 use App\Http\Controllers\Web\Admin\ProductController;
+use App\Http\Controllers\Web\Admin\ProductExportController;
 use App\Http\Controllers\Web\Admin\StateController;
 use App\Http\Controllers\Web\Admin\TypeDocumentController;
 use App\Http\Controllers\Web\Admin\UnitController;
@@ -102,6 +103,7 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/product', [ProductController::class, 'create'])->name('product.create');
         Route::post('/product', [ProductController::class, 'store'])->name('product.store');
+        Route::get('/product/export', ProductExportController::class)->name('product.export');
         Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
         Route::get('/product/edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
         Route::patch('/product/edit/{id}/{files}', [ProductController::class, 'update'])->name('product.update');

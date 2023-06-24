@@ -25,6 +25,7 @@ import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import TableCol from '@/Components/Tables/Basic/TableCol.vue';
 import TableRow from '@/Components/Tables/Basic/TableRow.vue';
 import TitlePage from '@/Components/TitlePage.vue';
+import PrimaryButton from '@/Components/Buttons/PrimaryButton.vue';
 
 const props = defineProps({
     filters: Object,
@@ -138,11 +139,16 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
 
         <BasicBodyPage>
             <div class="flex flex-col justify-center items-center">
-                <div class="w-full mt-5 grid grid-cols-12 gap-4">
-                    <Link :href="route('product.create')" class="col-span-3">
+                <div class="w-full flex justify-between items-center mt-5 gap-5">
+                    <Link :href="route('product.create')" class="w-64">
                         <SuccessButton class="w-full">Agregar productos</SuccessButton>
                     </Link>
-                    <div class="col-span-5">
+                    <Link :href="route('product.export')" class="w-64">
+                        <PrimaryButton class="w-full">Exportar productos</PrimaryButton>
+                    </Link>
+                </div>
+                <div class="w-full mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="col-span-2">
                         <input
                             v-model="search"
                             type="text"
@@ -150,7 +156,7 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                             placeholder="Buscar..."
                         >
                     </div>
-                    <DropdownButtonStrict :btn-label="btnCategoryText" class="col-span-2">
+                    <DropdownButtonStrict :btn-label="btnCategoryText" class="col-span-1">
                         <DropdownItem @click="setCategory()">
                             Todas
                         </DropdownItem>
@@ -162,7 +168,7 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                             {{ product_category.name }}
                         </DropdownItem>
                     </DropdownButtonStrict>
-                    <DropdownButtonStrict :btn-label="btnAvailabilityText" class="col-span-2">
+                    <DropdownButtonStrict :btn-label="btnAvailabilityText" class="col-span-1">
                         <DropdownItem @click="setAvailability()">
                             Todas
                         </DropdownItem>
@@ -218,6 +224,13 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
             v-if="success === 'Product created.'"
             title="¡Bien Hecho!"
             text="Producto guardado satisfactoriamente."
+            :close="false"
+            :btn-close="true"
+        />
+        <AlertSuccess
+            v-if="success === 'Products exported.'"
+            title="¡Bien Hecho!"
+            text="La exportación de productos fue encolada."
             :close="false"
             :btn-close="true"
         />
