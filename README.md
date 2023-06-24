@@ -147,6 +147,16 @@ php artisan serve
 >>- **Username:** client@example.com
 >>- **Password:** 12345678
 
+## Queues
+This application works with queues, currently there is two queues, the first one is for the email verification called *email_verification* and the second one is for the export of products called *export*, please run one thoses commands or both for the right dispatch of this job:
+```sh
+php artisan queue:work --queue=email_verification
+```
+```sh
+php artisan queue:work --queue=export
+```
+* If you want to know more about queues and how they work internally, [please click here.](https://laravel.com/docs/10.x/queues)
+
 ## Running tests
 These tests has been made with [PHPUnit](https://phpunit.de/); you can learn more about the assertions reading [How can I test a Laravel application?](https://laravel.com/docs/10.x/testing) or [How to tests Endpoints with Inertia.js?](https://inertiajs.com/testing)
 
