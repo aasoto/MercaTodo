@@ -3,12 +3,14 @@
 namespace App\Http\Jobs;
 
 use App\Domain\Product\Models\Product;
+use App\Http\Mail\SendEmailExportProducts;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -60,6 +62,10 @@ class ProductExportJob implements ShouldQueue
         });
 
         fclose($file);
+
+        Mail::to('admin@example.com')
+            ->cc('notification@mercatodo.com')
+            ->send(new SendEmailExportProducts($this->uuid));
     }
 
     private function create_file(string $file_name): void
