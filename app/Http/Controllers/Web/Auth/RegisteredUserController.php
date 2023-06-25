@@ -8,6 +8,7 @@ use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Http\Controllers\Controller;
+use App\Http\Jobs\SendEmailVerificationJob;
 use App\Http\Requests\Web\Auth\RegisteredUser\StoreRequest;
 use App\Support\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -43,7 +44,9 @@ class RegisteredUserController extends Controller
         $data = StoreRegisterData::fromRequest($request);
         $user = $store_register_action->handle($data);
 
-        event(new Registered($user));
+        // event(new Registered($user));
+
+        SendEmailVerificationJob::dispatch($user)->onQueue('email_verification');
 
         Auth::login($user);
 

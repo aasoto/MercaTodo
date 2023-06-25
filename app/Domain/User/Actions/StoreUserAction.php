@@ -5,6 +5,7 @@ namespace App\Domain\User\Actions;
 use App\Domain\User\Dtos\StoreUserData;
 use App\Domain\User\Models\User;
 use App\Domain\User\Services\RolesServices;
+use App\Http\Jobs\SendEmailVerificationJob;
 use Illuminate\Support\Facades\Hash;
 
 class StoreUserAction
@@ -20,7 +21,7 @@ class StoreUserAction
 
         // Call to an undefined method Illuminate\Database\Eloquent\Model::assignRole().
         /** @phpstan-ignore-next-line */
-        User::create([
+        $user = User::create([
             "type_document"     => $data->type_document,
             "number_document"   => $data->number_document,
             "first_name"        => $data->first_name,
@@ -36,8 +37,9 @@ class StoreUserAction
             "state_id"          => $data->state_id,
             "city_id"           => $data->city_id
         ])
-            -> assignRole($role ? $role['name'] : '')
-            -> sendEmailVerificationNotification();
+            -> assignRole($role ? $role['name'] : '');
+
+        SendEmailVerificationJob::dispatch($user)->onQueue('email_verification');
 
         return $role ? $role['name'] : '';
     }

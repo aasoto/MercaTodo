@@ -26,7 +26,6 @@ return new class extends Migration
             $table->text('picture_2')->nullable();
             $table->text('picture_3')->nullable();
             $table->boolean('availability')->default(true);
-            // $table->text('tags');
             $table->timestamps();
         });
     }

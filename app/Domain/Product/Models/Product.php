@@ -10,9 +10,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 
 /**
+ * @property string name
+ * @property string barcode
+ * @property string description
+ * @property double price
+ * @property int stock
+ * @property string availability
  * @method static Product join(...$parameters)
  * @method static Product orderBy(...$parameters)
  * @method static Product orderByDesc(...$parameters)
@@ -63,5 +70,10 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class, 'products_category_id');
+    }
+
+    public function product_unit(): HasOne
+    {
+        return $this->hasOne(Unit::class, 'code', 'unit');
     }
 }
