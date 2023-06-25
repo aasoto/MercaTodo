@@ -8,11 +8,15 @@ import { useCartStore } from '@/Store/Cart';
 
 import { ShoppingCartIcon } from '@heroicons/vue/24/solid';
 
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import Pagination from '@/Components/Pagination.vue';
-import NotFoundMessage from "@/Components/NotFoundMessage.vue";
 import AlertError from '@/Components/Alerts/AlertError.vue';
 import AlertWarning from '@/Components/Alerts/AlertWarning.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import DropdownButtonFlexible from '@/Components/Buttons/DropdownButtonFlexible.vue';
+import DropdownItem from '@/Components/Buttons/DropdownItem.vue';
+import DropdownItemBox from '@/Components/Buttons/DropdownItemBox.vue';
+import NotFoundMessage from "@/Components/NotFoundMessage.vue";
+import Pagination from '@/Components/Pagination.vue';
+import TitlePage from '@/Components/TitlePage.vue';
 
 const props = defineProps({
     filters: Object,
@@ -99,9 +103,9 @@ const getResults = () => {
         <template #header>
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div class="col-span-1 flex justify-center items-center">
-                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    <TitlePage>
                         Vitrina de productos
-                    </h2>
+                    </TitlePage>
                 </div>
                 <div class="col-span-2">
                     <input
@@ -111,35 +115,23 @@ const getResults = () => {
                         placeholder="Buscar..."
                     >
                 </div>
-                <div class="col-span-1 relative group">
-                    <button
-                        id="dropdownDefaultButton"
-                        class="w-full text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
-                        type="button"
-                    >
-                        <span v-html="btnCategoryLabel" class="capitalize"></span>
-                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <!-- Dropdown menu -->
-                    <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                            <li>
-                                <span @click="setCategory('Categorías')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                    Ninguna
-                                </span>
-                            </li>
-                        </ul>
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                            <li v-for="product_category in products_categories">
-                                <span @click="setCategory(product_category.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                    {{ product_category.name }}
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <DropdownButtonFlexible :btn-label="btnCategoryLabel" class="col-span-1">
+                    <DropdownItemBox>
+                        <DropdownItem @click="setCategory('Categorías')">
+                            Ninguna
+                        </DropdownItem>
+                    </DropdownItemBox>
+                    <DropdownItemBox>
+                        <DropdownItem
+                            v-for="product_category in products_categories"
+                            @click="setCategory(product_category.name)"
+                            :key="product_category.id"
+                        >
+                            {{ product_category.name }}
+                        </DropdownItem>
+                    </DropdownItemBox>
+                </DropdownButtonFlexible>
+
                 <div class="col-span-1 flex justify-center items-center gap-2">
                     <input
                         v-model="minPrice"

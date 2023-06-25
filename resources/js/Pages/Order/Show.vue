@@ -12,6 +12,16 @@ import AlertError from '@/Components/Alerts/AlertError.vue';
 import InfoButton from '@/Components/Buttons/InfoButton.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import Pagination from '@/Components/Pagination.vue';
+import TitlePage from '@/Components/TitlePage.vue';
+import PaymentStatusDetail from '@/Pages/Order/Partials/PaymentStatusDetail.vue';
+import MulticolorInfo from '@/Components/Infos/MulticolorInfo.vue';
+import BasicBodyPage from '@/Components/Body/BasicBodyPage.vue';
+import BasicTable from '@/Components/Tables/BasicTable.vue';
+import TableRow from '@/Components/Tables/Basic/TableRow.vue';
+import TableCol from '@/Components/Tables/Basic/TableCol.vue';
+import DropdownButtonFlexible from '@/Components/Buttons/DropdownButtonFlexible.vue';
+import DropdownItemBox from '@/Components/Buttons/DropdownItemBox.vue';
+import DropdownItem from '@/Components/Buttons/DropdownItem.vue';
 
 const props = defineProps({
     order: Object,
@@ -84,160 +94,84 @@ const localDate = (date) => {
     const dt = new Date(date);
     return dt.toLocaleString();
 }
+
+const tableTitles = [ 'Nombre', 'Unidad', 'Cantidad', 'Valor unitario', 'Valor total' ];
 </script>
 <template>
     <Head title="Detalle de orden" />
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                <TitlePage>
                     Detalle de orden No. {{ order.id }}
-                </h2>
+                </TitlePage>
                 <div class="flex justify-center items-center gap-3">
-                    <div class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                    <MulticolorInfo color="blue">
                         Fecha: {{ localDate(order.created_at) }}
-                    </div>
-                    <div v-if="order.payment_status == 'canceled'" class="rounded-md bg-red-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Estado: CANCELADO
-                    </div>
-                    <div v-if="order.payment_status == 'paid'" class="rounded-md bg-green-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Estado: PAGADO
-                    </div>
-                    <div v-if="(order.payment_status == 'pending') && order.url" class="rounded-md bg-yellow-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Estado: PENDIENTE
-                    </div>
-                    <div v-else-if="order.payment_status == 'pending'" class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Estado: SIN LINK DE PAGO
-                    </div>
-                    <div v-if="order.payment_status == 'waiting'" class="rounded-md bg-purple-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Estado: PAGO POR CONFIRMAR
-                    </div>
-                    <div v-if="order.payment_status == 'verify_bank'" class="rounded-md bg-orange-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Estado: VERIFICAR TRANSACCIÓN CON SU ENTIDAD BANCARIA
-                    </div>
-                    <div v-if="order.payment_status == 'approved_partial'" class="rounded-md bg-amber-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Estado: PAGO INCOMPLETO
-                    </div>
-                    <div v-if="order.payment_status == 'partial_expired'" class="rounded-md bg-zinc-300 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
-                        Estado: PAGO EXPIRADO
-                    </div>
-                    <div class="rounded-md bg-blue-200 px-10 py-2 text-gray-900 dark:text-white text-md font-bold">
+                    </MulticolorInfo>
+                    <PaymentStatusDetail :payment-status="order.payment_status" :url="order.url"/>
+                    <MulticolorInfo color="blue">
                         Total orden: {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
-                    </div>
+                    </MulticolorInfo>
                 </div>
             </div>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg px-10">
-                    <div class="flex flex-col justify-center items-center">
-                        <table class="w-full m-5 rounded-lg">
-                            <thead class="bg-gray-300 dark:bg-gray-700 rounded-t-lg">
-                                <th class="rounded-tl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
-                                    Nombre
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Unidad
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Cantidad
-                                </th>
-                                <th class="border-r dark:border-r-0 py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Valor unitario
-                                </th>
-                                <th class="rounded-tr-lg py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Valor total
-                                </th>
-                            </thead>
-                            <tbody>
-                                <tr v-for="product in products.data" class="border-b border-gray-400">
-                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ product.name }}
-                                    </td>
-                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ product.unit }}
-                                    </td>
-                                    <td class="px-3 py-3 text-black dark:text-white capitalize">
-                                        {{ product.quantity }}
-                                    </td>
-                                    <td class="px-3 py-3 text-black dark:text-white text-right capitalize">
-                                        {{ product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
-                                    </td>
-                                    <td class="px-3 py-3 text-black dark:text-white text-right capitalize">
-                                        {{ totalPrice(product.price, product.quantity).toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot class="bg-gray-300 dark:bg-gray-700 rounded-b-lg">
-                                <th class="rounded-bl-lg py-3 border-r dark:border-r-0 text-black dark:text-white text-lg font-bold text-center">
-                                    Nombre
-                                </th>
-                                <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Unidad
-                                </th>
-                                <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Cantidad
-                                </th>
-                                <th class="border-r dark:border-r-0 p-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Valor unitario
-                                </th>
-                                <th class="rounded-br-lg py-3 text-black dark:text-white text-lg font-bold text-center">
-                                    Valor total
-                                </th>
-                            </tfoot>
-                        </table>
-                        <Pagination class="my-6" :links="products.links" />
-                        <div class="w-full flex justify-end items-center gap-5 mb-5">
-                            <div v-if="(order.payment_status == 'pending' && !order.url) || order.payment_status == 'canceled'" class="relative group">
-                                <button
-                                    id="dropdownDefaultButton"
-                                    class="w-full text-black dark:text-white bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded group-hover:rounded-t group-hover:rounded-b-none px-5 py-3 text-center inline-flex justify-between items-center shadow-none group-hover:shadow transition duration-200"
-                                    type="button"
-                                >
-                                    <span v-html="btnPaymentMethodLabel" class="capitalize"></span>
-                                    <ChevronDownIcon class="w-4 h-4 ml-2"/>
-                                </button>
-                                <!-- Dropdown menu -->
-                                <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
-                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                        <li>
-                                            <span @click="setPaymentMethod('NONE', 'Metodo de pago')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                                Ninguno
-                                            </span>
-                                        </li>
-                                    </ul>
-                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                        <li v-for="paymentMethod in paymentMethods">
-                                            <span @click="setPaymentMethod(paymentMethod.code, paymentMethod.name)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white capitalize cursor-pointer">
-                                                {{ paymentMethod.name }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <SuccessButton v-if="(canPay == true) && (order.payment_status == 'pending'  || order.payment_status == 'approved_partial') && order.url" @click="openWebcheckout(order.code)" class="flex gap-4">
-                                <CreditCardIcon class="w-6 h-6"/>
-                                <span v-if="order.payment_status == 'pending'">
-                                    Pagar orden
-                                </span>
-                                <span v-else>
-                                    Completar pago
-                                </span>
-                            </SuccessButton>
-                            <InfoButton v-else-if="(order.payment_status == 'pending')  || (order.payment_status == 'canceled')" @click="generateNewURLWebcheckout()" class="flex gap-4">
-                                <LinkIcon class="w-6 h-6"/>
-                                Generar nuevo link de pago
-                            </InfoButton>
-                            <SuccessButton v-if="order.payment_status == 'waiting'" @click="openWebcheckout(order.code)" class="flex gap-4">
-                                <CreditCardIcon class="w-6 h-6"/>
-                                Ver estado de la transacción
-                            </SuccessButton>
-                        </div>
-                    </div>
+        <BasicBodyPage>
+            <div class="flex flex-col justify-center items-center">
+                <BasicTable :titles="tableTitles">
+                    <TableRow v-for="product in products.data">
+                        <TableCol class="capitalize">
+                            {{ product.name }}
+                        </TableCol>
+                        <TableCol class="capitalize">
+                            {{ product.unit }}
+                        </TableCol>
+                        <TableCol class="capitalize">
+                            {{ product.quantity }}
+                        </TableCol>
+                        <TableCol class="text-right capitalize">
+                            {{ product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
+                        </TableCol>
+                        <TableCol class="text-right capitalize">
+                            {{ totalPrice(product.price, product.quantity).toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
+                        </TableCol>
+                    </TableRow>
+                </BasicTable>
+                <Pagination class="my-6" :links="products.links" />
+                <div class="w-full flex justify-end items-center gap-5 mb-5">
+                    <DropdownButtonFlexible :btn-label="btnPaymentMethodLabel" v-if="(order.payment_status == 'pending' && !order.url) || order.payment_status == 'canceled'">
+                        <DropdownItemBox>
+                            <DropdownItem @click="setPaymentMethod('NONE', 'Metodo de pago')">
+                                Ninguno
+                            </DropdownItem>
+                        </DropdownItemBox>
+                        <DropdownItemBox>
+                            <DropdownItem v-for="paymentMethod in paymentMethods" @click="setPaymentMethod(paymentMethod.code, paymentMethod.name)">
+                                {{ paymentMethod.name }}
+                            </DropdownItem>
+                        </DropdownItemBox>
+                    </DropdownButtonFlexible>
+                    <SuccessButton v-if="(canPay == true) && (order.payment_status == 'pending'  || order.payment_status == 'approved_partial') && order.url" @click="openWebcheckout(order.code)" class="flex gap-4">
+                        <CreditCardIcon class="w-6 h-6"/>
+                        <span v-if="order.payment_status == 'pending'">
+                            Pagar orden
+                        </span>
+                        <span v-else>
+                            Completar pago
+                        </span>
+                    </SuccessButton>
+                    <InfoButton v-else-if="(order.payment_status == 'pending')  || (order.payment_status == 'canceled')" @click="generateNewURLWebcheckout()" class="flex gap-4">
+                        <LinkIcon class="w-6 h-6"/>
+                        Generar nuevo link de pago
+                    </InfoButton>
+                    <SuccessButton v-if="order.payment_status == 'waiting'" @click="openWebcheckout(order.code)" class="flex gap-4">
+                        <CreditCardIcon class="w-6 h-6"/>
+                        Ver estado de la transacción
+                    </SuccessButton>
                 </div>
             </div>
-        </div>
+        </BasicBodyPage>
         <AlertError
             v-if="success === 'Payment error.'"
             title="Error de servicio externo"
