@@ -1,10 +1,14 @@
 <script setup>
+import { ref } from 'vue';
+import { Head, router, useForm } from '@inertiajs/vue3';
+
+import { EyeIcon, LinkIcon } from '@heroicons/vue/24/outline';
+import { ChevronDownIcon, CreditCardIcon } from '@heroicons/vue/24/solid';
+
 import AlertError from '@/Components/Alerts/AlertError.vue';
 import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 import Pagination from '@/Components/Pagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
 
 const props = defineProps({
     orders: Object,
@@ -181,10 +185,7 @@ const generateNewURLWebcheckout = (id) => {
                                     </td>
                                     <td class="px-3 py-3 text-black dark:text-white capitalize flex justify-center items-center gap-3">
                                         <button @click="showOrderDetail(order.id)" class="bg-blue-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
-                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
+                                            <EyeIcon class="w-4 h-4"/>
                                             <span>
                                                 Detalles
                                             </span>
@@ -196,9 +197,7 @@ const generateNewURLWebcheckout = (id) => {
                                                 type="button"
                                             >
                                                 <span v-html="regenerateLinkId == order.id ? btnPaymentMethodLabel : 'Metodo de pago'" class="capitalize"></span>
-                                                <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                                </svg>
+                                                <ChevronDownIcon class="w-4 h-4 ml-2"/>
                                             </button>
                                             <!-- Dropdown menu -->
                                             <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
@@ -219,10 +218,7 @@ const generateNewURLWebcheckout = (id) => {
                                             </div>
                                         </div>
                                         <button v-if="(order.payment_status == 'pending' || order.payment_status == 'approved_partial') && expirationDate(order.updated_at) && order.url" @click="openWebcheckout(order.code)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                                <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
-                                                <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
-                                            </svg>
+                                            <CreditCardIcon class="w-4 h-4"/>
                                             <span v-if="order.payment_status == 'pending'">
                                                 Pagar orden
                                             </span>
@@ -231,9 +227,7 @@ const generateNewURLWebcheckout = (id) => {
                                             </span>
                                         </button>
                                         <button v-else-if="(order.payment_status == 'pending' || order.payment_status == 'canceled') && paymentMethod && (regenerateLinkId == order.id)" @click="generateNewURLWebcheckout(order.id)" class="bg-cyan-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                                <path fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 00-5.304 0l-4.5 4.5a3.75 3.75 0 001.035 6.037.75.75 0 01-.646 1.353 5.25 5.25 0 01-1.449-8.45l4.5-4.5a5.25 5.25 0 117.424 7.424l-1.757 1.757a.75.75 0 11-1.06-1.06l1.757-1.757a3.75 3.75 0 000-5.304zm-7.389 4.267a.75.75 0 011-.353 5.25 5.25 0 011.449 8.45l-4.5 4.5a5.25 5.25 0 11-7.424-7.424l1.757-1.757a.75.75 0 111.06 1.06l-1.757 1.757a3.75 3.75 0 105.304 5.304l4.5-4.5a3.75 3.75 0 00-1.035-6.037.75.75 0 01-.354-1z" clip-rule="evenodd" />
-                                            </svg>
+                                            <LinkIcon class="w-6 h-6"/>
                                             <span v-if="!order.url">
                                                 Generar link de pago
                                             </span>
@@ -242,10 +236,7 @@ const generateNewURLWebcheckout = (id) => {
                                             </span>
                                         </button>
                                         <button v-if="(order.payment_status == 'waiting') && order.url" @click="openWebcheckout(order.code)" class="bg-green-600 rounded-md text-white px-3 py-1 flex justify-center items-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                                <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
-                                                <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
-                                            </svg>
+                                            <CreditCardIcon class="w-4 h-4"/>
                                             Ver estado transacción
                                         </button>
                                     </td>

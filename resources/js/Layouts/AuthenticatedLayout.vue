@@ -4,6 +4,10 @@ import { storeToRefs } from 'pinia';
 
 import { Link, usePage } from '@inertiajs/vue3';
 import { useSignedRoleStore } from '@/Store/SignedRole';
+import { useCartStore } from '@/Store/Cart';
+
+import { ShoppingCartIcon as ShoppingCartIconOutline } from '@heroicons/vue/24/outline';
+import { ShoppingCartIcon as ShoppingCartIconSolid } from '@heroicons/vue/24/solid';
 
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -11,7 +15,6 @@ import MercaTodoLogoGray from "@/Components/Images/MercaTodoLogoGray.vue";
 import MercaTodoLogoWhite from "@/Components/Images/MercaTodoLogoWhite.vue";
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { useCartStore } from '@/Store/Cart';
 
 const showingNavigationDropdown = ref(false);
 
@@ -88,32 +91,8 @@ if (usePage().props.auth.user) {
                                     <div
                                         class="relative h-12 w-12 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full"
                                     >
-                                        <svg
-                                            v-if="!numberOfProducts"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke-width="1.5"
-                                            stroke="currentColor"
-                                            class="w-9 h-9 stroke-red-500"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                                            />
-                                        </svg>
-                                        <svg
-                                            v-else
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="currentColor"
-                                            class="w-9 h-9 text-red-500"
-                                        >
-                                            <path
-                                                d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-                                            />
-                                        </svg>
+                                        <ShoppingCartIconOutline v-if="!numberOfProducts" class="w-9 h-9 stroke-red-500"/>
+                                        <ShoppingCartIconSolid v-else class="w-9 h-9 text-red-500"/>
                                         <span
                                             class="absolute translate-x-0.5 -translate-y-0.5 z-20 text-xs font-bold"
                                             :class="numberQuantityOfProducts ? 'text-white' : 'text-red-500'"
@@ -264,32 +243,8 @@ if (usePage().props.auth.user) {
                                 <div
                                     class="h-12 w-12 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full"
                                 >
-                                    <svg
-                                        v-if="!numberOfProducts"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="1.5"
-                                        stroke="currentColor"
-                                        class="w-7 h-7 stroke-red-500"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                                        />
-                                    </svg>
-                                    <svg
-                                        v-else
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        class="w-7 h-7 text-red-500"
-                                    >
-                                        <path
-                                            d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-                                        />
-                                    </svg>
+                                    <ShoppingCartIconOutline v-if="!numberOfProducts" class="w-7 h-7 stroke-red-500"/>
+                                    <ShoppingCartIconSolid v-else class="w-7 h-7 text-red-500"/>
                                 </div>
                                 <span
                                     v-if="numberOfProducts"

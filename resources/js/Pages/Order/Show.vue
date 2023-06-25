@@ -1,12 +1,17 @@
 <script setup>
+import { ref } from 'vue';
+import { Head, router, useForm } from '@inertiajs/vue3';
+
+import { useCartStore } from '@/Store/Cart';
+
+import { ChevronDownIcon, CreditCardIcon, LinkIcon } from '@heroicons/vue/24/solid';
+
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
 import AlertError from '@/Components/Alerts/AlertError.vue';
 import InfoButton from '@/Components/Buttons/InfoButton.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import Pagination from '@/Components/Pagination.vue';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useCartStore } from '@/Store/Cart';
-import { Head, router, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
 
 const props = defineProps({
     order: Object,
@@ -191,9 +196,7 @@ const localDate = (date) => {
                                     type="button"
                                 >
                                     <span v-html="btnPaymentMethodLabel" class="capitalize"></span>
-                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
+                                    <ChevronDownIcon class="w-4 h-4 ml-2"/>
                                 </button>
                                 <!-- Dropdown menu -->
                                 <div id="dropdown" class="absolute z-10 hidden group-hover:block bg-white divide-y divide-gray-100 rounded-b shadow w-full dark:bg-gray-700 transition duration-200">
@@ -214,10 +217,7 @@ const localDate = (date) => {
                                 </div>
                             </div>
                             <SuccessButton v-if="(canPay == true) && (order.payment_status == 'pending'  || order.payment_status == 'approved_partial') && order.url" @click="openWebcheckout(order.code)" class="flex gap-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                    <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
-                                    <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
-                                </svg>
+                                <CreditCardIcon class="w-6 h-6"/>
                                 <span v-if="order.payment_status == 'pending'">
                                     Pagar orden
                                 </span>
@@ -226,19 +226,13 @@ const localDate = (date) => {
                                 </span>
                             </SuccessButton>
                             <InfoButton v-else-if="(order.payment_status == 'pending')  || (order.payment_status == 'canceled')" @click="generateNewURLWebcheckout()" class="flex gap-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                    <path fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 00-5.304 0l-4.5 4.5a3.75 3.75 0 001.035 6.037.75.75 0 01-.646 1.353 5.25 5.25 0 01-1.449-8.45l4.5-4.5a5.25 5.25 0 117.424 7.424l-1.757 1.757a.75.75 0 11-1.06-1.06l1.757-1.757a3.75 3.75 0 000-5.304zm-7.389 4.267a.75.75 0 011-.353 5.25 5.25 0 011.449 8.45l-4.5 4.5a5.25 5.25 0 11-7.424-7.424l1.757-1.757a.75.75 0 111.06 1.06l-1.757 1.757a3.75 3.75 0 105.304 5.304l4.5-4.5a3.75 3.75 0 00-1.035-6.037.75.75 0 01-.354-1z" clip-rule="evenodd" />
-                                </svg>
+                                <LinkIcon class="w-6 h-6"/>
                                 Generar nuevo link de pago
                             </InfoButton>
                             <SuccessButton v-if="order.payment_status == 'waiting'" @click="openWebcheckout(order.code)" class="flex gap-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                    <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
-                                    <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
-                                </svg>
+                                <CreditCardIcon class="w-6 h-6"/>
                                 Ver estado de la transacción
                             </SuccessButton>
-
                         </div>
                     </div>
                 </div>
