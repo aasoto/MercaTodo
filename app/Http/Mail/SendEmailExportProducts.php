@@ -5,6 +5,7 @@ namespace App\Http\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -18,7 +19,7 @@ class SendEmailExportProducts extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        private string $file_uuid,
+        public string $file_name,
     )
     {}
 
@@ -28,7 +29,8 @@ class SendEmailExportProducts extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Export Products of MercaTodo Database',
+            from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')),
+            subject: 'Send Email Export Products',
         );
     }
 
@@ -38,7 +40,10 @@ class SendEmailExportProducts extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.exportProducts',
+            view: 'emails.export',
+            with: [
+                'url' => env('APP_URL'),
+            ],
         );
     }
 
@@ -49,10 +54,6 @@ class SendEmailExportProducts extends Mailable
      */
     public function attachments(): array
     {
-        return [
-            Attachment::fromStorageDisk(config()->get('filesystem.default'), '/exports')
-            ->as($this->file_uuid.'.csv')
-            ->withMime('text/csv'),
-        ];
+        return [];
     }
 }

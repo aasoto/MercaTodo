@@ -19,7 +19,8 @@ class ProductExportJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        public string $uuid = '',
+        public mixed $user,
+        public ?string $uuid = '',
     ) {}
 
     public function handle(): void
@@ -38,6 +39,7 @@ class ProductExportJob implements ShouldQueue
         if (!$this->uuid) {
             $this->uuid = Str::uuid()->serialize();
         }
+
         $file_name = sprintf('exports/%s.csv', $this->uuid);
         $this->create_file($file_name);
         $file = $this->open_file($file_name);
@@ -63,9 +65,7 @@ class ProductExportJob implements ShouldQueue
 
         fclose($file);
 
-        Mail::to('admin@example.com')
-            ->cc('notification@mercatodo.com')
-            ->send(new SendEmailExportProducts($this->uuid));
+        Mail::to($this->user)->send(new SendEmailExportProducts($this->uuid));
     }
 
     private function create_file(string $file_name): void
