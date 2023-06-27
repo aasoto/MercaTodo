@@ -4,7 +4,7 @@ import { onMounted } from 'vue';
 import Chart from 'chart.js/auto';
 
 const props = defineProps({
-    color: Array,
+    color: String,
     data: Array,
     identificator: String,
     label: String,

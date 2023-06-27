@@ -9,9 +9,11 @@ import BasicCard from '@/Components/Cards/BasicCard.vue';
 import DoughnutChart from '@/Components/Charts/DoughnutChart.vue';
 import TitlePage from '@/Components/TitlePage.vue';
 import LineChart from '@/Components/Charts/LineChart.vue';
+import BarChart from '@/Components/Charts/BarChart.vue';
 
 const props = defineProps({
     ordersByDay: Object,
+    ordersByPaymentStatus: Object,
     productsByCategory: Object,
     productsStatusByStock: Object,
     productsByAvailability: Object,
@@ -76,6 +78,17 @@ assignRole(props.userRole);
                         identificator="ordersByDay"
                         label="Número de ordenes hechas por día"
                         :labels="ordersByDay.labels"
+                    />
+                </BasicCard>
+
+                <BasicCard title="Número de ordenes por estado de pago">
+                    <BarChart
+                        :color-bars="ordersByPaymentStatus.colorBars"
+                        :color-border-bars="ordersByPaymentStatus.colorBorderBars"
+                        :data="ordersByPaymentStatus.data"
+                        identificator="ordersByPaymentStatus"
+                        label="Número de ordenes por estado de pago"
+                        :labels="ordersByPaymentStatus.labels"
                     />
                 </BasicCard>
             </div>

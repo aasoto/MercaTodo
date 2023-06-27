@@ -21,6 +21,7 @@ class DashboardController extends Controller
     {
         return Inertia::render('Dashboard', [
             'ordersByDay' => $order_reports->orders_by_day(10),
+            'ordersByPaymentStatus' => $order_reports->orders_by_payment_status(),
             'productsByCategory' => $product_reports->products_by_category(),
             'productsStatusByStock' => $product_reports->products_status_by_stock(),
             'productsByAvailability' => $product_reports->products_by_availability(),

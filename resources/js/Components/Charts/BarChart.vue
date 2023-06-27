@@ -3,31 +3,47 @@ import { onMounted } from 'vue';
 
 import Chart from 'chart.js/auto';
 
+const props = defineProps({
+    colorBars: Array,
+    colorBorderBars: Array,
+    data: Array,
+    identificator: String,
+    label: String,
+    labels: Array,
+});
+
+const data = {
+  labels: props.labels,
+  datasets: [{
+    label: props.label,
+    data: props.data,
+    backgroundColor: props.colorBars,
+    borderColor: props.colorBorderBars,
+    borderWidth: 1
+  }]
+};
+
 const config = {
     type: 'bar',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-        }]
-    },
+    data: data,
     options: {
         scales: {
+            x: {
+                stacked: true
+            },
             y: {
-                beginAtZero: true
+                stacked: true
             }
         }
     }
 };
 
 onMounted(() => {
-    new Chart(document.getElementById('BarChart'), config);
+    new Chart(document.getElementById(`${props.identificator}BarChart`), config);
 });
 </script>
 <template>
     <div>
-        <canvas id="BarChart"></canvas>
+        <canvas :id="`${identificator}BarChart`"></canvas>
     </div>
 </template>

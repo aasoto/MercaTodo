@@ -38,4 +38,50 @@ class ReportServices
             'labels' => $labels,
         ];
     }
+
+    public function orders_by_payment_status(): array
+    {
+        $color_bars = [
+            'rgba(22, 163, 74, 0.2)', //green
+            'rgba(250, 204, 21, 0.2)', //yellow
+            'rgba(220, 38, 38, 0.2)', //red
+            'rgba(217, 119, 6, 0.2)', //amber - approval_partial
+            'rgba(147, 51, 234, 0.2)', //purple - waiting
+            'rgba(234, 88, 12, 0.2)', //orange - verify_bank
+            'rgba(82, 82, 91, 0.2)', //zinc - partial_expired
+        ];
+
+        $color_border_bars = [
+            'rgb(22, 163, 74)', //green
+            'rgb(250, 204, 21)', //yellow
+            'rgb(220, 38, 38)', //red
+            'rgb(217, 119, 6)', //amber - approval_partial
+            'rgb(147, 51, 234)', //purple - waiting
+            'rgb(234, 88, 12)', //orange - verify_bank
+            'rgb(82, 82, 91)', //zinc - partial_expired
+        ];
+
+        $data = array();
+        $labels = config('paymentStatus');
+
+        $orders = Order::get();
+        $counter = 0;
+
+        foreach ($labels as $label) {
+            foreach ($orders as $order) {
+                if ($order['payment_status'] == $label) {
+                    $counter++;
+                }
+            }
+            array_push($data, $counter);
+            $counter = 0;
+        }
+
+        return [
+            'colorBars' => $color_bars,
+            'colorBorderBars' => $color_border_bars,
+            'data' => $data,
+            'labels' => $labels,
+        ];
+    }
 }
