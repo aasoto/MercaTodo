@@ -5,12 +5,14 @@ import { useSignedRoleStore } from '@/Store/SignedRole';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
+import BasicCard from '@/Components/Cards/BasicCard.vue';
 import DoughnutChart from '@/Components/Charts/DoughnutChart.vue';
+import TitlePage from '@/Components/TitlePage.vue';
 
 const props = defineProps({
-    categoriesData: Array,
-    colors: Array,
-    productsData: Array,
+    productsByCategory: Object,
+    productsStatusByStock: Object,
+    productsByAvailability: Object,
     userRole: String,
 });
 
@@ -25,24 +27,45 @@ assignRole(props.userRole);
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
+            <TitlePage>
+                Dashboard
+            </TitlePage>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100 grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <!-- Bienvenido al modo Administrador de MercadoTodo -->
-                        <DoughnutChart
-                            class="col-span-1"
-                            :colors="colors"
-                            :data="productsData"
-                            :identificator="'TotalProducts'"
-                            :label="'Total productos por categorías'"
-                            :labels="categoriesData"
-                        />
-                    </div>
-                </div>
+        <div class="p-6 text-gray-900 dark:text-gray-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <BasicCard title="Total productos por categorías" class="col-span-1">
+                    <DoughnutChart
+                        class="mx-24"
+                        :colors="productsByCategory.colors"
+                        :data="productsByCategory.data"
+                        :identificator="'totalProducts'"
+                        :label="'Total productos por categorías'"
+                        :labels="productsByCategory.labels"
+                    />
+                </BasicCard>
+
+                <BasicCard title="Estado de los productos según su stock" class="col-span-1">
+                    <DoughnutChart
+                        class="mx-24"
+                        :colors="productsStatusByStock.colors"
+                        :data="productsStatusByStock.data"
+                        :identificator="'productsStatusByStock'"
+                        :label="'Estado de los productos según su stock'"
+                        :labels="productsStatusByStock.labels"
+                    />
+                </BasicCard>
+
+                <BasicCard title="Productos habilitados e inhabilitados" class="col-span-1">
+                    <DoughnutChart
+                        class="mx-24"
+                        :colors="productsByAvailability.colors"
+                        :data="productsByAvailability.data"
+                        :identificator="'productsByAvailability'"
+                        :label="'Productos habilitados e inhabilitados'"
+                        :labels="productsByAvailability.labels"
+                    />
+                </BasicCard>
             </div>
         </div>
     </AuthenticatedLayout>

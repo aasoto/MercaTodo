@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Admin;
 
 use App\Domain\Product\Models\Product;
 use App\Domain\Product\Models\ProductCategory;
+use App\Domain\Product\Services\ReportServices;
 use App\Domain\User\Models\ModelHasRole as Role;
 use App\Domain\User\Traits\AuthHasRole;
 use App\Http\Controllers\Controller;
@@ -14,22 +15,12 @@ class DashboardController extends Controller
 {
     use AuthHasRole;
 
-    public function index(): Response
+    public function index(ReportServices $reports): Response
     {
-        $products_data = array();
-        $categories_data = array();
-        $colors = array();
-
-        foreach (ProductCategory::getFromCache() as $key => $value) {
-            array_push($products_data, count(Product::where('products_category_id', $value['id'])->get()));
-            array_push($categories_data, ucwords($value['name']));
-            array_push($colors, 'rgb('.rand(0, 255).', '.rand(0, 255).', '.rand(0, 255).')');
-        }
-
         return Inertia::render('Dashboard', [
-            'categoriesData' => $categories_data,
-            'colors' => $colors,
-            'productsData' => $products_data,
+            'productsByCategory' => $reports->products_by_category(),
+            'productsStatusByStock' => $reports->products_status_by_stock(),
+            'productsByAvailability' => $reports->products_by_availability(),
             'userRole' =>
                 session('user_role') ? session('user_role') : $this->authHasRole(Role::getFromCache()),
         ]);
