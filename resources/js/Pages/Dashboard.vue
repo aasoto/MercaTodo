@@ -8,8 +8,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import BasicCard from '@/Components/Cards/BasicCard.vue';
 import DoughnutChart from '@/Components/Charts/DoughnutChart.vue';
 import TitlePage from '@/Components/TitlePage.vue';
+import LineChart from '@/Components/Charts/LineChart.vue';
 
 const props = defineProps({
+    ordersByDay: Object,
     productsByCategory: Object,
     productsStatusByStock: Object,
     productsByAvailability: Object,
@@ -64,6 +66,16 @@ assignRole(props.userRole);
                         :identificator="'productsByAvailability'"
                         :label="'Productos habilitados e inhabilitados'"
                         :labels="productsByAvailability.labels"
+                    />
+                </BasicCard>
+
+                <BasicCard title="Número de ordenes hechas por día">
+                    <LineChart
+                        :color="ordersByDay.color"
+                        :data="ordersByDay.data"
+                        identificator="ordersByDay"
+                        label="Número de ordenes hechas por día"
+                        :labels="ordersByDay.labels"
                     />
                 </BasicCard>
             </div>
