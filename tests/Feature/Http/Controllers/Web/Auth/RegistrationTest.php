@@ -39,12 +39,12 @@ class RegistrationTest extends TestCase
         $email = fake()->safeEmail();
 
         $response = $this->post('/register', [
-            'typeDocument' => $type[0]['code'],
-            'numberDocument' => strval(fake()->randomNumber(5, true)),
-            'firstName' => fake()->firstName($gender = 'male'|'female'),
-            'secondName' => fake()->firstName($gender = 'male'|'female'),
+            'type_document' => $type[0]['code'],
+            'number_document' => strval(fake()->randomNumber(5, true)),
+            'first_name' => fake()->firstName($gender = 'male'|'female'),
+            'second_name' => fake()->firstName($gender = 'male'|'female'),
             'surname' => fake()->lastName(),
-            'secondSurname' => fake()->lastName(),
+            'second_surname' => fake()->lastName(),
             'email' => $email,
             'password' => 'password',
             'password_confirmation' => 'password',
@@ -52,8 +52,8 @@ class RegistrationTest extends TestCase
             'gender' => fake()->randomElement(['m', 'f', 'o']),
             'phone' => fake()->phoneNumber(),
             'address' => fake()->streetAddress(),
-            'state' => $state[0]["id"],
-            'city' => $city["id"],
+            'state_id' => $state[0]["id"],
+            'city_id' => $city["id"],
         ]);
 
         $this->assertDatabaseHas('users', [
