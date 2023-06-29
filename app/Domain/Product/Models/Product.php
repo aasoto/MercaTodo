@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 
 /**
+ * @property int id
  * @property string name
  * @property string barcode
  * @property string description
