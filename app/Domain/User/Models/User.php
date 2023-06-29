@@ -16,6 +16,21 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
+ * @property string type_document
+ * @property string number_document
+ * @property string first_name
+ * @property string second_name
+ * @property string surname
+ * @property string second_surname
+ * @property string email
+ * @property string password
+ * @property string birthdate
+ * @property string gender
+ * @property string phone
+ * @property string address
+ * @property string state_id
+ * @property string city_id
+ * @property string enabled
  * @method static User join(...$parameters)
  * @method static User orderBy(...$parameters)
  * @method static User orderByDesc(...$parameters)
