@@ -148,6 +148,12 @@ return [
             'path' => storage_path('logs/import_products_file.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
+
+        'export_products_file' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/export_products_file.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
     ],
 
 ];

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -41,34 +42,44 @@ class ProductExportJob implements ShouldQueue
             $this->uuid = Str::uuid()->serialize();
         }
 
-        $file_name = sprintf('exports/%s.csv', $this->uuid);
-        $this->create_file($file_name);
-        $file = $this->open_file($file_name);
-        fputcsv($file, $headers);
+        try {
 
-        Product::with('category')->with('product_unit')->chunk(10, function ($products) use ($file) {
-            /**
-             * @var Product $product
-             */
-            foreach ($products as $product) {
-                fputcsv($file, [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'category' => $product->category->name,
-                    'barcode' => $product->barcode,
-                    'description' => $product->description,
-                    'price' => $product->price,
-                    'unit' => $product->product_unit->name,
-                    'stock' => $product->stock,
-                    'picture_1' => $product->picture_1,
-                    'picture_2' => $product->picture_2,
-                    'picture_3' => $product->picture_3,
-                    'availability' => $product->availability == '1' ? 'enabled' : 'disabled',
-                ]);
-            }
-        });
+            $file_name = sprintf('exports/%s.csv', $this->uuid);
+            $this->create_file($file_name);
+            $file = $this->open_file($file_name);
+            fputcsv($file, $headers);
 
-        fclose($file);
+            Product::with('category')->with('product_unit')->chunk(10, function ($products) use ($file) {
+                /**
+                 * @var Product $product
+                 */
+                foreach ($products as $product) {
+                    fputcsv($file, [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'category' => $product->category->name,
+                        'barcode' => $product->barcode,
+                        'description' => $product->description,
+                        'price' => $product->price,
+                        'unit' => $product->product_unit->name,
+                        'stock' => $product->stock,
+                        'picture_1' => $product->picture_1,
+                        'picture_2' => $product->picture_2,
+                        'picture_3' => $product->picture_3,
+                        'availability' => $product->availability == '1' ? 'enabled' : 'disabled',
+                    ]);
+                }
+            });
+
+            fclose($file);
+
+        } catch (\Exception $exception) {
+            Log::channel('export_products_file')
+            ->error('Error exporting products file', [
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTrace(),
+            ]);
+        }
     }
 
     private function create_file(string $file_name): void
