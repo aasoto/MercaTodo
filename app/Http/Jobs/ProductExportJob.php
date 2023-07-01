@@ -31,12 +31,16 @@ class ProductExportJob implements ShouldQueue
             'price',
             'unit',
             'stock',
+            'picture_1',
+            'picture_2',
+            'picture_3',
             'availability',
         ];
 
         if (!$this->uuid) {
             $this->uuid = Str::uuid()->serialize();
         }
+
         $file_name = sprintf('exports/%s.csv', $this->uuid);
         $this->create_file($file_name);
         $file = $this->open_file($file_name);
@@ -56,6 +60,9 @@ class ProductExportJob implements ShouldQueue
                     'price' => $product->price,
                     'unit' => $product->product_unit->name,
                     'stock' => $product->stock,
+                    'picture_1' => $product->picture_1,
+                    'picture_2' => $product->picture_2,
+                    'picture_3' => $product->picture_3,
                     'availability' => $product->availability == '1' ? 'enabled' : 'disabled',
                 ]);
             }

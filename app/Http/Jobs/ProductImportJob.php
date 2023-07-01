@@ -31,7 +31,10 @@ class ProductImportJob implements ShouldQueue
         'price' => 5,
         'unit' => 6,
         'stock' => 7,
-        'availability' => 8,
+        'picture_1' => 8,
+        'picture_2' => 9,
+        'picture_3' => 10,
+        'availability' => 11,
     ];
 
     public function __construct(
@@ -80,6 +83,9 @@ class ProductImportJob implements ShouldQueue
             'price' => $row[self::HEADERS['price']],
             'unit' => $this->get_unit_code($row[self::HEADERS['unit']]),
             'stock' => $row[self::HEADERS['stock']],
+            'picture_1' => $row[self::HEADERS['picture_1']],
+            'picture_2' => $row[self::HEADERS['picture_2']],
+            'picture_3' => $row[self::HEADERS['picture_3']],
             'availability' => $this->get_availability($row[self::HEADERS['availability']]),
         ]);
     }

@@ -20,6 +20,9 @@ use Illuminate\Database\Query\Builder;
  * @property string description
  * @property double price
  * @property int stock
+ * @property string picture_1
+ * @property string picture_2
+ * @property string picture_3
  * @property string availability
  * @method static Product join(...$parameters)
  * @method static Product orderBy(...$parameters)
