@@ -9,14 +9,14 @@ use Illuminate\Http\UploadedFile;
 class ImportProductData
 {
     public function __construct(
-        public UploadedFile $products_file,
+        public string $products_file,
     )
     {}
 
     public static function fromRequest(FormRequest $request): self
     {
         return new static(
-            products_file: $request->file('products_file'),
+            products_file: $request->file('products_file')->store('imports'),
         );
     }
 }

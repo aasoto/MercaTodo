@@ -95,13 +95,13 @@ class ProductImportJob implements ShouldQueue
         return $product_category->id;
     }
 
-    private function get_unit_code(string $code): string
+    private function get_unit_code(string $name): string
     {
         $unit = Unit::query()->firstOrCreate([
-            'code' => $code,
+            'name' => $name,
         ], [
-            'code' => $code,
-            'name' => $code,
+            'code' => strtolower($name),
+            'name' => $name,
         ]);
 
         return $unit->code;

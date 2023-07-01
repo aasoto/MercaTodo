@@ -140,9 +140,14 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
         <BasicBodyPage>
             <div class="flex flex-col justify-center items-center">
                 <div class="w-full flex justify-between items-center mt-5 gap-5">
-                    <Link :href="route('product.create')" class="w-64">
-                        <SuccessButton class="w-full">Agregar productos</SuccessButton>
-                    </Link>
+                    <div class="flex justify-center items-center gap-5">
+                        <Link :href="route('product.create')" class="w-64">
+                            <SuccessButton class="w-full">Agregar productos</SuccessButton>
+                        </Link>
+                        <Link :href="route('product.import.attach')" class="w-64">
+                            <SuccessButton class="w-full">Importar productos</SuccessButton>
+                        </Link>
+                    </div>
                     <Link :href="route('product.export')" class="w-64">
                         <PrimaryButton class="w-full">Exportar productos</PrimaryButton>
                     </Link>
@@ -231,6 +236,13 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
             v-if="success === 'Products exported.'"
             title="¡Bien Hecho!"
             text="La exportación de productos fue encolada."
+            :close="false"
+            :btn-close="true"
+        />
+        <AlertSuccess
+            v-if="success === 'Products imported.'"
+            title="¡Bien Hecho!"
+            text="La importación de productos fue encolada."
             :close="false"
             :btn-close="true"
         />
