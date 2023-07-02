@@ -3,6 +3,7 @@
 namespace App\Http\Jobs;
 
 use App\Domain\Product\Models\Product;
+use App\Http\Mail\SendEmailExportProducts;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -18,7 +20,8 @@ class ProductExportJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        public string $uuid = '',
+        public mixed $user,
+        public ?string $uuid = '',
     ) {}
 
     public function handle(): void
@@ -73,6 +76,8 @@ class ProductExportJob implements ShouldQueue
 
             fclose($file);
 
+            Mail::to($this->user)->send(new SendEmailExportProducts($this->uuid));
+
         } catch (\Exception $exception) {
             Log::channel('export_products_file')
             ->error('Error exporting products file', [
@@ -80,6 +85,7 @@ class ProductExportJob implements ShouldQueue
                 'trace' => $exception->getTrace(),
             ]);
         }
+
     }
 
     private function create_file(string $file_name): void
