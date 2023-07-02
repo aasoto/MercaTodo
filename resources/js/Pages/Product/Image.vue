@@ -1,16 +1,19 @@
 <script setup>
-import { Head, useForm } from '@inertiajs/vue3';
-
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-
+import AlertSuccess from '@/Components/Alerts/AlertSuccess.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputFile from '@/Components/Inputs/InputFile.vue';
-import TitlePage from '@/Components/TitlePage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TitlePage from '@/Components/TitlePage.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head, useForm } from '@inertiajs/vue3';
+
+const props = defineProps({
+    fileName: String,
+});
 
 const form = useForm({
-    products_file: '',
+    image_file: '',
 });
 </script>
 <template>
@@ -19,7 +22,7 @@ const form = useForm({
     <AuthenticatedLayout>
         <template #header>
             <TitlePage>
-                Importe masivo de productos
+                Adjuntar directamente imagenes de productos
             </TitlePage>
         </template>
 
@@ -27,17 +30,17 @@ const form = useForm({
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="m-5">
-                        <form @submit.prevent="form.post(route('product.import.store'))" class="mt-6 space-y-6">
+                        <form @submit.prevent="form.post(route('product.image.store'))" class="mt-6 space-y-6">
                             <div class="grid grid-cols-2 gap-5 my-5">
                                 <div class="col-span-1">
                                     <InputLabel for="picture_1">
                                         Archivo<span class="text-red-600"> *</span>
                                     </InputLabel>
                                     <InputFile
-                                        @input="form.products_file = $event.target.files[0]"
+                                        @input="form.image_file = $event.target.files[0]"
                                         required
                                     />
-                                    <InputError class="mt-2" :message="form.errors.picture_1" />
+                                    <InputError class="mt-2" :message="form.errors.image_file" />
                                 </div>
                             </div>
                             <div class="flex items-center gap-4">
@@ -57,5 +60,13 @@ const form = useForm({
                 </div>
             </div>
         </div>
+        <AlertSuccess
+            v-if="fileName"
+            icon="success"
+            :title="fileName"
+            text="Este es el nombre de la imagen guardada."
+            :close="false"
+            :btn-close="true"
+        />
     </AuthenticatedLayout>
 </template>

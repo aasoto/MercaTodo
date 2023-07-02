@@ -25,7 +25,6 @@ import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import TableCol from '@/Components/Tables/Basic/TableCol.vue';
 import TableRow from '@/Components/Tables/Basic/TableRow.vue';
 import TitlePage from '@/Components/TitlePage.vue';
-import PrimaryButton from '@/Components/Buttons/PrimaryButton.vue';
 
 const props = defineProps({
     filters: Object,
@@ -140,17 +139,20 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
         <BasicBodyPage>
             <div class="flex flex-col justify-center items-center">
                 <div class="w-full flex justify-between items-center mt-5 gap-5">
-                    <div class="flex justify-center items-center gap-5">
-                        <Link :href="route('product.create')" class="w-64">
-                            <SuccessButton class="w-full">Agregar productos</SuccessButton>
-                        </Link>
-                        <Link :href="route('product.import.attach')" class="w-64">
-                            <SuccessButton class="w-full">Importar productos</SuccessButton>
-                        </Link>
-                    </div>
-                    <Link :href="route('product.export')" class="w-64">
-                        <PrimaryButton class="w-full">Exportar productos</PrimaryButton>
+                    <Link :href="route('product.create')" class="w-64">
+                        <SuccessButton class="w-full">Agregar productos</SuccessButton>
                     </Link>
+                    <DropdownButtonStrict btn-label="Gestión de productos">
+                        <DropdownLink :href="route('product.export')">
+                            Exportar productos
+                        </DropdownLink>
+                        <DropdownLink :href="route('product.import.create')">
+                            Importar productos
+                        </DropdownLink>
+                        <DropdownLink :href="route('product.image.create')">
+                            Adjuntar imagenes de productos
+                        </DropdownLink>
+                    </DropdownButtonStrict>
                 </div>
                 <div class="w-full mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="col-span-2">
