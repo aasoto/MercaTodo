@@ -25,20 +25,20 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'typeDocument' => 'required|string|max:3',
-            'numberDocument' => 'required|regex:/^[0-9A-Z]+$/i|max:100|unique:users,number_document',
-            'firstName' => 'required|string|max:100',
-            'secondName' => 'nullable|string|max:100',
+            'type_document' => 'required|string|max:3',
+            'number_document' => 'required|regex:/^[0-9A-Z]+$/i|max:100|unique:users,number_document',
+            'first_name' => 'required|string|max:100',
+            'second_name' => 'nullable|string|max:100',
             'surname' => 'required|string|max:100',
-            'secondSurname' => 'nullable|string|max:100',
+            'second_surname' => 'nullable|string|max:100',
             'email' => 'required|string|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'birthdate' => 'required|date|before:18 years',
             'gender' => 'required|regex:/^[fmo]+$/i|max:1',
             'phone' => 'required|regex:/^[+\\-\\(\\)\\0-9x ]+$/i|max:100|unique:'.User::class,
             'address' => 'required|string|max:1000',
-            'state' => 'required|integer',
-            'city' => 'required|integer'
+            'state_id' => 'required|integer',
+            'city_id' => 'required|integer'
         ];
     }
 }

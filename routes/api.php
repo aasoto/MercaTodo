@@ -24,8 +24,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::name('api.')->group(function () {
-    Route::post('login', LoginController::class)->name('api.login');
-    Route::post('register', RegisterController::class)->name('api.register');
+    Route::post('login', LoginController::class)->name('login');
+    Route::post('register', RegisterController::class)->name('register');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/product/export', ProductExportController::class)->name('api.product.export');
