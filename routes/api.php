@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\ProductExportController;
 use App\Http\Controllers\Api\Admin\ProductImportController;
+use App\Http\Controllers\Api\Admin\ProductUploadImageController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ Route::name('api.')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/product/export', ProductExportController::class)->name('api.product.export');
         Route::post('/product/import', ProductImportController::class)->name('api.product.import.store');
+        Route::post('/product/image', ProductUploadImageController::class)->name('product.image.store');
     });
 
 });

@@ -6,6 +6,7 @@ use App\Domain\Product\Dtos\ImportProductData;
 use App\Http\Controllers\Controller;
 use App\Http\Jobs\ProductImportJob;
 use App\Http\Requests\Api\Admin\Product\ImportRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProductImportController extends Controller
@@ -13,7 +14,7 @@ class ProductImportController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(ImportRequest $request)
+    public function __invoke(ImportRequest $request): JsonResponse
     {
         $data = ImportProductData::fromRequest($request);
 
