@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ProductExportController;
+use App\Http\Controllers\Api\Admin\ProductImportController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Http\Request;
@@ -21,6 +23,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::name('api.')->group(function () {
-    Route::post('login', LoginController::class)->name('login');
-    Route::post('register', RegisterController::class)->name('register');
+    Route::post('login', LoginController::class)->name('api.login');
+    Route::post('register', RegisterController::class)->name('api.register');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/product/export', ProductExportController::class)->name('api.product.export');
+        Route::post('/product/import', ProductImportController::class)->name('api.product.import.store');
+    });
+
 });
