@@ -28,9 +28,9 @@ Route::name('api.')->group(function () {
     Route::post('register', RegisterController::class)->name('register');
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/product/export', ProductExportController::class)->name('api.product.export');
-        Route::post('/product/import', ProductImportController::class)->name('api.product.import.store');
-        Route::post('/product/image', ProductUploadImageController::class)->name('product.image.store');
+        Route::get('/product/export', ProductExportController::class)->name('product.export');
+        Route::post('/product/import', ProductImportController::class)->name('product.import');
+        Route::post('/product/image', ProductUploadImageController::class)->name('product.image');
     });
 
 });
