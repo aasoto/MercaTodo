@@ -25,7 +25,6 @@ import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import TableCol from '@/Components/Tables/Basic/TableCol.vue';
 import TableRow from '@/Components/Tables/Basic/TableRow.vue';
 import TitlePage from '@/Components/TitlePage.vue';
-import PrimaryButton from '@/Components/Buttons/PrimaryButton.vue';
 
 const props = defineProps({
     filters: Object,
@@ -143,9 +142,17 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                     <Link :href="route('product.create')" class="w-64">
                         <SuccessButton class="w-full">Agregar productos</SuccessButton>
                     </Link>
-                    <Link :href="route('product.export')" class="w-64">
-                        <PrimaryButton class="w-full">Exportar productos</PrimaryButton>
-                    </Link>
+                    <DropdownButtonStrict btn-label="Gestión de productos">
+                        <DropdownLink :href="route('product.export')">
+                            Exportar productos
+                        </DropdownLink>
+                        <DropdownLink :href="route('product.import.create')">
+                            Importar productos
+                        </DropdownLink>
+                        <DropdownLink :href="route('product.image.create')">
+                            Adjuntar imagenes de productos
+                        </DropdownLink>
+                    </DropdownButtonStrict>
                 </div>
                 <div class="w-full mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="col-span-2">
@@ -231,6 +238,13 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
             v-if="success === 'Products exported.'"
             title="¡Bien Hecho!"
             text="La exportación de productos fue encolada."
+            :close="false"
+            :btn-close="true"
+        />
+        <AlertSuccess
+            v-if="success === 'Products imported.'"
+            title="¡Bien Hecho!"
+            text="La importación de productos fue encolada."
             :close="false"
             :btn-close="true"
         />
