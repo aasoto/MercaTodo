@@ -29,20 +29,20 @@ class StoreRegisterData
     public static function fromRequest(FormRequest $request): self
     {
         return new static(
-            type_document: $request->input('typeDocument'),
-            number_document: $request->input('numberDocument'),
-            first_name: $request->input('firstName'),
-            second_name: $request->input('secondName'),
+            type_document: $request->input('type_document'),
+            number_document: $request->input('number_document'),
+            first_name: $request->input('first_name'),
+            second_name: $request->input('second_name'),
             surname: $request->input('surname'),
-            second_surname: $request->input('secondSurname'),
+            second_surname: $request->input('second_surname'),
             email: $request->input('email'),
             password: $request->input('password'),
             birthdate: Carbon::make($request->input('birthdate')),
             gender: $request->input('gender'),
             phone: $request->input('phone'),
             address: $request->input('address'),
-            state_id: $request->input('state'),
-            city_id: $request->input('city'),
+            state_id: $request->input('state_id'),
+            city_id: $request->input('city_id'),
         );
     }
 }

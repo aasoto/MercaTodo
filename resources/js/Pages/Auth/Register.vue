@@ -12,22 +12,21 @@ const props = defineProps({
     states: Array,
     typeDocuments: Object,
 });
-console.log(props.typeDocuments);
+
 const form = useForm({
-    // name: '',
-    typeDocument: '',
-    numberDocument: '',
-    firstName: '',
-    secondName: '',
+    type_document: '',
+    number_document: '',
+    first_name: '',
+    second_name: '',
     surname: '',
-    secondSurname: '',
+    second_surname: '',
     birthdate: '',
     gender: '',
     phone: '',
     address: '',
     email: '',
-    state: '',
-    city: '',
+    state_id: '',
+    city_id: '',
     password: '',
     password_confirmation: '',
     terms: false,
@@ -59,15 +58,15 @@ const submit = () => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                 <div class="col-span-1">
-                    <InputLabel for="typeDocument">
+                    <InputLabel for="type_document">
                         Tipo de documento<span class="text-red-600"> *</span>
                     </InputLabel>
 
                     <select
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                        name="typeDocument"
-                        id="typeDocument"
-                        v-model="form.typeDocument"
+                        name="type_document"
+                        id="type_document"
+                        v-model="form.type_document"
                         autofocus
                         required
                     >
@@ -81,54 +80,54 @@ const submit = () => {
                         </option>
                     </select>
 
-                    <InputError class="mt-2" :message="form.errors.typeDocument" />
+                    <InputError class="mt-2" :message="form.errors.type_document" />
 
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="numberDocument">
+                    <InputLabel for="number_document">
                         Número de documento<span class="text-red-600"> *</span>
                     </InputLabel>
                     <TextInput
-                        id="numberDocument"
+                        id="number_document"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="form.numberDocument"
+                        v-model="form.number_document"
                         required
-                        autocomplete="numberDocument"
+                        autocomplete="number_document"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.numberDocument" />
+                    <InputError class="mt-2" :message="form.errors.number_document" />
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="firstName">
+                    <InputLabel for="first_name">
                         Primer nombre<span class="text-red-600"> *</span>
                     </InputLabel>
                     <TextInput
-                        id="firstName"
+                        id="first_name"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="form.firstName"
+                        v-model="form.first_name"
                         required
-                        autocomplete="firstName"
+                        autocomplete="first_name"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.firstName" />
+                    <InputError class="mt-2" :message="form.errors.first_name" />
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="secondName" value="Segundo nombre" />
+                    <InputLabel for="second_name" value="Segundo nombre" />
 
                     <TextInput
-                        id="secondName"
+                        id="second_name"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="form.secondName"
-                        autocomplete="secondName"
+                        v-model="form.second_name"
+                        autocomplete="second_name"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.secondName" />
+                    <InputError class="mt-2" :message="form.errors.second_name" />
                 </div>
 
                 <div class="col-span-1">
@@ -149,17 +148,17 @@ const submit = () => {
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="secondSurname" value="Segundo Apellido" />
+                    <InputLabel for="second_surname" value="Segundo Apellido" />
 
                     <TextInput
-                        id="secondSurname"
+                        id="second_surname"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="form.secondSurname"
-                        autocomplete="secondSurname"
+                        v-model="form.second_surname"
+                        autocomplete="second_surname"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.secondSurname" />
+                    <InputError class="mt-2" :message="form.errors.second_surname" />
                 </div>
 
                 <div class="col-span-1">
@@ -233,16 +232,16 @@ const submit = () => {
                 </div>
 
                 <div class="col-span-1">
-                    <InputLabel for="state">
+                    <InputLabel for="state_id">
                         Estado<span class="text-red-600"> *</span>
                     </InputLabel>
 
                     <select
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                        name="state"
-                        id="state"
-                        v-model="form.state"
-                        @change="show_cities(form.state)"
+                        name="state_id"
+                        id="state_id"
+                        v-model="form.state_id"
+                        @change="show_cities(form.state_id)"
                         required
                     >
                         <option value="">Seleccionar...</option>
@@ -255,20 +254,20 @@ const submit = () => {
                         </option>
                     </select>
 
-                    <InputError class="mt-2" :message="form.errors.state" />
+                    <InputError class="mt-2" :message="form.errors.state_id" />
 
                 </div>
 
                 <div class="col-span-1" v-if="state_selected !== 0">
-                    <InputLabel for="city">
+                    <InputLabel for="city_id">
                         Ciudad<span class="text-red-600"> *</span>
                     </InputLabel>
 
                     <select
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                        name="city"
-                        id="city"
-                        v-model="form.city"
+                        name="city_id"
+                        id="city_id"
+                        v-model="form.city_id"
                         required
                     >
                         <option value="">Seleccionar...</option>
@@ -282,7 +281,7 @@ const submit = () => {
                         </template>
                     </select>
 
-                    <InputError class="mt-2" :message="form.errors.city" />
+                    <InputError class="mt-2" :message="form.errors.city_id" />
 
                 </div>
 

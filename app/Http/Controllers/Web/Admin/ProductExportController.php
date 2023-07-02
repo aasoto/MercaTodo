@@ -12,7 +12,7 @@ class ProductExportController extends Controller
 {
     public function __invoke(Request $request): RedirectResponse
     {
-        ProductExportJob::dispatch()->onQueue('export');
+        ProductExportJob::dispatch()->onQueue('export-import');
 
         return Redirect::route('products.index')->with('success', 'Products exported.');
     }
