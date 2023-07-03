@@ -16,10 +16,13 @@ use Illuminate\Database\Query\Builder;
 /**
  * @property int id
  * @property string name
+ * @property string slug
+ * @property int products_category_id
  * @property string barcode
  * @property string description
  * @property double price
  * @property int stock
+ * @property string unit
  * @property string picture_1
  * @property string picture_2
  * @property string picture_3

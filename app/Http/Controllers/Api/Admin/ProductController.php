@@ -63,12 +63,11 @@ class ProductController extends Controller
          */
         $product = Product::query()->findOrFail($id);
 
-        $files = array();
-        array_push($files, [
+        $files = array(
             'picture_1' => $product->picture_1,
             'picture_2' => $product->picture_2,
             'picture_3' => $product->picture_3,
-        ]);
+        );
 
         $data = UpdateProductData::fromRequest($request);
 
@@ -76,7 +75,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => trans('message.updated', ['attribute' => 'product']),
-            'data' => new ProductResource($product),
+            'data' => new ProductResource($product->fresh()),
         ], 200);
     }
 
