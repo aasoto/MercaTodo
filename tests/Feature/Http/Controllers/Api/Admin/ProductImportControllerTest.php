@@ -12,6 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -24,6 +25,8 @@ class ProductImportControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        Storage::fake(config()->get('filesystem.default'));
 
         $this->seed([
             StateSeeder::class,

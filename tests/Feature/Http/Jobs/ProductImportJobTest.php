@@ -40,7 +40,7 @@ class ProductImportJobTest extends TestCase
 
     public function test_can_import_products(): void
     {
-        Storage::fake();
+        Storage::fake(config()->get('filesystem.default'));
         Bus::fake();
         Mail::fake();
         Sanctum::actingAs($this->user);

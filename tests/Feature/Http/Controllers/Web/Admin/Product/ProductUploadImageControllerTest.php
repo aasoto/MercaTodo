@@ -24,7 +24,7 @@ class ProductUploadImageControllerTest extends TestCase
     {
         parent::setUp();
 
-        Storage::fake();
+        Storage::fake('public');
 
         $this->seed([
             StateSeeder::class,
