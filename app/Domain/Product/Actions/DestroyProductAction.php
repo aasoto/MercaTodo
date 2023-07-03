@@ -21,8 +21,11 @@ class DestroyProductAction
         ->whereSlug($slug)
         ->first();
 
-        $this->images->Delete($query ? $query->toArray() : []);
-
-        return Product::where('slug', $slug)->delete();
+        if ($query) {
+            $this->images->Delete($query ? $query->toArray() : []);
+            return Product::where('slug', $slug)->delete();
+        } else {
+            return false;
+        }
     }
 }
