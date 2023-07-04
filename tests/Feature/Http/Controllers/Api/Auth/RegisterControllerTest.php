@@ -18,66 +18,105 @@ class RegisterControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_can_register_new_user_by_api(): void
+    private array $data;
+
+    public function setUp(): void
     {
-        $this->seed([RoleSeeder::class]);
-        $type_document = TypeDocument::factory()->create();
-        $state = State::factory()->create();
-        $city = City::factory()->create();
+        parent::setUp();
 
-        $data = [
-            'type_document' => $type_document['code'],
-            'number_document' => fake()->randomNumber(7, true),
-            'first_name' => fake()->firstName($gender = 'male'|'female'),
-            'second_name' => fake()->firstName($gender = 'male'|'female'),
-            'surname' => fake()->lastName(),
-            'second_surname' => fake()->lastName() ,
-            'email' => fake()->unique()->safeEmail(),
-            'password' => 'password',
-            'password_confirmation' => 'password',
-            'birthdate' => fake()->date(),
-            'gender' => fake()->randomElement(['m', 'f', 'o']),
-            'address' => fake()->streetAddress(),
-            'phone' => fake()->phoneNumber(),
-            'state_id' => $state["id"],
-            'city_id' => $city["id"],
-        ];
-
-        $response = $this->post(route('api.register'), $data, [
-            'Accept' => 'application/json',
+        $this->seed([
+            RoleSeeder::class,
         ]);
+
+        State::factory()->create();
+        City::factory()->create();
+        TypeDocument::factory()->create();
+
+        $user = User::factory()->make();
+
+        $this->data = [
+            'type_document' => $user->type_document,
+            'number_document' => $user->number_document,
+            'first_name' => $user->first_name,
+            'second_name' => $user->second_name,
+            'surname' => $user->surname,
+            'second_surname' => $user->second_surname,
+            'email' => $user->email,
+            'password' => $user->password,
+            'password_confirmation' => $user->password,
+            'birthdate' => $user->birthdate,
+            'gender' => $user->gender,
+            'address' => $user->address,
+            'phone' => $user->phone,
+            'state_id' => $user->state_id,
+            'city_id' => $user->city_id,
+        ];
+    }
+
+    public function test_can_register_new_user_admin_by_api(): void
+    {
+        $response = $this->postJson(route('api.register', 'admin'), $this->data);
 
         $response->assertJsonMissingValidationErrors();
         $response->assertStatus(201);
         $response->assertJsonFragment([
             'message' => trans('message.created'),
             'user' => [
-                'first_name' => $data['first_name'],
-                'second_name' => $data['second_name'],
-                'surname' => $data['surname'],
-                'second_surname' => $data['second_surname'],
-                'email' => $data['email'],
+                'first_name' => $this->data['first_name'],
+                'second_name' => $this->data['second_name'],
+                'surname' => $this->data['surname'],
+                'second_surname' => $this->data['second_surname'],
+                'email' => $this->data['email'],
             ],
         ]);
 
         $this->assertDatabaseCount('users', 1);
         $this->assertDatabaseHas('users', [
-            'first_name' => $data['first_name'],
-            'second_name' => $data['second_name'],
-            'surname' => $data['surname'],
-            'second_surname' => $data['second_surname'],
-            'email' => $data['email'],
+            'first_name' => $this->data['first_name'],
+            'second_name' => $this->data['second_name'],
+            'surname' => $this->data['surname'],
+            'second_surname' => $this->data['second_surname'],
+            'email' => $this->data['email'],
         ]);
+
+        $this->assertDatabaseCount('model_has_roles', 1);
+        $this->assertDatabaseHas('model_has_roles', [
+            'role_id' => 1,
+            'model_id' => 1,
+        ]);
+    }
+
+    public function test_can_register_new_user_client_by_api(): void
+    {
+        $response = $this->postJson(route('api.register', 'client'), $this->data);
+
+        $response->assertJsonMissingValidationErrors();
+        $response->assertStatus(201);
+        $response->assertJsonFragment([
+            'message' => trans('message.created'),
+            'user' => [
+                'first_name' => $this->data['first_name'],
+                'second_name' => $this->data['second_name'],
+                'surname' => $this->data['surname'],
+                'second_surname' => $this->data['second_surname'],
+                'email' => $this->data['email'],
+            ],
+        ]);
+
+        $this->assertDatabaseCount('users', 1);
+        $this->assertDatabaseHas('users', [
+            'first_name' => $this->data['first_name'],
+            'second_name' => $this->data['second_name'],
+            'surname' => $this->data['surname'],
+            'second_surname' => $this->data['second_surname'],
+            'email' => $this->data['email'],
+        ]);
+
+        $this->assertDatabaseCount('model_has_roles', 1);
     }
 
     public function test_can_validate_when_some_fields_are_not_sent(): void
     {
-        $this->seed([
-            StateSeeder::class,
-            CitySeeder::class,
-            TypeDocumentSeeder::class,
-            RoleSeeder::class,
-        ]);
         /**
          * @var User $user
          */
@@ -101,7 +140,7 @@ class RegisterControllerTest extends TestCase
             'city_id' => '',
         ];
 
-        $response = $this->post(route('api.register'), $data, [
+        $response = $this->post(route('api.register', 'admin'), $data, [
             'Accept' => 'application/json',
         ]);
 
