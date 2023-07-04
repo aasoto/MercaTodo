@@ -21,12 +21,12 @@ class ProductController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $posts = QueryBuilder::for(Product::class)
+        $products = QueryBuilder::for(Product::class)
             ->allowedFilters(['name', 'price', 'availability', 'products_category_id', 'unit'])
-            ->allowedIncludes('products_category')
+            ->allowedIncludes(['category', 'product_unit'])
             ->paginate(10);
 
-        return ProductResource::collection($posts);
+        return ProductResource::collection($products);
     }
 
     public function store(
@@ -46,7 +46,7 @@ class ProductController extends Controller
     public function show(string $slug): ProductResource
     {
         $product = QueryBuilder::for(Product::class)
-            ->allowedIncludes('products_category')
+            ->allowedIncludes(['category', 'product_unit'])
             ->where('slug', $slug)
             ->first();
 
