@@ -11,6 +11,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class UnitResource extends JsonResource
 {
+    /**
+     * @return array<mixed>
+     */
     public function toArray(Request $request): array
     {
         return [

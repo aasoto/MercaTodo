@@ -8,6 +8,8 @@ use App\Domain\Product\Models\Product;
 trait Cart
 {
     /**
+     * @param bool $has_products
+     * @param Order|array<mixed> $order
      * @return array<mixed>
      */
     public function get_cart(bool $has_products, Order|array $order): array

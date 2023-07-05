@@ -9,6 +9,8 @@ class GetProductsByOrderAction
 {
     /**
      * @param string $order_id
+     * @param bool $has_products
+     * @param ?array<mixed> $products
      * @return array<mixed>
      */
     public function handle(string $order_id, bool $has_products, ?array $products): array

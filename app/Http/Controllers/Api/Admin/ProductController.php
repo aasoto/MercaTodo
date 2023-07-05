@@ -81,7 +81,7 @@ class ProductController extends Controller
 
     public function destroy(
         DestroyProductAction $destroy_product_action,
-        string $slug)
+        string $slug): JsonResponse
     {
         $result = $destroy_product_action->handle($slug);
 

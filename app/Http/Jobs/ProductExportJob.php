@@ -93,7 +93,7 @@ class ProductExportJob implements ShouldQueue
         Storage::disk(config()->get('filesystem.default'))->put($file_name, '');
     }
 
-    private function open_file(string $file_name)
+    private function open_file(string $file_name): mixed
     {
         return fopen(Storage::disk(config()->get('filesystem.default'))->path($file_name), 'w');
     }

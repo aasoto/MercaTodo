@@ -39,6 +39,9 @@ class RestoreStockProductsService
         return $products_data;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function insolvent_products(StoreOrderData $products_data): array
     {
         if (isset($this->request->validated()['products'])) {
@@ -100,7 +103,7 @@ class RestoreStockProductsService
         Product $product,
         int $quantity,
         UpdateProductAction $update_product_action,
-        bool $increment = true)
+        bool $increment = true): void
     {
         $update_product_data = new UpdateProductData(
             $product->name,
@@ -123,12 +126,12 @@ class RestoreStockProductsService
         $update_product_action->handle($update_product_data, strval($product->id), '[]');
     }
 
-    private function increment_stock(int $stock, int $quantity)
+    private function increment_stock(int $stock, int $quantity): int
     {
         return  $stock + $quantity;
     }
 
-    private function decrement_stock(int $stock, int $quantity)
+    private function decrement_stock(int $stock, int $quantity): int
     {
         return  $stock - $quantity;
     }

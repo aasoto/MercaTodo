@@ -13,11 +13,12 @@ use App\Http\Requests\Api\Admin\ProductCategory\UpdateRequest;
 use App\Http\Resources\ProductsCategoryResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductCategoryController extends Controller
 {
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         $products_categories = QueryBuilder::for(ProductCategory::class)
             ->allowedFilters(['name'])
