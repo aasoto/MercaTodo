@@ -52,12 +52,12 @@ class UnitController extends Controller
 
     public function update(
         UpdateRequest $request,
-        UpdateUnitAction $update_product_action,
+        UpdateUnitAction $update_unit_action,
         string $id): JsonResponse
     {
         $data = UpdateUnitData::fromRequest($request);
 
-        $update_product_action->handle($id, $data);
+        $update_unit_action->handle($id, $data);
 
         return response()->json([
             'message' => trans('message.updated', ['attribute' => 'product']),

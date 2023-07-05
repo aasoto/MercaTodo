@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ProductCategoryController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductExportController;
 use App\Http\Controllers\Api\Admin\ProductImportController;
@@ -43,6 +44,11 @@ Route::name('api.')->group(function () {
         Route::post('/unit', [UnitController::class, 'store'])->name('product.unit.store');
         Route::get('/unit/{code}', [UnitController::class, 'show'])->name('product.unit.show');
         Route::patch('/unit/edit/{id}', [UnitController::class, 'update'])->name('product.unit.update');
+
+        Route::get('/product_categories', [ProductCategoryController::class, 'index'])->name('product.category.index');
+        Route::post('/product_category', [ProductCategoryController::class, 'store'])->name('product.category.store');
+        Route::get('/product_category/{id}', [ProductCategoryController::class, 'show'])->name('product.category.show');
+        Route::patch('/product_category/edit/{id}', [ProductCategoryController::class, 'update'])->name('product.category.update');
 
     });
 
