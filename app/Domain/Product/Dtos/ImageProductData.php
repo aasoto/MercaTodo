@@ -5,6 +5,7 @@ namespace App\Domain\Product\Dtos;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\UploadedFile;
 
+/** @phpstan-consistent-constructor */
 class ImageProductData
 {
     public function __construct(

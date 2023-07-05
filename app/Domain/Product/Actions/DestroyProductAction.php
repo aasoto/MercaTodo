@@ -22,7 +22,7 @@ class DestroyProductAction
         ->first();
 
         if ($query) {
-            $this->images->Delete($query ? $query->toArray() : []);
+            $this->images->Delete($query->toArray());
             return Product::where('slug', $slug)->delete();
         } else {
             return false;

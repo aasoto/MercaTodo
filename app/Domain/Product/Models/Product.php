@@ -14,19 +14,19 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 
 /**
- * @property int id
- * @property string name
- * @property string slug
- * @property int products_category_id
- * @property string barcode
- * @property string description
- * @property double price
- * @property int stock
- * @property string unit
- * @property string picture_1
- * @property string picture_2
- * @property string picture_3
- * @property string availability
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property int $products_category_id
+ * @property string $barcode
+ * @property string $description
+ * @property double $price
+ * @property int $stock
+ * @property string $unit
+ * @property string $picture_1
+ * @property string $picture_2
+ * @property string $picture_3
+ * @property string $availability
  * @method static Product join(...$parameters)
  * @method static Product orderBy(...$parameters)
  * @method static Product orderByDesc(...$parameters)

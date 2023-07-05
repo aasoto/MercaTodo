@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * @property int id
- * @property string name
+ * @property int $id
+ * @property string $name
  * @method static ProductCategoryFactory factory(...$parameters)
  */
 class ProductCategory extends Model

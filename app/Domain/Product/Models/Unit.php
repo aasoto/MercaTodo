@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * @property int id
- * @property string code
- * @property string name
+ * @property int $id
+ * @property string $code
+ * @property string $name
  * @method static UnitFactory factory(...$parameters)
  */
 class Unit extends Model

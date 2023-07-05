@@ -59,7 +59,7 @@ class RestoreStockProductsService
             foreach ($this->request->validated()['products'] as $key => $value) {
                 $purchase_total = $purchase_total + $value['totalPrice'];
             }
-            $order_data = new UpdateOrderData(null, $purchase_total);
+            $order_data = new UpdateOrderData(null, strval($purchase_total));
             $update_order_action->handle($order_data, $this->order['code']);
         }
     }
@@ -77,7 +77,7 @@ class RestoreStockProductsService
             if ($product->stock != 0) {
                 $this->update_products($product, $value->quantity, $update_product_action, false);
             } else {
-                $remove_product_of_order->handle($this->order->id, $product->id);
+                $remove_product_of_order->handle($this->order->id, strval($product->id));
             }
 
         }
@@ -117,7 +117,7 @@ class RestoreStockProductsService
             null,
             null,
             null,
-            $product->availability,
+            boolval($product->availability),
         );
 
         $update_product_action->handle($update_product_data, strval($product->id), '[]');
