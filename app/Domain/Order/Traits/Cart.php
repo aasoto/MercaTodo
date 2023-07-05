@@ -17,7 +17,7 @@ trait Cart
     {
         $cart = array();
 
-        if ($has_products) {
+        if ($has_products && $order) {
             foreach ($order as $key => $value) {
                 array_push($cart, [
                     'id' => $value['id'],
@@ -26,7 +26,7 @@ trait Cart
                     'quantity' => $value['quantity'],
                 ]);
             }
-        } else {
+        } elseif ($order_saved) {
             foreach ($order_saved->products as $key => $value) {
                 /**
                  * @var Product $product

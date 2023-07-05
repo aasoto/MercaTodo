@@ -37,7 +37,7 @@ class GetProductsByOrderAction
                     'totalPrice' => $value['quantity'] * $value['price'],
                 ]);
             }
-        } else {
+        } elseif($products) {
             foreach ($products as $key => $value) {
                 /**
                  * @var Product $product

@@ -60,11 +60,11 @@ class ProductExportJob implements ShouldQueue
                     fputcsv($file, [
                         'id' => $product->id,
                         'name' => $product->name,
-                        'category' => $product->category->name,
+                        'category' => $product->category?->name,
                         'barcode' => $product->barcode,
                         'description' => $product->description,
                         'price' => $product->price,
-                        'unit' => $product->product_unit->name,
+                        'unit' => $product->product_unit?->name,
                         'stock' => $product->stock,
                         'picture_1' => $product->picture_1,
                         'picture_2' => $product->picture_2,
@@ -76,7 +76,7 @@ class ProductExportJob implements ShouldQueue
 
             fclose($file);
 
-            Mail::to($this->user)->send(new SendEmailExportProducts($this->uuid));
+            Mail::to($this->user)->send(new SendEmailExportProducts($this->uuid ? $this->uuid : ''));
 
         } catch (\Exception $exception) {
             Log::channel('export_products_file')
