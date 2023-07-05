@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductExportController;
 use App\Http\Controllers\Api\Admin\ProductImportController;
 use App\Http\Controllers\Api\Admin\ProductUploadImageController;
+use App\Http\Controllers\Api\Admin\UnitController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Http\Request;
@@ -37,6 +38,12 @@ Route::name('api.')->group(function () {
         Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
         Route::patch('/product/edit/{id}', [ProductController::class, 'update'])->name('product.update');
         Route::delete('/product/{slug}', [ProductController::class, 'destroy'])->name('product.destroy');
+
+        Route::get('/units', [UnitController::class, 'index'])->name('product.unit.index');
+        Route::post('/unit', [UnitController::class, 'store'])->name('product.unit.store');
+        Route::get('/unit/{code}', [UnitController::class, 'show'])->name('product.unit.show');
+        Route::patch('/unit/edit/{id}', [UnitController::class, 'update'])->name('product.unit.update');
+
     });
 
 });

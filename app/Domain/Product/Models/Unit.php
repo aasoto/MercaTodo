@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 /**
+ * @property int id
  * @property string code
  * @property string name
  * @method static UnitFactory factory(...$parameters)

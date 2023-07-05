@@ -11,13 +11,15 @@ class StoreUnitAction
     /**
      * @param StoreUnitData $data
      */
-    public function handle(StoreUnitData $data): void
+    public function handle(StoreUnitData $data): Unit
     {
-        Unit::create([
+        $unit = Unit::create([
             'code' => $data->code,
             'name' => $data->name,
         ]);
 
         Cache::put('units', Unit::select('id', 'code', 'name')->get());
+
+        return $unit;
     }
 }
