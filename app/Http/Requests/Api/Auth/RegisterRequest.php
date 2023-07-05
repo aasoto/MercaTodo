@@ -20,7 +20,7 @@ class RegisterRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<mixed>>
+     * @return array<string, array<int, Password|string|null>|string>
      */
     public function rules(): array
     {

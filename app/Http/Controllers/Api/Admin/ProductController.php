@@ -71,7 +71,11 @@ class ProductController extends Controller
 
         $data = UpdateProductData::fromRequest($request);
 
-        $update_product_action->handle($data, $id, json_encode($files));
+        /**
+         * @var string $encode_files
+         */
+        $encode_files = json_encode($files);
+        $update_product_action->handle($data, $id, $encode_files);
 
         return response()->json([
             'message' => trans('message.updated', ['attribute' => 'product']),
