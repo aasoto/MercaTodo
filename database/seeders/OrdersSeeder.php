@@ -17,7 +17,7 @@ class OrdersSeeder extends Seeder
     public function run(): void
     {
         for ($i=0; $i < 5; $i++) {
-            $user = User::factory()->create()->assignRole('admin');
+            $user = User::factory()->create()->assignRole('client');
             for ($j=0; $j < 5; $j++) {
                 $this->make_order($user);
             }
