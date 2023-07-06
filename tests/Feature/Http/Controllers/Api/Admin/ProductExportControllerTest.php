@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Http\Controllers\Api\Admin;
 
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use App\Http\Jobs\ProductExportJob;
-use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
-use Database\Seeders\StateSeeder;
-use Database\Seeders\TypeDocumentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Queue;
@@ -25,11 +25,12 @@ class ProductExportControllerTest extends TestCase
         parent::setUp();
 
         $this->seed([
-            StateSeeder::class,
-            CitySeeder::class,
             RoleSeeder::class,
-            TypeDocumentSeeder::class,
         ]);
+
+        State::factory()->create();
+        City::factory()->create();
+        TypeDocument::factory()->create();
 
         $this->user = User::factory()->create()->assignRole('admin');
     }

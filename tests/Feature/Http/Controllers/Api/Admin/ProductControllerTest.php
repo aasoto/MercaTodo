@@ -3,13 +3,13 @@
 namespace Tests\Feature\Http\Controllers\Api\Admin;
 
 use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
+use App\Domain\Product\Models\Unit;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
-use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\RoleSeeder;
-use Database\Seeders\UnitSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -31,10 +31,11 @@ class ProductControllerTest extends TestCase
         Storage::fake('public');
 
         $this->seed([
-            ProductCategorySeeder::class,
-            UnitSeeder::class,
             RoleSeeder::class,
         ]);
+
+        ProductCategory::factory()->create();
+        Unit::factory()->create();
 
         $this->product = Product::factory()->create();
 

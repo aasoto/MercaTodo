@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Http\Controllers\Web\Auth;
 
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use App\Support\Providers\RouteServiceProvider;
-use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
-use Database\Seeders\StateSeeder;
-use Database\Seeders\TypeDocumentSeeder;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -21,12 +21,14 @@ class EmailVerificationTest extends TestCase
     public function setUp (): void
     {
         parent::setUp();
+
         $this->seed([
-            StateSeeder::class,
-            CitySeeder::class,
             RoleSeeder::class,
-            TypeDocumentSeeder::class,
         ]);
+
+        State::factory()->create();
+        City::factory()->create();
+        TypeDocument::factory()->create();
     }
 
     public function test_email_verification_screen_can_be_rendered(): void
