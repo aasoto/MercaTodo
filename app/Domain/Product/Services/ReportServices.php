@@ -31,13 +31,31 @@ class ReportServices
 
     public function products_status_by_stock(): array
     {
+        $products = Product::get();
+
         $colors = ['rgb(25, 119, 3)', 'rgb(255, 204, 0)', 'rgb(223, 6, 52)'];
         $data = array();
         $labels = ['Abundantes: stock > 5', 'Escasos: stock <= 5', 'Agotados: stock = 0'];
 
-        array_push($data, count(Product::where('stock', '>', 5)->get()));
-        array_push($data, count(Product::where('stock', '<=', 5)->get()));
-        array_push($data, count(Product::where('stock', 0)->get()));
+        $abundant = 0;
+        $scarce = 0;
+        $sold_out = 0;
+
+        foreach ($products as $key => $value) {
+            if ($value['stock'] > 5) {
+                $abundant++;
+            }
+            if ($value['stock'] <= 5) {
+                $scarce++;
+            }
+            if ($value['stock'] == 0) {
+                $sold_out++;
+            }
+        }
+
+        array_push($data, $abundant);
+        array_push($data, $scarce);
+        array_push($data, $sold_out);
 
         return [
             'colors' => $colors,
@@ -48,12 +66,25 @@ class ReportServices
 
     public function products_by_availability(): array
     {
+        $products = Product::get();
+
         $colors = ['rgb(25, 119, 3)', 'rgb(223, 6, 52)'];
         $data = array();
         $labels = ['Habilitados', 'Inhabilitados'];
 
-        array_push($data, count(Product::where('availability', '1')->get()));
-        array_push($data, count(Product::where('availability', '0')->get()));
+        $enabled = 0;
+        $disabled = 0;
+
+        foreach ($products as $key => $value) {
+            if ($value['availability'] == '1') {
+                $enabled++;
+            } else {
+                $disabled++;
+            }
+        }
+
+        array_push($data, $enabled);
+        array_push($data, $disabled);
 
         return [
             'colors' => $colors,
