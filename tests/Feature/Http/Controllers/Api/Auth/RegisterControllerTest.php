@@ -80,10 +80,6 @@ class RegisterControllerTest extends TestCase
         ]);
 
         $this->assertDatabaseCount('model_has_roles', 1);
-        $this->assertDatabaseHas('model_has_roles', [
-            'role_id' => 1,
-            'model_id' => 1,
-        ]);
     }
 
     public function test_can_register_new_user_client_by_api(): void

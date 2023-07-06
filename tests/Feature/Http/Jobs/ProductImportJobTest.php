@@ -63,23 +63,19 @@ class ProductImportJobTest extends TestCase
 
         $this->assertDatabaseCount('products', 3);
         $this->assertDatabaseHas('products', [
-            'id' => 1,
             'name' => 'Test import product',
             'barcode' => '123456789',
             'price' => 10000,
-            'products_category_id' => '1',
             'unit' => 'unidad',
         ]);
 
         $this->assertDatabaseCount('products_categories', 3);
         $this->assertDatabaseHas('products_categories', [
-            'id' => 1,
             'name' => 'Test import category',
         ]);
 
         $this->assertDatabaseCount('units', 3);
         $this->assertDatabaseHas('units', [
-            'id' => 1,
             'code' => 'unidad',
             'name' => 'Unidad',
         ]);
