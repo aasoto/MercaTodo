@@ -10,7 +10,7 @@ use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
-use Database\Seeders\OrderHasProductSeeder;
+use Database\Seeders\OrderFullSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -45,11 +45,12 @@ class OrderHasProductTest extends TestCase
             'email' => env('CLIENT_EMAIL'),
         ])->assignRole('client');
 
-        Product::factory(100)->create();
+        Product::factory(3)->create();
 
-        $this->order = Order::factory()->create();
+        $this->seed(OrderFullSeeder::class);
 
-        $this->seed(OrderHasProductSeeder::class);
+        $this->order = Order::inRandomOrder()->first();
+
     }
 
     public function test_can_list_products_of_an_order(): void

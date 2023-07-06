@@ -11,6 +11,7 @@ use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductExportTest extends TestCase
@@ -22,6 +23,8 @@ class ProductExportTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        Storage::fake(config()->get('filesystem.default'));
 
         $this->seed([
             RoleSeeder::class,

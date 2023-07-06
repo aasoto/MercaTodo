@@ -32,7 +32,6 @@ class ProductExportJobTest extends TestCase
     public function test_can_generate_export_file_successfully(): void
     {
         Storage::fake(config()->get('filesystem.default'));
-        Storage::fake('public');
         Mail::fake();
 
         $this->seed([

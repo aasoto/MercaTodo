@@ -10,9 +10,7 @@ use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
-use Database\Seeders\OrderSeeder;
-use Database\Seeders\OrderHasProductSeeder;
-use Database\Seeders\ProductSeeder;
+use Database\Seeders\OrderFullSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -38,17 +36,17 @@ class OrderTest extends TestCase
         TypeDocument::factory()->create();
         ProductCategory::factory()->create();
         Unit::factory()->create();
+        Product::factory()->count(7)->create();
 
         $this->seed([
             RoleSeeder::class,
-            ProductSeeder::class,
         ]);
 
         $this->user = User::factory()->create([
             'email' => env('CLIENT_EMAIL'),
         ])->assignRole('client');
 
-        $this->seed(OrderSeeder::class);
+        $this->seed(OrderFullSeeder::class);
     }
 
     public function test_can_list_orders_by_client(): void
@@ -256,7 +254,6 @@ class OrderTest extends TestCase
 
     public function test_can_show_order_detail(): void
     {
-        $this->seed(OrderHasProductSeeder::class);
         $order = Order::inRandomOrder()->first();
 
         $response = $this->actingAs($this->user)
