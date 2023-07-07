@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers\Web\Admin;
 
 use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
+use Database\Seeders\OrdersSeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StateSeeder;
 use Database\Seeders\TypeDocumentSeeder;
@@ -22,6 +23,7 @@ class DashboardTest extends TestCase
             CitySeeder::class,
             RoleSeeder::class,
             TypeDocumentSeeder::class,
+            OrdersSeeder::class,
         ]);
 
         $user = User::factory()->create()->assignRole('admin');
@@ -33,8 +35,39 @@ class DashboardTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Dashboard')
                 ->has('userRole')
-        );
+                ->has('ordersByDay')
+                ->has('ordersByDay', fn (Assert $page) => $page
+                    ->has('color')
+                    ->has('data')
+                    ->has('labels')
+                )
+                ->has('ordersByPaymentStatus')
+                ->has('ordersByPaymentStatus', fn (Assert $page) => $page
+                    ->has('colorBars')
+                    ->has('colorBorderBars')
+                    ->has('data')
+                    ->has('labels')
+                )
+                ->has('productsByCategory')
+                ->has('productsByCategory', fn (Assert $page) => $page
+                    ->has('colors')
+                    ->has('data')
+                    ->has('labels')
+                )
+                ->has('productsStatusByStock')
+                ->has('productsStatusByStock', fn (Assert $page) => $page
+                    ->has('colors')
+                    ->has('data')
+                    ->has('labels')
+                )
+                ->has('productsByAvailability')
+                ->has('productsByAvailability', fn (Assert $page) => $page
+                    ->has('colors')
+                    ->has('data')
+                    ->has('labels')
+                )
+                ->etc()
+            );
 
-        $response->assertView('h2')->contains('Dashboard');
     }
 }

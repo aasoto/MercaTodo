@@ -1,11 +1,22 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useSignedRoleStore } from '@/Store/SignedRole';
 import { Head } from '@inertiajs/vue3';
-import Showcase from './Showcase/Index.vue';
+
+import { useSignedRoleStore } from '@/Store/SignedRole';
+
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
+import BasicCard from '@/Components/Cards/BasicCard.vue';
+import DoughnutChart from '@/Components/Charts/DoughnutChart.vue';
+import TitlePage from '@/Components/TitlePage.vue';
+import LineChart from '@/Components/Charts/LineChart.vue';
+import BarChart from '@/Components/Charts/BarChart.vue';
 
 const props = defineProps({
-    products: Object,
+    ordersByDay: Object,
+    ordersByPaymentStatus: Object,
+    productsByCategory: Object,
+    productsStatusByStock: Object,
+    productsByAvailability: Object,
     userRole: String,
 });
 
@@ -20,16 +31,66 @@ assignRole(props.userRole);
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
+            <TitlePage>
+                Dashboard
+            </TitlePage>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        Bienvenido al modo Administrador de MercadoTodo
-                    </div>
-                </div>
+        <div class="p-6 text-gray-900 dark:text-gray-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <BasicCard title="Total productos por categorías" class="col-span-1">
+                    <DoughnutChart
+                        class="mx-24"
+                        :colors="productsByCategory.colors"
+                        :data="productsByCategory.data"
+                        :identificator="'totalProducts'"
+                        :label="'Total productos por categorías'"
+                        :labels="productsByCategory.labels"
+                    />
+                </BasicCard>
+
+                <BasicCard title="Estado de los productos según su stock" class="col-span-1">
+                    <DoughnutChart
+                        class="mx-24"
+                        :colors="productsStatusByStock.colors"
+                        :data="productsStatusByStock.data"
+                        :identificator="'productsStatusByStock'"
+                        :label="'Estado de los productos según su stock'"
+                        :labels="productsStatusByStock.labels"
+                    />
+                </BasicCard>
+
+                <BasicCard title="Productos habilitados e inhabilitados" class="col-span-1">
+                    <DoughnutChart
+                        class="mx-24"
+                        :colors="productsByAvailability.colors"
+                        :data="productsByAvailability.data"
+                        :identificator="'productsByAvailability'"
+                        :label="'Productos habilitados e inhabilitados'"
+                        :labels="productsByAvailability.labels"
+                    />
+                </BasicCard>
+
+                <BasicCard title="Número de ordenes hechas por día">
+                    <LineChart
+                        :color="ordersByDay.color"
+                        :data="ordersByDay.data"
+                        identificator="ordersByDay"
+                        label="Número de ordenes hechas por día"
+                        :labels="ordersByDay.labels"
+                    />
+                </BasicCard>
+
+                <BasicCard title="Número de ordenes por estado de pago">
+                    <BarChart
+                        :color-bars="ordersByPaymentStatus.colorBars"
+                        :color-border-bars="ordersByPaymentStatus.colorBorderBars"
+                        :data="ordersByPaymentStatus.data"
+                        identificator="ordersByPaymentStatus"
+                        label="Número de ordenes por estado de pago"
+                        :labels="ordersByPaymentStatus.labels"
+                    />
+                </BasicCard>
             </div>
         </div>
     </AuthenticatedLayout>
