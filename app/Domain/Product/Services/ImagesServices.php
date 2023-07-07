@@ -2,8 +2,10 @@
 
 namespace App\Domain\Product\Services;
 
+use App\Domain\Product\Dtos\ImageProductData;
 use App\Domain\Product\Dtos\StoreProductData;
 use App\Domain\Product\Dtos\UpdateProductData;
+use App\Domain\Product\Models\Product;
 use App\Domain\Product\Traits\StorageFiles;
 
 class ImagesServices
@@ -90,5 +92,18 @@ class ImagesServices
         if (isset($data['picture_3']) && isset($files['picture_3'])) {
             $this->remove('images/products', $files['picture_3']);
         }
+    }
+
+    public function upload_single_image(ImageProductData $data): string
+    {
+        if ($data->product_id && $data->picture_number) {
+            $current_file_name = Product::select('picture_'.$data->picture_number)
+                ->where('id', $data->product_id)
+                ->first();
+
+            $this->remove('images/products', $current_file_name['picture_'.$data->picture_number]);
+        }
+
+        return $this->upload($data->image_file, 'images/products', rand(0, 100));
     }
 }
