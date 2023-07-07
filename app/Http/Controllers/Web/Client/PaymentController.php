@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class PaymentController extends Controller
 {
-    use Cart, CheckStock;
+    use CheckStock;
 
     public function show(string $code): HttpFoundationResponse
     {

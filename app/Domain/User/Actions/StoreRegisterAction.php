@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class StoreRegisterAction
 {
-    public function handle(StoreRegisterData $data): User
+    public function handle(StoreRegisterData $data, ?string $role = 'client'): User
     {
 
         // Call to an undefined method Illuminate\Database\Eloquent\Model::assignRole().
@@ -28,6 +28,6 @@ class StoreRegisterAction
             "address"           => $data->address,
             "state_id"          => $data->state_id,
             "city_id"           => $data->city_id,
-        ])->assignRole('client');
+        ])->assignRole($role);
     }
 }

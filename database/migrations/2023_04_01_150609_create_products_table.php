@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 100)->unique();
             $table->string('slug', 100)->unique();
             $table->foreignId("products_category_id")->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->text('barcode')->unique();
+            $table->string('barcode', 100)->unique();
             $table->text('description')->nullable();
             $table->double('price', 15, 2);
             $table->string("unit", 100);

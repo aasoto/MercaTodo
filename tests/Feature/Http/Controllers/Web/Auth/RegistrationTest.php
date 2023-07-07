@@ -6,10 +6,7 @@ use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Support\Providers\RouteServiceProvider;
-use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
-use Database\Seeders\StateSeeder;
-use Database\Seeders\TypeDocumentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -27,11 +24,12 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register(): void
     {
         $this->seed([
-            StateSeeder::class,
-            CitySeeder::class,
             RoleSeeder::class,
-            TypeDocumentSeeder::class,
         ]);
+
+        State::factory()->create();
+        City::factory()->create();
+        TypeDocument::factory()->create();
 
         $state = State::getFromCache();
         $city = City::select('id')->where('state_id', $state[0]["id"])->inRandomOrder()->first();

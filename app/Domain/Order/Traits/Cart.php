@@ -8,13 +8,16 @@ use App\Domain\Product\Models\Product;
 trait Cart
 {
     /**
+     * @param bool $has_products
+     * @param ?array<mixed> $order
+     * @param ?Order $order_saved
      * @return array<mixed>
      */
-    public function get_cart(bool $has_products, Order|array $order): array
+    public function get_cart(bool $has_products, ?array $order, ?Order $order_saved): array
     {
         $cart = array();
 
-        if ($has_products) {
+        if ($has_products && $order) {
             foreach ($order as $key => $value) {
                 array_push($cart, [
                     'id' => $value['id'],
@@ -23,8 +26,8 @@ trait Cart
                     'quantity' => $value['quantity'],
                 ]);
             }
-        } else {
-            foreach ($order->products as $key => $value) {
+        } elseif ($order_saved) {
+            foreach ($order_saved->products as $key => $value) {
                 /**
                  * @var Product $product
                  */

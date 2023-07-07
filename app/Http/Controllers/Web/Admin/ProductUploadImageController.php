@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Web\Admin;
 
 use App\Domain\Product\Dtos\ImageProductData;
+use App\Domain\Product\Models\Product;
+use App\Domain\Product\Services\ImagesServices;
 use App\Domain\Product\Traits\StorageFiles;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\Admin\Product\ImageRequest;
@@ -23,11 +25,13 @@ class ProductUploadImageController extends Controller
         ]);
     }
 
-    public function store(ImageRequest $request): RedirectResponse
+    public function store(
+        ImageRequest $request,
+        ImagesServices $images_services): RedirectResponse
     {
-        $data = ImageProductData::fromRequest($request);
-
-        $file_name = $this->upload($data->image_file, 'images/products', rand(0, 100));
+        $file_name = $images_services->upload_single_image(
+            ImageProductData::fromRequest($request)
+        );
 
         return Redirect::route('product.image.create')->with('file_name', $file_name);
     }

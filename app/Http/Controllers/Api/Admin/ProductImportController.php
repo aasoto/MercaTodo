@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Domain\Product\Dtos\ImportProductData;
+use App\Domain\User\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Jobs\ProductImportJob;
 use App\Http\Requests\Api\Admin\Product\ImportRequest;
@@ -18,9 +19,14 @@ class ProductImportController extends Controller
     {
         $data = ImportProductData::fromRequest($request);
 
+        /**
+         * @var User $auth_user
+         */
+        $auth_user = $request->user();
+
         ProductImportJob::dispatch(
             $data->products_file,
-            $request->user(),
+            $auth_user,
         )->onQueue('export-import');
 
         return response()->json([

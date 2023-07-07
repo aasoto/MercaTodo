@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Http\Controllers\Web\Auth;
 
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
@@ -20,13 +23,15 @@ class EmailVerificationPromptTest extends TestCase
     public function setUp (): void
     {
         parent::setUp();
+
         $this->seed([
-            StateSeeder::class,
-            CitySeeder::class,
             RoleSeeder::class,
-            TypeDocumentSeeder::class,
-            UserSeeder::class,
         ]);
+
+        State::factory()->create();
+        City::factory()->create();
+        TypeDocument::factory()->create();
+        User::factory()->create()->assignRole('admin');
     }
 
     public function test_if_email_is_verfied_direct_start(): void

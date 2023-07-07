@@ -5,13 +5,13 @@ namespace Tests\Feature\Domain\Order\Services;
 use App\Domain\Order\Models\Order;
 use App\Domain\Order\Models\OrderHasProduct;
 use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
+use App\Domain\Product\Models\Unit;
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
-use Database\Seeders\CitySeeder;
-use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\RoleSeeder;
-use Database\Seeders\StateSeeder;
-use Database\Seeders\TypeDocumentSeeder;
-use Database\Seeders\UnitSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Http;
@@ -32,13 +32,14 @@ class RestoreStockProductsTest extends TestCase
         Storage::fake('public');
 
         $this->seed([
-            StateSeeder::class,
-            CitySeeder::class,
             RoleSeeder::class,
-            TypeDocumentSeeder::class,
-            ProductCategorySeeder::class,
-            UnitSeeder::class,
         ]);
+
+        State::factory()->create();
+        City::factory()->create();
+        TypeDocument::factory()->create();
+        ProductCategory::factory()->create();
+        Unit::factory()->create();
 
         $this->user = User::factory()->create()->assignRole('client');
 

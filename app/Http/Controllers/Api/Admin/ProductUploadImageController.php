@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Domain\Product\Dtos\ImageProductData;
+use App\Domain\Product\Services\ImagesServices;
 use App\Domain\Product\Traits\StorageFiles;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Product\ImageRequest;
@@ -13,11 +14,13 @@ class ProductUploadImageController extends Controller
 {
     use StorageFiles;
 
-    public function __invoke(ImageRequest $request): JsonResponse
+    public function __invoke(
+        ImageRequest $request,
+        ImagesServices $images_services): JsonResponse
     {
-        $data = ImageProductData::fromRequest($request);
-
-        $file_name = $this->upload($data->image_file, 'images/products', rand(0, 100));
+        $file_name = $images_services->upload_single_image(
+            ImageProductData::fromRequest($request)
+        );
 
         return response()->json([
             'message' => trans('Product image saved.', ['attribute' => 'file_name']),

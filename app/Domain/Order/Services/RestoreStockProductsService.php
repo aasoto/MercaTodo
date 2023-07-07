@@ -30,21 +30,24 @@ class RestoreStockProductsService
     {
         $get_products = new GetProductsByOrderAction();
 
-        if (isset($this->request->validated()['products'])) {
+        if (isset($this->request?->validated()['products'])) {
             $products_data = new StoreOrderData($get_products->handle($this->order->id, true, $this->request->validated()['products']), $this->request->validated()['payment_method']);
         } else {
-            $products_data = new StoreOrderData($get_products->handle($this->order->id, false, null), $this->request->validated()['payment_method']);
+            $products_data = new StoreOrderData($get_products->handle($this->order->id, false, null), $this->request?->validated()['payment_method']);
         }
 
         return $products_data;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function insolvent_products(StoreOrderData $products_data): array
     {
-        if (isset($this->request->validated()['products'])) {
-            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(true, $products_data->products), $this->request->validated()['payment_method'])));
+        if (isset($this->request?->validated()['products'])) {
+            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(true, $products_data->products, null), $this->request->validated()['payment_method'])));
         }else {
-            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(false, $this->order), $this->request->validated()['payment_method'])));
+            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(false, null, $this->order), $this->request?->validated()['payment_method'])));
         }
 
         return $limitated_stock;
@@ -54,12 +57,12 @@ class RestoreStockProductsService
     {
         $update_order_action = new UpdateOrderAction();
 
-        if (isset($this->request->validated()['products'])) {
+        if (isset($this->request?->validated()['products'])) {
             $purchase_total = 0;
             foreach ($this->request->validated()['products'] as $key => $value) {
                 $purchase_total = $purchase_total + $value['totalPrice'];
             }
-            $order_data = new UpdateOrderData(null, $purchase_total);
+            $order_data = new UpdateOrderData(null, strval($purchase_total));
             $update_order_action->handle($order_data, $this->order['code']);
         }
     }
@@ -77,7 +80,7 @@ class RestoreStockProductsService
             if ($product->stock != 0) {
                 $this->update_products($product, $value->quantity, $update_product_action, false);
             } else {
-                $remove_product_of_order->handle($this->order->id, $product->id);
+                $remove_product_of_order->handle($this->order->id, strval($product->id));
             }
 
         }
@@ -100,7 +103,7 @@ class RestoreStockProductsService
         Product $product,
         int $quantity,
         UpdateProductAction $update_product_action,
-        bool $increment = true)
+        bool $increment = true): void
     {
         $update_product_data = new UpdateProductData(
             $product->name,
@@ -117,18 +120,18 @@ class RestoreStockProductsService
             null,
             null,
             null,
-            $product->availability,
+            boolval($product->availability),
         );
 
         $update_product_action->handle($update_product_data, strval($product->id), '[]');
     }
 
-    private function increment_stock(int $stock, int $quantity)
+    private function increment_stock(int $stock, int $quantity): int
     {
         return  $stock + $quantity;
     }
 
-    private function decrement_stock(int $stock, int $quantity)
+    private function decrement_stock(int $stock, int $quantity): int
     {
         return  $stock - $quantity;
     }

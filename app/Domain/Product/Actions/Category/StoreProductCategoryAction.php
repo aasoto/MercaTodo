@@ -8,14 +8,16 @@ use Illuminate\Support\Facades\Cache;
 
 class StoreProductCategoryAction
 {
-    public function handle(StoreProductCategoryData $data): void
+    public function handle(StoreProductCategoryData $data): ProductCategory
     {
-        ProductCategory::create([
+        $product_category = ProductCategory::create([
             'name' => $data->name,
         ]);
 
         Cache::put('products_categories',
             ProductCategory::select('id', 'name')->orderBy('name')->get()
         );
+
+        return $product_category;
     }
 }

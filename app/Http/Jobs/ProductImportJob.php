@@ -69,6 +69,9 @@ class ProductImportJob implements ShouldQueue
         }
     }
 
+    /**
+     * @param array<mixed> $row
+     */
     private function process_row(array $row): void
     {
         Product::query()->updateOrCreate([

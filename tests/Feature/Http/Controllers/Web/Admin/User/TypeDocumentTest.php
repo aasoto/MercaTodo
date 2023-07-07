@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers\Web\Admin\User;
 
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
@@ -25,11 +27,12 @@ class TypeDocumentTest extends TestCase
         parent::setUp();
 
         $this->seed([
-            StateSeeder::class,
-            CitySeeder::class,
             RoleSeeder::class,
-            TypeDocumentSeeder::class,
         ]);
+
+        State::factory()->create();
+        City::factory()->create();
+        TypeDocument::factory()->create();
 
         $this->user = User::factory()->create()->assignRole('admin');
         $this->type_document = TypeDocument::factory()->create();
