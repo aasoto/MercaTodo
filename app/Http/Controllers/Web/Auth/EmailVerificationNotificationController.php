@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Auth;
 
+use App\Domain\User\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Jobs\SendEmailVerificationJob;
 use App\Support\Providers\RouteServiceProvider;
@@ -19,7 +20,12 @@ class EmailVerificationNotificationController extends Controller
             return redirect()->intended(RouteServiceProvider::HOME);
         }
 
-        SendEmailVerificationJob::dispatch($request->user())->onQueue('email_verification');
+        /**
+         * @var User $auth_user
+         */
+        $auth_user = $request->user();
+
+        SendEmailVerificationJob::dispatch($auth_user)->onQueue('email_verification');
 
         return back()->with('status', 'verification-link-sent');
     }

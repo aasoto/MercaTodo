@@ -20,6 +20,9 @@ class LoginController extends Controller
             ], 422);
         }
 
+        /**
+         * @var User $user
+         */
         $user = User::query()->where('email', $request->get('email'))->first();
         $token = $user->createToken(Str::random())->plainTextToken;
 

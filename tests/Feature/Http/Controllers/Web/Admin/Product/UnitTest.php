@@ -3,6 +3,9 @@
 namespace Tests\Feature\Http\Controllers\Web\Admin\Product;
 
 use App\Domain\Product\Models\Unit;
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use Database\Seeders\CitySeeder;
 use Database\Seeders\RoleSeeder;
@@ -26,12 +29,13 @@ class UnitTest extends TestCase
         parent::setUp();
 
         $this->seed([
-            StateSeeder::class,
-            CitySeeder::class,
             RoleSeeder::class,
-            TypeDocumentSeeder::class,
-            UnitSeeder::class,
         ]);
+
+        State::factory()->create();
+        City::factory()->create();
+        TypeDocument::factory()->create();
+        Unit::factory()->create();
 
         $this->user = User::factory()->create()->assignRole('admin');
         $this->unit = Unit::factory()->create();
