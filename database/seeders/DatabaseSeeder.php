@@ -22,9 +22,7 @@ class DatabaseSeeder extends Seeder
             UnitSeeder::class,
             ProductSeeder::class,
             PaymentMethodSeeder::class,
-            // OrderSeeder::class,
-            // OrderHasProductSeeder::class,
-            OrderFullSeeder::class,
+            OrdersSeeder::class,
         ]);
     }
 }

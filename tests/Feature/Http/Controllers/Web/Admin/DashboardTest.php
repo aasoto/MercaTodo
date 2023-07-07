@@ -2,10 +2,14 @@
 
 namespace Tests\Feature\Http\Controllers\Web\Admin;
 
+use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
+use App\Domain\Product\Models\Unit;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
+use Database\Seeders\OrdersSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -17,13 +21,18 @@ class DashboardTest extends TestCase
 
     public function test_shows_dashboard_page(): void
     {
-        $this->seed([
-            RoleSeeder::class,
-        ]);
 
         State::factory()->create();
         City::factory()->create();
         TypeDocument::factory()->create();
+        ProductCategory::factory()->create();
+        Unit::factory()->create();
+        Product::factory()->count(3)->create();
+
+        $this->seed([
+            RoleSeeder::class,
+            OrdersSeeder::class,
+        ]);
 
         $user = User::factory()->create()->assignRole('admin');
 
