@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Http\Controllers\Web\Admin\Product;
 
+use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
+use App\Domain\Product\Models\Unit;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
@@ -11,7 +14,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class ProductUploadImageControllerTest extends TestCase
@@ -33,15 +35,31 @@ class ProductUploadImageControllerTest extends TestCase
         State::factory()->create();
         City::factory()->create();
         TypeDocument::factory()->create();
+        ProductCategory::factory()->create();
+        Unit::factory()->create();
 
         $this->user = User::factory()->create()->assignRole('admin');
     }
 
     public function test_can_upload_image_for_product(): void
     {
-        Sanctum::actingAs($this->user);
+        $response = $this->actingAs($this->user)->post(route('product.image.store'), [
+            'image_file' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
+        ]);
 
-        $response = $this->postJson(route('product.image.store'), [
+        $response->assertRedirect(route('product.image.create'));
+    }
+
+    public function test_can_replace_image_for_product(): void
+    {
+        /**
+         * @var Product $product
+         */
+        $product = Product::factory()->create();
+
+        $response = $this->actingAs($this->user)->post(route('product.image.store'), [
+            'product_id' => $product->id,
+            'picture_number' => rand(1, 3),
             'image_file' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
         ]);
 
