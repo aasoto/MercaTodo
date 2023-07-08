@@ -11,6 +11,8 @@ import TableRow from '@/Components/Tables/Basic/TableRow.vue';
 import TableCol from '@/Components/Tables/Basic/TableCol.vue';
 import Pagination from '@/Components/Pagination.vue';
 import NotFoundMessage from '@/Components/NotFoundMessage.vue';
+import PaymentStatus from '@/Pages/Order/Partials/PaymentStatus.vue';
+import { dateGMT } from '@/Composables/FormatDate.js'
 
 const props = defineProps({
     filters: Object,
@@ -104,19 +106,19 @@ const tableTitles = ['ID', 'Código', 'Fecha de compra', 'Fecha de pago', 'Estad
                             {{ order.code }}
                         </TableCol>
                         <TableCol class="capitalize">
-                            {{ order.purchase_date }}
+                            {{ dateGMT(order.purchase_date, -5) }}
                         </TableCol>
                         <TableCol class="capitalize">
-                            {{ order.payment_date }}
+                            {{ dateGMT(order.payment_date, -5) }}
                         </TableCol>
                         <TableCol class="capitalize">
-                            {{ order.payment_status }}
+                            <PaymentStatus :order="order"/>
                         </TableCol>
                         <TableCol class="capitalize">
-                            {{ order.purchase_total }}
+                            {{ order.purchase_total.toLocaleString('es-CO', { style: 'currency', currency: 'COP'}) }}
                         </TableCol>
                         <TableCol class="capitalize">
-                            {{ order.updated_at }}
+                            {{ dateGMT(order.updated_at, -5) }}
                         </TableCol>
                         <TableCol class="capitalize">
                             {{ `${order.first_name} ${order.second_name} ${order.surname} ${order.second_surname}` }}
