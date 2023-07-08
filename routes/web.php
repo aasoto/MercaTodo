@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\Admin\ProductController;
 use App\Http\Controllers\Web\Admin\ProductExportController;
 use App\Http\Controllers\Web\Admin\ProductImportController;
 use App\Http\Controllers\Web\Admin\ProductUploadImageController;
+use App\Http\Controllers\Web\Admin\ReportController;
 use App\Http\Controllers\Web\Admin\StateController;
 use App\Http\Controllers\Web\Admin\TypeDocumentController;
 use App\Http\Controllers\Web\Admin\UnitController;
@@ -130,6 +131,11 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::post('/unit/store', [UnitController::class, 'store'])->name('unit.store');
         Route::get('/unit/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
         Route::patch('/unit/edit/{id}', [UnitController::class, 'update'])->name('unit.update');
+    });
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/reports', [ReportController::class, 'index'])->name('report.index');
+        Route::get('/order_report', [ReportController::class, 'export'])->name('order.report.export');
     });
 
     /** ORDERS */
