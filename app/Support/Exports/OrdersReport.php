@@ -22,6 +22,7 @@ class OrdersReport implements FromQuery
                 isset($this->filters['date_1']) ? $this->filters['date_1'] : null,
                 isset($this->filters['date_2']) ? $this->filters['date_2'] : null,
                 )
+            -> whereUserNumberDocument(isset($this->filters['number_document']) ? $this->filters['number_document'] : null)
             -> select(
                 'orders.id',
                 'orders.code',

@@ -18,8 +18,13 @@ const props = defineProps({
     success: String,
 });
 
+const numberDocument = ref(props.filters.numberDocument);
 const date1 = ref(props.filters.date1);
 const date2 = ref(props.filters.date2);
+
+watch(numberDocument, value => {
+    getResults();
+});
 
 watch(date1, value => {
     getResults();
@@ -30,37 +35,19 @@ watch(date2, value => {
 });
 
 const getResults = () => {
-    if (date1.value && date2.value) {
-        router.get('/order_report', {
-            date1: date1.value,
-            date2: date2.value
-        }, {
-            preserveState: true,
-            replace: true,
-        });
-    } else {
-        if (date1.value) {
-            router.get('/order_report', {
-                date1: date1.value
-            }, {
-                preserveState: true,
-                replace: true,
-            });
-        }
-        if (date2.value) {
-            router.get('/order_report', {
-                date2: date2.value
-            }, {
-                preserveState: true,
-                replace: true,
-            });
-        }
-    }
-
+    router.get('/order_report', {
+        numberDocument: numberDocument.value,
+        date1: date1.value,
+        date2: date2.value
+    }, {
+        preserveState: true,
+        replace: true,
+    });
 }
 
 const generateReport = () => {
     router.post(route('order.report.export'), {
+        number_document: numberDocument.value,
         date_1: date1.value,
         date_2: date2.value,
     });
@@ -82,6 +69,14 @@ const tableTitles = ['ID', 'Código', 'Fecha de compra', 'Fecha de pago', 'Estad
         <BasicBodyPage>
             <div class="flex flex-col justify-center items-center">
                 <div class="w-full mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="col-span-1">
+                        <input
+                            v-model="numberDocument"
+                            type="text"
+                            class="w-full px-5 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            placeholder="Número de documento del usuario"
+                        >
+                    </div>
                     <div class="col-span-1 flex justify-center items-center gap-2">
                         <input
                             v-model="date1"
@@ -135,7 +130,7 @@ const tableTitles = ['ID', 'Código', 'Fecha de compra', 'Fecha de pago', 'Estad
         <AlertSuccess
             v-if="success === 'Orders report generated.'"
             title="¡Bien Hecho!"
-            text="La exportación de productos fue encolada."
+            text="La exportación del reporte de ordenes está siendo procesada, una vez este proceso termine usted recibirá un correo electronico con el link de descarga del archivo."
             :close="false"
             :btn-close="true"
         />

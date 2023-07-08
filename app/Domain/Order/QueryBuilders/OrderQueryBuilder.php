@@ -33,7 +33,6 @@ class OrderQueryBuilder extends Builder
 
     public function whereDateBetween(?string $date_1, ?string $date_2): self|Order
     {
-        // $date_1 = date('2023-07-06');
         if ($date_1 && $date_2) {
             return $this->whereBetween('orders.purchase_date', [$date_1, $date_2]);
         } elseif ($date_1) {
@@ -43,5 +42,13 @@ class OrderQueryBuilder extends Builder
         } else {
             return $this;
         }
+    }
+
+    public function whereUserNumberDocument(?string $number_document): self
+    {
+        // dd($number_document);
+        return $number_document ?
+            $this->where('users.number_document', $number_document) :
+            $this;
     }
 }

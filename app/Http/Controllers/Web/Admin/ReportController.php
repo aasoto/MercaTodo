@@ -25,9 +25,10 @@ class ReportController extends Controller
     public function create_order(Request $request): Response
     {
         return Inertia::render('Report/Order/Create', [
-            'filters' => $request->only(['date1', 'date2']),
+            'filters' => $request->only(['date1', 'date2', 'numberDocument']),
             'orders' => Order::query()
-                ->whereDateBetween($request->input('date1'), $request->input('date2'))
+                -> whereDateBetween($request->input('date1'), $request->input('date2'))
+                -> whereUserNumberDocument($request->input('numberDocument'))
                 -> select(
                     'orders.id',
                     'orders.code',
@@ -46,6 +47,7 @@ class ReportController extends Controller
                 -> join('users', 'orders.user_id', 'users.id')
                 -> paginate(10)
                 -> withQueryString(),
+            'success' => session('success'),
         ]);
     }
 
@@ -56,6 +58,6 @@ class ReportController extends Controller
             new OrdersReportJob($request->user(), $path_file),
         ]);
 
-        return Redirect::route('report.index')->with('success', 'Orders report generated.');
+        return Redirect::route('order.report.create')->with('success', 'Orders report generated.');
     }
 }
