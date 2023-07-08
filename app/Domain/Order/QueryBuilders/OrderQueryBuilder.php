@@ -30,4 +30,18 @@ class OrderQueryBuilder extends Builder
         $authenticated_user_id = auth()->user()?->id;
         return $authenticated_user_id ? $this->where('user_id', $authenticated_user_id) : $this;
     }
+
+    public function whereDateBetween(?string $date_1, ?string $date_2): self|Order
+    {
+        // $date_1 = date('2023-07-06');
+        if ($date_1 && $date_2) {
+            return $this->whereBetween('orders.purchase_date', [$date_1, $date_2]);
+        } elseif ($date_1) {
+            return $this->where('orders.purchase_date', $date_1);
+        } elseif ($date_2) {
+            return $this->where('orders.purchase_date', $date_2);
+        } else {
+            return $this;
+        }
+    }
 }
