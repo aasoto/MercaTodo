@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Exports;
+namespace App\Http\Exports;
 
 use App\Domain\Order\Models\Order;
 use Maatwebsite\Excel\Concerns\Exportable;

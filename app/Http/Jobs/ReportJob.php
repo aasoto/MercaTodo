@@ -11,21 +11,19 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class OrdersReportJob implements ShouldQueue
+class ReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
+        private string $email_subject,
         private mixed $user,
         private string $path,
-    ){}
+    )
+    {}
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
-        Mail::to($this->user)->send(new SendEmailReport("Order's report", $this->path));
-
+        Mail::to($this->user)->send(new SendEmailReport($this->email_subject, $this->path));
     }
 }

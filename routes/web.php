@@ -136,9 +136,9 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/reporting', [ReportController::class, 'index'])->name('report.index');
         Route::get('/user_report', [ReportController::class, 'create_user'])->name('user.report.create');
-        Route::get('/user_report_export', [ReportController::class, 'export_user'])->name('user.report.export');
+        Route::post('/user_report_export', [ReportController::class, 'export_user'])->name('user.report.export');
         Route::get('/product_report', [ReportController::class, 'create_product'])->name('product.report.create');
-        Route::get('/product_report_export', [ReportController::class, 'export_product'])->name('product.report.export');
+        Route::post('/product_report_export', [ReportController::class, 'export_product'])->name('product.report.export');
         Route::get('/order_report', [ReportController::class, 'create_order'])->name('order.report.create');
         Route::post('/order_report_export', [ReportController::class, 'export_order'])->name('order.report.export');
 

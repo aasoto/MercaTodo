@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Web\Admin;
 
 use App\Domain\Order\Models\Order;
+use App\Domain\Product\Models\Product;
+use App\Domain\Product\Models\ProductCategory;
 use App\Http\Controllers\Controller;
+use App\Http\Exports\OrdersReport;
+use App\Http\Exports\ProductsReport;
 use App\Http\Jobs\OrdersReportJob;
-use App\Http\Requests\Web\Admin\Order\ReportRequest;
-use App\Support\Exports\OrdersReport;
+use App\Http\Jobs\ReportJob;
+use App\Http\Requests\Web\Admin\Order\ReportRequest as OrderReportRequest;
+use App\Http\Requests\Web\Admin\Product\ReportRequest as ProductReportRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -55,13 +60,47 @@ class ReportController extends Controller
         ]);
     }
 
-    public function export_order(ReportRequest $request): RedirectResponse
+    public function export_order(OrderReportRequest $request): RedirectResponse
     {
         $path_file = 'reports/orders/orders_'.time().'.xlsx';
         (new OrdersReport($request->validated()))->queue($path_file)->chain([
-            new OrdersReportJob($request->user(), $path_file),
+            new ReportJob("Order's report", $request->user(), $path_file),
         ]);
 
         return Redirect::route('order.report.create')->with('success', 'Orders report generated.');
+    }
+
+    public function create_product(Request $request): Response
+    {
+        return Inertia::render('Report/Product/Create', [
+            'filters' => $request->only(['category']),
+            'products' => Product::query()
+                -> whereCategory($request->input('category'))
+                -> select(
+                    'products.name',
+                    'products_categories.name as category',
+                    'products.price',
+                    'units.name as unit',
+                    'products.stock',
+                    'products.availability',
+                )
+                -> join('products_categories', 'products.products_category_id', 'products_categories.id')
+                -> join('units', 'products.unit', 'units.code')
+                -> orderby('products.id')
+                -> paginate(10)
+                -> withQueryString(),
+            'productsCategories' => ProductCategory::getFromCache(),
+            'success' => session('success'),
+        ]);
+    }
+
+    public function export_product(ProductReportRequest $request): RedirectResponse
+    {
+        $path_file = 'reports/orders/orders_'.time().'.xlsx';
+        (new ProductsReport($request->validated()))->queue($path_file)->chain([
+            new ReportJob("Product's report", $request->user(), $path_file),
+        ]);
+
+        return Redirect::route('product.report.create')->with('success', 'Products report generated.');
     }
 }
