@@ -22,6 +22,7 @@ class ReportRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'search' => ['nullable', 'string'],
             'category' => ['nullable', 'string'],
             'min_stock' => ['nullable', 'integer'],
             'max_stock' => ['nullable', 'integer'],

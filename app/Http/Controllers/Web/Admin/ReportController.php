@@ -74,8 +74,9 @@ class ReportController extends Controller
     public function create_product(Request $request): Response
     {
         return Inertia::render('Report/Product/Create', [
-            'filters' => $request->only(['category', 'minStock', 'maxStock', 'minPrice', 'maxPrice', 'unitCode']),
+            'filters' => $request->only(['search', 'category', 'minStock', 'maxStock', 'minPrice', 'maxPrice', 'unitCode']),
             'products' => Product::query()
+                -> whereSearch($request->input('search'))
                 -> whereCategory($request->input('category'))
                 -> whereUnit($request->input('unitCode'))
                 -> whereStockBetween($request->input('minStock'), $request->input('maxStock'))

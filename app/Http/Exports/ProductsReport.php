@@ -18,6 +18,7 @@ class ProductsReport implements FromQuery
     public function query()
     {
         return Product::query()
+            -> whereSearch(isset($this->filters['search']) ? $this->filters['search'] : null)
             -> whereCategory(isset($this->filters['category']) ? $this->filters['category'] : null)
             -> whereUnit(isset($this->filters['unit_code']) ? $this->filters['unit_code'] : null)
             -> whereStockBetween(

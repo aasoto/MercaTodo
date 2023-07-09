@@ -23,12 +23,17 @@ const props = defineProps({
     success: String,
 });
 
+const search = ref(props.filters.search);
 const category = ref(props.filters.category);
 const minStock = ref(props.filters.minStock);
 const maxStock = ref(props.filters.maxStock);
 const minPrice = ref(props.filters.minPrice);
 const maxPrice = ref(props.filters.maxPrice);
 const unitCode = ref(props.filters.unitCode);
+
+watch(search, value => {
+    getResults();
+});
 
 watch(category, value => {
     getResults();
@@ -78,6 +83,7 @@ const setUnit = (code, name) => {
 
 const getResults = () => {
     router.get(route('product.report.create'), {
+        search: search.value,
         category: category.value,
         minStock: minStock.value,
         maxStock: maxStock.value,
@@ -92,6 +98,7 @@ const getResults = () => {
 
 const generateReport = () => {
     router.post(route('product.report.export'), {
+        search: search.value,
         category: category.value,
         min_stock: minStock.value,
         max_stock: maxStock.value,
@@ -117,6 +124,14 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
         <BasicBodyPage>
             <div class="flex flex-col justify-center items-center">
                 <div class="w-full mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="col-span-1">
+                        <input
+                            v-model="search"
+                            type="text"
+                            class="w-full px-5 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            placeholder="Buscar..."
+                        >
+                    </div>
                     <DropdownButtonStrict :btn-label="btnCategoryText" class="col-span-1">
                         <DropdownItem @click="setCategory()">
                             Todas
