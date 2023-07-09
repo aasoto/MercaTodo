@@ -23,6 +23,10 @@ class ProductsReport implements FromQuery
                 isset($this->filters['min_stock']) ? $this->filters['min_stock'] : null,
                 isset($this->filters['max_stock']) ? $this->filters['max_stock'] : null,
             )
+            -> wherePriceBetween(
+                isset($this->filters['min_price']) ? $this->filters['min_price'] : null,
+                isset($this->filters['max_price']) ? $this->filters['max_price'] : null,
+            )
             -> select(
                 'products.id',
                 'products.name',

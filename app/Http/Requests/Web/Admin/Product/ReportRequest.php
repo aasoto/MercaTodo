@@ -25,6 +25,8 @@ class ReportRequest extends FormRequest
             'category' => ['nullable', 'string'],
             'min_stock' => ['nullable', 'integer'],
             'max_stock' => ['nullable', 'integer'],
+            'min_price' => ['nullable', 'numeric'],
+            'max_price' => ['nullable', 'numeric'],
         ];
     }
 }

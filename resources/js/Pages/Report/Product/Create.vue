@@ -25,6 +25,8 @@ const props = defineProps({
 const category = ref(props.filters.category);
 const minStock = ref(props.filters.minStock);
 const maxStock = ref(props.filters.maxStock);
+const minPrice = ref(props.filters.minPrice);
+const maxPrice = ref(props.filters.maxPrice);
 
 watch(category, value => {
     getResults();
@@ -35,6 +37,14 @@ watch(minStock, value => {
 });
 
 watch(maxStock, value => {
+    getResults();
+});
+
+watch(minPrice, value => {
+    getResults();
+});
+
+watch(maxPrice, value => {
     getResults();
 });
 
@@ -54,6 +64,8 @@ const getResults = () => {
         category: category.value,
         minStock: minStock.value,
         maxStock: maxStock.value,
+        minPrice: minPrice.value,
+        maxPrice: maxPrice.value,
     }, {
         preserveState: true,
         replace: true,
@@ -65,6 +77,8 @@ const generateReport = () => {
         category: category.value,
         min_stock: minStock.value,
         max_stock: maxStock.value,
+        min_price: minPrice.value,
+        max_price: maxPrice.value,
     });
 }
 
@@ -111,6 +125,25 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                                 v-model="maxStock"
                                 type="number"
                                 placeholder="Stock max."
+                                class="px-2 py-[10px] w-32 bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            >
+                        </div>
+                    </div>
+                    <div class="rounded-md border border-gray-300 p-1 col-span-1">
+                        <InputLabel class="translate-x-5 -translate-y-3 bg-white dark:bg-gray-800 w-52 px-3">
+                                Entre precios de productos
+                        </InputLabel>
+                        <div class="flex justify-center items-center gap-2">
+                            <input
+                                v-model="minPrice"
+                                type="number"
+                                placeholder="Precio min."
+                                class="px-2 py-[10px] w-32 bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            >
+                            <input
+                                v-model="maxPrice"
+                                type="number"
+                                placeholder="Precio max."
                                 class="px-2 py-[10px] w-32 bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
                             >
                         </div>
