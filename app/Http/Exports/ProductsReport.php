@@ -19,6 +19,7 @@ class ProductsReport implements FromQuery
     {
         return Product::query()
             -> whereCategory(isset($this->filters['category']) ? $this->filters['category'] : null)
+            -> whereUnit(isset($this->filters['unit_code']) ? $this->filters['unit_code'] : null)
             -> whereStockBetween(
                 isset($this->filters['min_stock']) ? $this->filters['min_stock'] : null,
                 isset($this->filters['max_stock']) ? $this->filters['max_stock'] : null,

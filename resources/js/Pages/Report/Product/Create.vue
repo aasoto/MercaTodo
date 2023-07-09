@@ -19,6 +19,7 @@ const props = defineProps({
     filters: Object,
     products: Object,
     productsCategories: Object,
+    units: Object,
     success: String,
 });
 
@@ -27,6 +28,7 @@ const minStock = ref(props.filters.minStock);
 const maxStock = ref(props.filters.maxStock);
 const minPrice = ref(props.filters.minPrice);
 const maxPrice = ref(props.filters.maxPrice);
+const unitCode = ref(props.filters.unitCode);
 
 watch(category, value => {
     getResults();
@@ -48,6 +50,10 @@ watch(maxPrice, value => {
     getResults();
 });
 
+watch(unitCode, value => {
+    getResults();
+});
+
 const btnCategoryText = ref('Categoría');
 const setCategory = (productCategory) => {
     if (productCategory) {
@@ -59,6 +65,17 @@ const setCategory = (productCategory) => {
     }
 }
 
+const btnUnitText = ref('Unidad');
+const setUnit = (code, name) => {
+    if (unitCode) {
+        unitCode.value = code;
+        btnUnitText.value = name;
+    } else {
+        unitCode.value = '';
+        btnUnitText.value = 'Unidad';
+    }
+}
+
 const getResults = () => {
     router.get(route('product.report.create'), {
         category: category.value,
@@ -66,6 +83,7 @@ const getResults = () => {
         maxStock: maxStock.value,
         minPrice: minPrice.value,
         maxPrice: maxPrice.value,
+        unitCode: unitCode.value,
     }, {
         preserveState: true,
         replace: true,
@@ -79,6 +97,7 @@ const generateReport = () => {
         max_stock: maxStock.value,
         min_price: minPrice.value,
         max_price: maxPrice.value,
+        unit_code: unitCode.value,
     });
 }
 
@@ -108,6 +127,18 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                             :key="productCategory.id"
                         >
                             {{ productCategory.name }}
+                        </DropdownItem>
+                    </DropdownButtonStrict>
+                    <DropdownButtonStrict :btn-label="btnUnitText" class="col-span-1">
+                        <DropdownItem @click="setUnit()">
+                            Todas
+                        </DropdownItem>
+                        <DropdownItem
+                            v-for="unit in units"
+                            @click="setUnit(unit.code, unit.name)"
+                            :key="unit.id"
+                        >
+                            {{ unit.name }}
                         </DropdownItem>
                     </DropdownButtonStrict>
                     <div class="rounded-md border border-gray-300 p-1 col-span-1">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Domain\Order\Models\Order;
 use App\Domain\Product\Models\Product;
 use App\Domain\Product\Models\ProductCategory;
+use App\Domain\Product\Models\Unit;
 use App\Http\Controllers\Controller;
 use App\Http\Exports\OrdersReport;
 use App\Http\Exports\ProductsReport;
@@ -73,9 +74,10 @@ class ReportController extends Controller
     public function create_product(Request $request): Response
     {
         return Inertia::render('Report/Product/Create', [
-            'filters' => $request->only(['category', 'minStock', 'maxStock', 'minPrice', 'maxPrice']),
+            'filters' => $request->only(['category', 'minStock', 'maxStock', 'minPrice', 'maxPrice', 'unitCode']),
             'products' => Product::query()
                 -> whereCategory($request->input('category'))
+                -> whereUnit($request->input('unitCode'))
                 -> whereStockBetween($request->input('minStock'), $request->input('maxStock'))
                 -> wherePriceBetween($request->input('minPrice'), $request->input('maxPrice'))
                 -> select(
@@ -92,6 +94,7 @@ class ReportController extends Controller
                 -> paginate(10)
                 -> withQueryString(),
             'productsCategories' => ProductCategory::getFromCache(),
+            'units' => Unit::getFromCache(),
             'success' => session('success'),
         ]);
     }

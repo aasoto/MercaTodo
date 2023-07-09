@@ -55,7 +55,7 @@ class ProductQueryBuilder extends Builder
         } elseif ($max_price) {
             return $this->where('products.price', $max_price);
         } else {
-            $this;
+            return $this;
         }
     }
 
@@ -70,6 +70,10 @@ class ProductQueryBuilder extends Builder
         } else {
             return $this;
         }
+    }
 
+    public function whereUnit(?string $unit_code): self
+    {
+        return $unit_code ? $this->where('products.unit', $unit_code) : $this;
     }
 }
