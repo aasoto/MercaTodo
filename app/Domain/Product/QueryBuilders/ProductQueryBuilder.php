@@ -52,4 +52,18 @@ class ProductQueryBuilder extends Builder
             $this->whereBetween('products.price', [$min_price, $max_price]) :
             $this;
     }
+
+    public function whereStockBetween(?int $min_stock, ?int $max_stock): self|Product
+    {
+        if ($min_stock && $max_stock) {
+            return $this->whereBetween('products.stock', [$min_stock, $max_stock]);
+        } elseif ($min_stock) {
+            return $this->where('products.stock', $min_stock);
+        } elseif ($max_stock) {
+            return $this->where('products.stock', $max_stock);
+        } else {
+            return $this;
+        }
+
+    }
 }

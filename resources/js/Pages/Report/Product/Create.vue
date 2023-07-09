@@ -13,6 +13,7 @@ import TableRow from '@/Components/Tables/Basic/TableRow.vue';
 import NotFoundMessage from '@/Components/NotFoundMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
+import InputLabel from '@/Components/InputLabel.vue';
 
 const props = defineProps({
     filters: Object,
@@ -22,8 +23,18 @@ const props = defineProps({
 });
 
 const category = ref(props.filters.category);
+const minStock = ref(props.filters.minStock);
+const maxStock = ref(props.filters.maxStock);
 
 watch(category, value => {
+    getResults();
+});
+
+watch(minStock, value => {
+    getResults();
+});
+
+watch(maxStock, value => {
     getResults();
 });
 
@@ -41,6 +52,8 @@ const setCategory = (productCategory) => {
 const getResults = () => {
     router.get(route('product.report.create'), {
         category: category.value,
+        minStock: minStock.value,
+        maxStock: maxStock.value,
     }, {
         preserveState: true,
         replace: true,
@@ -50,6 +63,8 @@ const getResults = () => {
 const generateReport = () => {
     router.post(route('product.report.export'), {
         category: category.value,
+        min_stock: minStock.value,
+        max_stock: maxStock.value,
     });
 }
 
@@ -81,6 +96,25 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                             {{ productCategory.name }}
                         </DropdownItem>
                     </DropdownButtonStrict>
+                    <div class="rounded-md border border-gray-300 p-1 col-span-1">
+                        <InputLabel class="translate-x-7 -translate-y-3 bg-white dark:bg-gray-800 w-48 px-3">
+                                Entre stocks de productos
+                        </InputLabel>
+                        <div class="flex justify-center items-center gap-2">
+                            <input
+                                v-model="minStock"
+                                type="number"
+                                placeholder="Stock min."
+                                class="px-2 py-[10px] w-32 bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            >
+                            <input
+                                v-model="maxStock"
+                                type="number"
+                                placeholder="Stock max."
+                                class="px-2 py-[10px] w-32 bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            >
+                        </div>
+                    </div>
                     <SuccessButton @click="generateReport()" class="col-span-1">
                         Generar reporte de products
                     </SuccessButton>
