@@ -23,6 +23,7 @@ class OrdersReport implements FromQuery
                 isset($this->filters['date_2']) ? $this->filters['date_2'] : null,
                 )
             -> whereUserNumberDocument(isset($this->filters['number_document']) ? $this->filters['number_document'] : null)
+            -> wherePaymentStatus(isset($this->filters['payment_status']) ? $this->filters['payment_status'] : null)
             -> select(
                 'orders.id',
                 'orders.code',
@@ -32,6 +33,7 @@ class OrdersReport implements FromQuery
                 'orders.purchase_total',
                 'orders.url',
                 'orders.updated_at',
+                'users.number_document',
                 'users.first_name',
                 'users.second_name',
                 'users.surname',

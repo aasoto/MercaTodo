@@ -25,6 +25,7 @@ class ReportRequest extends FormRequest
             'number_document' => ['nullable', 'string'],
             'date_1' => ['nullable', 'date'],
             'date_2' => ['nullable', 'date'],
+            'payment_status' => ['nullable', 'string'],
         ];
     }
 }

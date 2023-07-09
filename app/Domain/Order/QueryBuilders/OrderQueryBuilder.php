@@ -46,9 +46,15 @@ class OrderQueryBuilder extends Builder
 
     public function whereUserNumberDocument(?string $number_document): self
     {
-        // dd($number_document);
         return $number_document ?
             $this->where('users.number_document', $number_document) :
+            $this;
+    }
+
+    public function wherePaymentStatus(?string $payment_status): self
+    {
+        return $payment_status ?
+            $this->where('orders.payment_status', $payment_status) :
             $this;
     }
 }

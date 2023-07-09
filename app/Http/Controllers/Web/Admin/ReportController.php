@@ -25,10 +25,11 @@ class ReportController extends Controller
     public function create_order(Request $request): Response
     {
         return Inertia::render('Report/Order/Create', [
-            'filters' => $request->only(['date1', 'date2', 'numberDocument']),
+            'filters' => $request->only(['date1', 'date2', 'numberDocument', 'paymentStatus']),
             'orders' => Order::query()
                 -> whereDateBetween($request->input('date1'), $request->input('date2'))
                 -> whereUserNumberDocument($request->input('numberDocument'))
+                -> wherePaymentStatus($request->input('paymentStatus'))
                 -> select(
                     'orders.id',
                     'orders.code',

@@ -13,6 +13,8 @@ import Pagination from '@/Components/Pagination.vue';
 import NotFoundMessage from '@/Components/NotFoundMessage.vue';
 import PaymentStatus from '@/Pages/Order/Partials/PaymentStatus.vue';
 import { dateGMT } from '@/Composables/FormatDate.js'
+import DropdownButtonStrict from '@/Components/Buttons/DropdownButtonStrict.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
 
 const props = defineProps({
     filters: Object,
@@ -23,6 +25,8 @@ const props = defineProps({
 const numberDocument = ref(props.filters.numberDocument);
 const date1 = ref(props.filters.date1);
 const date2 = ref(props.filters.date2);
+const paymentStatus = ref(props.filters.paymentStatus);
+const paymentStatusBtnLabel = ref('Estados de pago');
 
 watch(numberDocument, value => {
     getResults();
@@ -36,11 +40,21 @@ watch(date2, value => {
     getResults();
 });
 
+watch(paymentStatus, value => {
+    getResults();
+});
+
+const selectPaymentStatus = (status, btnLabel) => {
+    paymentStatus.value = status;
+    paymentStatusBtnLabel.value = btnLabel;
+}
+
 const getResults = () => {
     router.get('/order_report', {
         numberDocument: numberDocument.value,
         date1: date1.value,
-        date2: date2.value
+        date2: date2.value,
+        paymentStatus: paymentStatus.value,
     }, {
         preserveState: true,
         replace: true,
@@ -52,6 +66,7 @@ const generateReport = () => {
         number_document: numberDocument.value,
         date_1: date1.value,
         date_2: date2.value,
+        payment_status: paymentStatus.value,
     });
 }
 
@@ -93,6 +108,26 @@ const tableTitles = ['ID', 'Código', 'Fecha de compra', 'Fecha de pago', 'Estad
                             class="px-2 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
                         >
                     </div>
+                    <DropdownButtonStrict :btn-label="paymentStatusBtnLabel">
+                        <DropdownLink @click="selectPaymentStatus('paid', 'Pagado')">
+                            Pagado
+                        </DropdownLink>
+                        <DropdownLink @click="selectPaymentStatus('pending', 'Pendiente')">
+                            Pendiente
+                        </DropdownLink>
+                        <DropdownLink @click="selectPaymentStatus('canceled', 'Cancelado')">
+                            Cancelado
+                        </DropdownLink>
+                        <DropdownLink @click="selectPaymentStatus('approved_partial', 'Pago incompleto')">
+                            Pago incompleto
+                        </DropdownLink>
+                        <DropdownLink @click="selectPaymentStatus('verify_bank', 'Verificar con su banco')">
+                            Verificar con su banco
+                        </DropdownLink>
+                        <DropdownLink @click="selectPaymentStatus('partial_expired', 'Pago expirado')">
+                            Pago expirado
+                        </DropdownLink>
+                    </DropdownButtonStrict>
                     <SuccessButton @click="generateReport()" class="col-span-1">
                         Generar reporte de ordenes
                     </SuccessButton>
