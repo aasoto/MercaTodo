@@ -15,6 +15,7 @@ import PaymentStatus from '@/Pages/Order/Partials/PaymentStatus.vue';
 import { dateGMT } from '@/Composables/FormatDate.js'
 import DropdownButtonStrict from '@/Components/Buttons/DropdownButtonStrict.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
+import InputLabel from '@/Components/InputLabel.vue';
 
 const props = defineProps({
     filters: Object,
@@ -27,6 +28,8 @@ const date1 = ref(props.filters.date1);
 const date2 = ref(props.filters.date2);
 const paymentStatus = ref(props.filters.paymentStatus);
 const paymentStatusBtnLabel = ref('Estados de pago');
+const minTotal = ref(props.filters.minTotal);
+const maxTotal = ref(props.filters.maxTotal);
 
 watch(numberDocument, value => {
     getResults();
@@ -44,6 +47,14 @@ watch(paymentStatus, value => {
     getResults();
 });
 
+watch(minTotal, value => {
+    getResults();
+});
+
+watch(maxTotal, value => {
+    getResults();
+});
+
 const selectPaymentStatus = (status, btnLabel) => {
     paymentStatus.value = status;
     paymentStatusBtnLabel.value = btnLabel;
@@ -55,6 +66,8 @@ const getResults = () => {
         date1: date1.value,
         date2: date2.value,
         paymentStatus: paymentStatus.value,
+        minTotal: minTotal.value,
+        maxTotal: maxTotal.value,
     }, {
         preserveState: true,
         replace: true,
@@ -67,6 +80,8 @@ const generateReport = () => {
         date_1: date1.value,
         date_2: date2.value,
         payment_status: paymentStatus.value,
+        min_total: minTotal.value,
+        max_total: maxTotal.value,
     });
 }
 
@@ -86,7 +101,7 @@ const tableTitles = ['ID', 'Código', 'Fecha de compra', 'Fecha de pago', 'Estad
         <BasicBodyPage>
             <div class="flex flex-col justify-center items-center">
                 <div class="w-full mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="col-span-1">
+                    <div class="col-span-2">
                         <input
                             v-model="numberDocument"
                             type="text"
@@ -94,21 +109,7 @@ const tableTitles = ['ID', 'Código', 'Fecha de compra', 'Fecha de pago', 'Estad
                             placeholder="Número de documento del usuario"
                         >
                     </div>
-                    <div class="col-span-1 flex justify-center items-center gap-2">
-                        <input
-                            v-model="date1"
-                            type="date"
-                            placeholder="Fecha inicio"
-                            class="px-2 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
-                        >
-                        <input
-                            v-model="date2"
-                            type="date"
-                            placeholder="Fecha final"
-                            class="px-2 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
-                        >
-                    </div>
-                    <DropdownButtonStrict :btn-label="paymentStatusBtnLabel">
+                    <DropdownButtonStrict class="col-span-1" :btn-label="paymentStatusBtnLabel">
                         <DropdownLink @click="selectPaymentStatus('paid', 'Pagado')">
                             Pagado
                         </DropdownLink>
@@ -131,6 +132,44 @@ const tableTitles = ['ID', 'Código', 'Fecha de compra', 'Fecha de pago', 'Estad
                     <SuccessButton @click="generateReport()" class="col-span-1">
                         Generar reporte de ordenes
                     </SuccessButton>
+                    <div class="rounded-md border border-gray-300 p-1 col-span-1">
+                        <InputLabel class="translate-x-7 -translate-y-3 bg-white dark:bg-gray-800 w-28 px-3">
+                                Entre fechas
+                        </InputLabel>
+                        <div class="flex justify-center items-center gap-2">
+                            <input
+                                v-model="date1"
+                                type="date"
+                                placeholder="Fecha inicio"
+                                class="px-2 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            >
+                            <input
+                                v-model="date2"
+                                type="date"
+                                placeholder="Fecha final"
+                                class="px-2 py-[10px] bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            >
+                        </div>
+                    </div>
+                    <div class="rounded-md border border-gray-300 p-1 col-span-1">
+                        <InputLabel class="translate-x-7 -translate-y-3 bg-white dark:bg-gray-800 w-48 px-3">
+                                Entre totales de compra
+                        </InputLabel>
+                        <div class="flex justify-center items-center gap-2">
+                            <input
+                                v-model="minTotal"
+                                type="number"
+                                placeholder="Total min."
+                                class="px-2 py-[10px] w-32 bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            >
+                            <input
+                                v-model="maxTotal"
+                                type="number"
+                                placeholder="Total max."
+                                class="px-2 py-[10px] w-32 bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
+                            >
+                        </div>
+                    </div>
                 </div>
                 <BasicTable v-if="orders.data.length > 0" :titles="tableTitles">
                     <TableRow v-for="order in orders.data">
@@ -141,7 +180,7 @@ const tableTitles = ['ID', 'Código', 'Fecha de compra', 'Fecha de pago', 'Estad
                             {{ order.code }}
                         </TableCol>
                         <TableCol class="capitalize">
-                            {{ dateGMT(order.purchase_date, -5) }}
+                            {{ dateGMT(order.purchase_date, 0) }}
                         </TableCol>
                         <TableCol class="capitalize">
                             {{ dateGMT(order.payment_date, -5) }}

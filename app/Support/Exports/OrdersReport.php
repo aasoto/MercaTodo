@@ -24,6 +24,10 @@ class OrdersReport implements FromQuery
                 )
             -> whereUserNumberDocument(isset($this->filters['number_document']) ? $this->filters['number_document'] : null)
             -> wherePaymentStatus(isset($this->filters['payment_status']) ? $this->filters['payment_status'] : null)
+            -> wherePurchaseTotal(
+                isset($this->filters['min_total']) ? $this->filters['min_total'] : null,
+                isset($this->filters['max_total']) ? $this->filters['max_total'] : null,
+                )
             -> select(
                 'orders.id',
                 'orders.code',
