@@ -258,7 +258,7 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                         </label>
                     </div>
                     <SuccessButton @click="generateReport()" class="col-span-1">
-                        Generar reporte de products
+                        Generar reporte de productos
                     </SuccessButton>
                 </div>
                 <BasicTable v-if="products.data.length > 0" :titles="tableTitles">
@@ -290,7 +290,7 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
         <AlertSuccess
             v-if="success === 'Products report generated.'"
             title="¡Bien Hecho!"
-            text="La exportación del reporte de productos está siendo procesado, una vez este proceso termine usted recibirá un correo electronico con el link de descarga del archivo."
+            text="La exportación del reporte de productos está siendo procesada, una vez este proceso termine usted recibirá un correo electronico con el link de descarga del archivo."
             :close="false"
             :btn-close="true"
         />

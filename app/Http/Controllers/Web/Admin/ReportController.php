@@ -6,13 +6,19 @@ use App\Domain\Order\Models\Order;
 use App\Domain\Product\Models\Product;
 use App\Domain\Product\Models\ProductCategory;
 use App\Domain\Product\Models\Unit;
+use App\Domain\User\Models\City;
+use App\Domain\User\Models\ModelHasRole as Role;
+use App\Domain\User\Models\State;
+use App\Domain\User\Models\TypeDocument;
+use App\Domain\User\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Exports\OrdersReport;
 use App\Http\Exports\ProductsReport;
-use App\Http\Jobs\OrdersReportJob;
+use App\Http\Exports\UsersReport;
 use App\Http\Jobs\ReportJob;
 use App\Http\Requests\Web\Admin\Order\ReportRequest as OrderReportRequest;
 use App\Http\Requests\Web\Admin\Product\ReportRequest as ProductReportRequest;
+use App\Http\Requests\Web\Admin\User\ReportRequest as UserReportRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -106,11 +112,57 @@ class ReportController extends Controller
 
     public function export_product(ProductReportRequest $request): RedirectResponse
     {
-        $path_file = 'reports/orders/orders_'.time().'.xlsx';
+        $path_file = 'reports/products/products_'.time().'.xlsx';
         (new ProductsReport($request->validated()))->queue($path_file)->chain([
             new ReportJob("Product's report", $request->user(), $path_file),
         ]);
 
         return Redirect::route('product.report.create')->with('success', 'Products report generated.');
+    }
+
+    public function create_user(Request $request): Response
+    {
+        return Inertia::render('Report/User/Create', [
+            'filters' => $request->only(['search']),
+            'users' => User::query()
+                -> whereSearch($request->input('search'))
+                -> select(
+                    'users.id',
+                    'users.type_document',
+                    'users.number_document',
+                    'users.first_name',
+                    'users.second_name',
+                    'users.surname',
+                    'users.second_surname',
+                    'users.email_verified_at',
+                    'users.enabled',
+                    'states.name as state_name',
+                    'cities.name as city_name',
+                    'model_has_roles.role_id',
+                    'users.created_at',
+                )
+                -> join('states', 'users.state_id', 'states.id')
+                -> join('cities', 'users.city_id', 'cities.id')
+                -> join('type_documents', 'users.type_document', 'type_documents.code')
+                -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
+                -> orderBy('users.id')
+                -> paginate(10)
+                -> withQueryString(),
+            'states' => State::getFromCache(),
+            'cities' => City::getFromCache(),
+            'typeDocument' => TypeDocument::getFromCache(),
+            'roles' => Role::getFromCache(),
+            'success' => session('success'),
+        ]);
+    }
+
+    public function export_user(UserReportRequest $request): RedirectResponse
+    {
+        $path_file = 'reports/users/users_'.time().'.xlsx';
+        (new UsersReport($request->validated()))->queue($path_file)->chain([
+            new ReportJob("Users' report", $request->user(), $path_file),
+        ]);
+
+        return Redirect::route('user.report.create')->with('success', 'Users report generated.');
     }
 }
