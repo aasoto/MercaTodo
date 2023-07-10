@@ -23,6 +23,14 @@ class ReportRequest extends FormRequest
     {
         return [
             'search' => ['nullable', 'string'],
+            'type_document' => ['nullable', 'string'],
+            'verified' => ['nullable', 'string'],
+            'enabled' => ['nullable', 'string'],
+            'role' => ['nullable', 'integer'],
+            'date_1' => ['nullable', 'date'],
+            'date_2' => ['nullable', 'date'],
+            'state_id' => ['nullable', 'integer'],
+            'city_id' => ['nullable', 'integer'],
         ];
     }
 }

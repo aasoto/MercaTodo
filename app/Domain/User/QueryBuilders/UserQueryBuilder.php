@@ -34,4 +34,62 @@ class UserQueryBuilder extends Builder
             }
         }) : $this;
     }
+
+    public function whereTypeDocument(?string $type_document): self
+    {
+        return $type_document ? $this->where('users.type_document', $type_document) : $this;
+    }
+
+    public function whereEmailVerified(?string $verified): self
+    {
+        if ($verified == 'true') {
+            return $this->where('users.email_verified_at', '!=', null);
+        } elseif ($verified == 'false') {
+            return $this->where('users.email_verified_at', null);
+        } else {
+            return $this;
+        }
+    }
+
+    public function whereEnabled(?string $enabled): self
+    {
+        if ($enabled == 'true') {
+            return $this->where('users.enabled', '1');
+        } elseif ($enabled == 'false') {
+            return $this->where('users.enabled', '0');
+        } else {
+            return $this;
+        }
+    }
+
+    public function whereRole(?string $role_id): self
+    {
+        return $role_id ? $this->where('model_has_roles.role_id', $role_id) : $this;
+    }
+
+    public function whereBetweenCreatedAt(?string $date_1, ?string $date_2): self|User
+    {
+        if ($date_1 && $date_2) {
+            return $this->whereBetween('users.created_at', [$date_1, $date_2]);
+        } elseif ($date_1) {
+            return $this->where('users.created_at', 'like', '%'.$date_1.'%');
+        } elseif ($date_2) {
+            return $this->where('users.created_at', 'like', '%'.$date_2.'%');
+        } else {
+            return $this;
+        }
+    }
+
+    public function whereStateAndCity(?string $state_id, ?string $city_id): self
+    {
+        if ($state_id && $city_id) {
+            return $this->where('users.state_id', $state_id)->where('users.city_id', $city_id);
+        } elseif ($state_id) {
+            return $this->where('users.state_id', $state_id);
+        } elseif ($city_id) {
+            return $this->where('users.city_id', $city_id);
+        } else {
+            return $this;
+        }
+    }
 }

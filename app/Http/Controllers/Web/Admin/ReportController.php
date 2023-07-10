@@ -123,9 +123,17 @@ class ReportController extends Controller
     public function create_user(Request $request): Response
     {
         return Inertia::render('Report/User/Create', [
-            'filters' => $request->only(['search']),
+            'filters' => $request->only([
+                'search', 'typeDocument', 'verified', 'enabled', 'role', 'date1', 'date2', 'stateId', 'cityId'
+            ]),
             'users' => User::query()
                 -> whereSearch($request->input('search'))
+                -> whereTypeDocument($request->input('typeDocument'))
+                -> whereEmailVerified($request->input('verified'))
+                -> whereEnabled($request->input('enabled'))
+                -> whereRole($request->input('role'))
+                -> whereBetweenCreatedAt($request->input('date1'), $request->input('date2'))
+                -> whereStateAndCity($request->input('stateId'), $request->input('cityId'))
                 -> select(
                     'users.id',
                     'users.type_document',
@@ -150,7 +158,7 @@ class ReportController extends Controller
                 -> withQueryString(),
             'states' => State::getFromCache(),
             'cities' => City::getFromCache(),
-            'typeDocument' => TypeDocument::getFromCache(),
+            'typeDocuments' => TypeDocument::getFromCache(),
             'roles' => Role::getFromCache(),
             'success' => session('success'),
         ]);

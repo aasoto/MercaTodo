@@ -19,6 +19,18 @@ class UsersReport implements FromQuery
     {
         return User::query()
         -> whereSearch(isset($this->filters['search']) ? $this->filters['search'] : null)
+        -> whereTypeDocument(isset($this->filters['type_document']) ? $this->filters['type_document'] : null)
+        -> whereEnabled(isset($this->filters['enabled']) ? $this->filters['enabled'] : null)
+        -> whereRole(isset($this->filters['role']) ? $this->filters['role'] : null)
+        -> whereEmailVerified(isset($this->filters['verified']) ? $this->filters['verified'] : null)
+        -> whereBetweenCreatedAt(
+            isset($this->filters['date_1']) ? $this->filters['date_1'] : null,
+            isset($this->filters['date_2']) ? $this->filters['date_2'] : null,
+        )
+        -> whereStateAndCity(
+            isset($this->filters['state_id']) ? $this->filters['state_id'] : null,
+            isset($this->filters['city_id']) ? $this->filters['city_id'] : null,
+        )
         -> select(
             'users.id',
             'users.type_document',
