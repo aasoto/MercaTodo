@@ -76,4 +76,13 @@ class ProductQueryBuilder extends Builder
     {
         return $unit_code ? $this->where('products.unit', $unit_code) : $this;
     }
+
+    public function whereSoldOut(?string $sold_out): self
+    {
+        if ($sold_out == 'true') {
+            return $this->where('products.stock', 0);
+        } else {
+            return $this;
+        }
+    }
 }

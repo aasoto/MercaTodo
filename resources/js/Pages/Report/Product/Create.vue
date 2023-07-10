@@ -32,6 +32,8 @@ const maxPrice = ref(props.filters.maxPrice);
 const unitCode = ref(props.filters.unitCode);
 const availability = ref(props.filters.availability);
 const enabled = ref('');
+const soldOut = ref(false);
+const solvent = ref('');
 
 watch(search, value => {
     getResults();
@@ -62,6 +64,10 @@ watch(unitCode, value => {
 });
 
 watch(availability, value => {
+    getResults();
+});
+
+watch(soldOut, value => {
     getResults();
 });
 
@@ -108,6 +114,15 @@ const setAvailability = (value) => {
     }
 }
 
+const getSoldOut = () => {
+    soldOut.value = !soldOut.value;
+    if (soldOut.value) {
+        solvent.value = 'true';
+    } else {
+        solvent.value = 'false';
+    }
+}
+
 const getResults = () => {
     router.get(route('product.report.create'), {
         search: search.value,
@@ -118,6 +133,7 @@ const getResults = () => {
         maxPrice: maxPrice.value,
         unitCode: unitCode.value,
         availability: availability.value,
+        soldOut: soldOut.value,
     }, {
         preserveState: true,
         replace: true,
@@ -134,6 +150,7 @@ const generateReport = () => {
         max_price: maxPrice.value,
         unit_code: unitCode.value,
         availability: enabled.value,
+        sold_out: solvent.value,
     });
 }
 
@@ -233,6 +250,12 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                                 class="px-2 py-[10px] w-32 bg-transparent text-black dark:text-white border border-gray-400 rounded-md placeholder:italic"
                             >
                         </div>
+                    </div>
+                    <div class="col-span-1 flex justify-center items-center">
+                        <input @click="getSoldOut()" id="sold-out-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="sold-out-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                            Agotados
+                        </label>
                     </div>
                     <SuccessButton @click="generateReport()" class="col-span-1">
                         Generar reporte de products

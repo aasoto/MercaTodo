@@ -30,6 +30,7 @@ class ReportRequest extends FormRequest
             'max_price' => ['nullable', 'numeric'],
             'unit_code' => ['nullable', 'string'],
             'availability' => ['nullable', 'string'],
+            'sold_out' => ['nullable', 'string'],
         ];
     }
 }
