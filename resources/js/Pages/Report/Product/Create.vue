@@ -30,6 +30,8 @@ const maxStock = ref(props.filters.maxStock);
 const minPrice = ref(props.filters.minPrice);
 const maxPrice = ref(props.filters.maxPrice);
 const unitCode = ref(props.filters.unitCode);
+const availability = ref(props.filters.availability);
+const enabled = ref('');
 
 watch(search, value => {
     getResults();
@@ -59,6 +61,10 @@ watch(unitCode, value => {
     getResults();
 });
 
+watch(availability, value => {
+    getResults();
+});
+
 const btnCategoryText = ref('Categoría');
 const setCategory = (productCategory) => {
     if (productCategory) {
@@ -70,14 +76,35 @@ const setCategory = (productCategory) => {
     }
 }
 
-const btnUnitText = ref('Unidad');
+const btnUnitText = ref('Unidades');
 const setUnit = (code, name) => {
-    if (unitCode) {
+    if (code && name) {
         unitCode.value = code;
         btnUnitText.value = name;
     } else {
         unitCode.value = '';
-        btnUnitText.value = 'Unidad';
+        btnUnitText.value = 'Unidades';
+    }
+}
+
+const btnAvailabilityText = ref('Disponilidad');
+const setAvailability = (value) => {
+    switch (value) {
+        case 'enabled':
+            availability.value = true;
+            enabled.value = 'true';
+            btnAvailabilityText.value = 'Habilitados';
+            break;
+        case 'disabled':
+            availability.value = false;
+            enabled.value = 'false';
+            btnAvailabilityText.value = 'Inhabilitados';
+            break;
+        default:
+            availability.value = '';
+            enabled.value = '';
+            btnAvailabilityText.value = 'Disponilidad';
+            break;
     }
 }
 
@@ -90,6 +117,7 @@ const getResults = () => {
         minPrice: minPrice.value,
         maxPrice: maxPrice.value,
         unitCode: unitCode.value,
+        availability: availability.value,
     }, {
         preserveState: true,
         replace: true,
@@ -105,6 +133,7 @@ const generateReport = () => {
         min_price: minPrice.value,
         max_price: maxPrice.value,
         unit_code: unitCode.value,
+        availability: enabled.value,
     });
 }
 
@@ -154,6 +183,17 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
                             :key="unit.id"
                         >
                             {{ unit.name }}
+                        </DropdownItem>
+                    </DropdownButtonStrict>
+                    <DropdownButtonStrict :btn-label="btnAvailabilityText" class="col-span-1">
+                        <DropdownItem @click="setAvailability()">
+                            Todas
+                        </DropdownItem>
+                        <DropdownItem @click="setAvailability('enabled')">
+                            Habilitado
+                        </DropdownItem>
+                        <DropdownItem @click="setAvailability('disabled')">
+                            Inhabilitado
                         </DropdownItem>
                     </DropdownButtonStrict>
                     <div class="rounded-md border border-gray-300 p-1 col-span-1">
