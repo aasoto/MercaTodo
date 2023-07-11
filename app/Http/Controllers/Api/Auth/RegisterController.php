@@ -25,7 +25,7 @@ class RegisterController extends Controller
             $user = $store_register_action->handle($data);
         }
 
-        SendEmailVerificationJob::dispatch($user)->onQueue('email_verification');
+        SendEmailVerificationJob::dispatch($user);
 
         return response()->json([
             'message' => trans('message.created', ['attribute' => 'user']),

@@ -29,10 +29,7 @@ class ProductImportController extends Controller
          */
         $auth_user = $request->user();
 
-        ProductImportJob::dispatch(
-            $data->products_file,
-            $auth_user,
-        )->onQueue('export-import');
+        ProductImportJob::dispatch($data->products_file, $auth_user);
 
         return Redirect::route('products.index')->with('success', 'Products imported.');
     }

@@ -25,7 +25,7 @@ class EmailVerificationNotificationController extends Controller
          */
         $auth_user = $request->user();
 
-        SendEmailVerificationJob::dispatch($auth_user)->onQueue('email_verification');
+        SendEmailVerificationJob::dispatch($auth_user);
 
         return back()->with('status', 'verification-link-sent');
     }

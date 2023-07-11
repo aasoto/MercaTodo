@@ -11,7 +11,7 @@ class ProductExportController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        ProductExportJob::dispatch($request->user())->onQueue('export-import');
+        ProductExportJob::dispatch($request->user());
 
         return response()->json([
             'message' => 'Export file queued',

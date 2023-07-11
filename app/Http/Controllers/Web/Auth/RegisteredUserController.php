@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
 
         // event(new Registered($user));
 
-        SendEmailVerificationJob::dispatch($user)->onQueue('email_verification');
+        SendEmailVerificationJob::dispatch($user);
 
         Auth::login($user);
 

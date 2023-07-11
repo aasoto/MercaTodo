@@ -60,7 +60,7 @@ Route::get('/showcase/{slug}', [ShowcaseController::class, 'show'])->name('showc
 Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
 
     /** DASHBOARD */
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('role:admin');
 
     /** PROFILE */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

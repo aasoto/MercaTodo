@@ -24,10 +24,7 @@ class ProductImportController extends Controller
          */
         $auth_user = $request->user();
 
-        ProductImportJob::dispatch(
-            $data->products_file,
-            $auth_user,
-        )->onQueue('export-import');
+        ProductImportJob::dispatch($data->products_file, $auth_user);
 
         return response()->json([
             'message' => trans('Products queued', ['attribute' => 'file']),
