@@ -26,7 +26,8 @@ class ReportServices
              */
             foreach ($orders as $order) {
                 $order_date = strtotime($order['purchase_date']);
-                $searching_date = date('Y-m-d', strtotime($current_date.'- '.$i.' days'));
+                $past_date = strtotime($current_date.'- '.$i.' days');
+                $searching_date = date('Y-m-d', $past_date ? $past_date : null);
                 if (date('Y-m-d', $order_date) == $searching_date) {
                     $orders_by_day++;
                 }
