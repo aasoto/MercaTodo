@@ -75,6 +75,9 @@ const getResults = () => {
 }
 
 const generateReport = () => {
+    let time = Math.floor(new Date().getTime() / 1000);
+    time = time.toString();
+
     router.post(route('order.report.export'), {
         number_document: numberDocument.value,
         date_1: date1.value,
@@ -82,6 +85,7 @@ const generateReport = () => {
         payment_status: paymentStatus.value,
         min_total: minTotal.value,
         max_total: maxTotal.value,
+        time: time,
     });
 }
 

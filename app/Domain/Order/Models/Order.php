@@ -17,6 +17,7 @@ use Illuminate\Database\Query\Builder;
  * @property string|null $request_id
  * @property string $user_id
  * @property Carbon $purchase_date
+ * @property Carbon $payment_date
  * @property string $currency
  * @property string|null $url
  * @property string $payment_status

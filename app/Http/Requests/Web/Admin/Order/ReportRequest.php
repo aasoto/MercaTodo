@@ -28,6 +28,7 @@ class ReportRequest extends FormRequest
             'payment_status' => ['nullable', 'string'],
             'min_total' => ['nullable', 'numeric'],
             'max_total' => ['nullable', 'numeric'],
+            'time' => ['required', 'string'],
         ];
     }
 }

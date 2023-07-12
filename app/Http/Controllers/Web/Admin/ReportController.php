@@ -69,7 +69,7 @@ class ReportController extends Controller
 
     public function export_order(OrderReportRequest $request): RedirectResponse
     {
-        $path_file = 'reports/orders/orders_'.time().'.xlsx';
+        $path_file = 'reports/orders/orders_'.$request->validated()['time'].'.xlsx';
         (new OrdersReport($request->validated()))->queue($path_file)->chain([
             new ReportJob("Order's report", $request->user(), $path_file),
         ]);
@@ -112,7 +112,7 @@ class ReportController extends Controller
 
     public function export_product(ProductReportRequest $request): RedirectResponse
     {
-        $path_file = 'reports/products/products_'.time().'.xlsx';
+        $path_file = 'reports/products/products_'.$request->validated()['time'].'.xlsx';
         (new ProductsReport($request->validated()))->queue($path_file)->chain([
             new ReportJob("Product's report", $request->user(), $path_file),
         ]);
@@ -166,7 +166,7 @@ class ReportController extends Controller
 
     public function export_user(UserReportRequest $request): RedirectResponse
     {
-        $path_file = 'reports/users/users_'.time().'.xlsx';
+        $path_file = 'reports/users/users_'.$request->validated()['time'].'.xlsx';
         (new UsersReport($request->validated()))->queue($path_file)->chain([
             new ReportJob("Users' report", $request->user(), $path_file),
         ]);

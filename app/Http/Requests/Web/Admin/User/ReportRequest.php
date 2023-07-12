@@ -31,6 +31,7 @@ class ReportRequest extends FormRequest
             'date_2' => ['nullable', 'date'],
             'state_id' => ['nullable', 'integer'],
             'city_id' => ['nullable', 'integer'],
+            'time' => ['required', 'string'],
         ];
     }
 }

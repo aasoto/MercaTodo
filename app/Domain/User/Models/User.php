@@ -16,6 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
+ * @property string $id
  * @property string $type_document
  * @property string $number_document
  * @property string $first_name

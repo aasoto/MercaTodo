@@ -6,6 +6,7 @@ use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
+use Database\Seeders\OrdersSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -17,13 +18,15 @@ class DashboardTest extends TestCase
 
     public function test_shows_dashboard_page(): void
     {
-        $this->seed([
-            RoleSeeder::class,
-        ]);
 
         State::factory()->create();
         City::factory()->create();
         TypeDocument::factory()->create();
+
+        $this->seed([
+            RoleSeeder::class,
+            OrdersSeeder::class,
+        ]);
 
         $user = User::factory()->create()->assignRole('admin');
 

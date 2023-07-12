@@ -31,6 +31,7 @@ class ReportRequest extends FormRequest
             'unit_code' => ['nullable', 'string'],
             'availability' => ['nullable', 'string'],
             'sold_out' => ['nullable', 'string'],
+            'time' => ['required', 'string'],
         ];
     }
 }

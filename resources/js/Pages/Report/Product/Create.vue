@@ -141,6 +141,9 @@ const getResults = () => {
 }
 
 const generateReport = () => {
+    let time = Math.floor(new Date().getTime() / 1000);
+    time = time.toString();
+
     router.post(route('product.report.export'), {
         search: search.value,
         category: category.value,
@@ -151,6 +154,7 @@ const generateReport = () => {
         unit_code: unitCode.value,
         availability: enabled.value,
         sold_out: solvent.value,
+        time: time,
     });
 }
 

@@ -159,6 +159,9 @@ const getResults = () => {
 }
 
 const generateReport = () => {
+    let time = Math.floor(new Date().getTime() / 1000);
+    time = time.toString();
+
     router.post(route('user.report.export'), {
         search: search.value,
         type_document: typeDocumentCode.value,
@@ -169,6 +172,7 @@ const generateReport = () => {
         date_2: date2.value,
         state_id: stateId.value,
         city_id: cityId.value,
+        time: time,
     });
 }
 
