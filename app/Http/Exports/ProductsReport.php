@@ -3,8 +3,11 @@
 namespace App\Http\Exports;
 
 use App\Domain\Product\Models\Product;
-use App\Domain\Product\Services\Contracts\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Query\Builder;
 
 class ProductsReport implements FromQuery
 {
@@ -18,9 +21,12 @@ class ProductsReport implements FromQuery
     )
     {}
 
-    public function query(): Product
+    public function query()
     {
-        return Product::query()
+        /**
+         * @var Builder|EloquentBuilder|Relation $query;
+         */
+        $query = Product::query()
             -> whereSearch(isset($this->filters['search']) ? $this->filters['search'] : null)
             -> whereCategory(isset($this->filters['category']) ? $this->filters['category'] : null)
             -> whereUnit(isset($this->filters['unit_code']) ? $this->filters['unit_code'] : null)
@@ -46,5 +52,7 @@ class ProductsReport implements FromQuery
             -> join('products_categories', 'products.products_category_id', 'products_categories.id')
             -> join('units', 'products.unit', 'units.code')
             -> orderBy('products.id');
+
+        return $query;
     }
 }
