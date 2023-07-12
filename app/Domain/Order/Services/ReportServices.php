@@ -6,6 +6,9 @@ use App\Domain\Order\Models\Order;
 
 class ReportServices
 {
+    /**
+     * @return array<mixed>
+     */
     public function orders_by_day(int $interval = 8): array
     {
         $color = 'rgb(75, 192, 192)';
@@ -40,6 +43,9 @@ class ReportServices
         ];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function orders_by_payment_status(): array
     {
         $color_bars = [

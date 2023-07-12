@@ -10,6 +10,9 @@ class ProductsReport implements FromQuery
 {
     use Exportable;
 
+    /**
+     * @param array<mixed> $filters
+     */
     public function __construct(
         private array $filters,
     )
