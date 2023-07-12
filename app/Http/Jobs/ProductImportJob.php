@@ -95,6 +95,9 @@ class ProductImportJob implements ShouldQueue
 
     private function get_product_category_id(string $name): int
     {
+        /**
+         * @var ProductCategory $product_category
+         */
         $product_category = ProductCategory::query()->firstOrCreate([
             'name' => $name,
         ], [
@@ -106,6 +109,9 @@ class ProductImportJob implements ShouldQueue
 
     private function get_unit_code(string $name): string
     {
+        /**
+         * @var Unit $unit
+         */
         $unit = Unit::query()->firstOrCreate([
             'name' => $name,
         ], [

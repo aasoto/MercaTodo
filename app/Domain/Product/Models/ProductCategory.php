@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Cache;
 /**
  * @property int $id
  * @property string $name
+ * @method static ProductCategory select(...$parameters)
+ * @method static ProductCategory orderBy(...$parameters)
  * @method static ProductCategoryFactory factory(...$parameters)
  */
 class ProductCategory extends Model

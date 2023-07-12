@@ -3,8 +3,8 @@
 namespace App\Http\Exports;
 
 use App\Domain\User\Models\User;
+use App\Domain\User\Services\Contracts\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromQuery;
 
 class UsersReport implements FromQuery
 {
@@ -15,7 +15,7 @@ class UsersReport implements FromQuery
     )
     {}
 
-    public function query()
+    public function query(): User
     {
         return User::query()
         -> whereSearch(isset($this->filters['search']) ? $this->filters['search'] : null)

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
  * @property int $id
  * @property string $code
  * @property string $name
+ * @method static Unit select(...$parameters)
  * @method static UnitFactory factory(...$parameters)
  */
 class Unit extends Model

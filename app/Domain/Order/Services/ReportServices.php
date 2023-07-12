@@ -17,6 +17,7 @@ class ReportServices
         $orders_by_day = 0;
 
         for ($i = $interval; $i >= 0; $i--) {
+            $searching_date = date('Y-m-d');
             /**
              * @var Order $order
              */

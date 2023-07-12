@@ -6,6 +6,10 @@ use App\Domain\Product\Models\ProductCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\QueryBuilder;
 
+/**
+ * @method static ProductCategory orderBy(...$parameters)
+ * @method static ProductCategory select(...$parameters)
+ */
 class ProductCategoryQueryBuilder extends Builder
 {
     public function queryBuilderIndex(): QueryBuilder

@@ -3,8 +3,8 @@
 namespace App\Http\Exports;
 
 use App\Domain\Product\Models\Product;
+use App\Domain\Product\Services\Contracts\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromQuery;
 
 class ProductsReport implements FromQuery
 {
@@ -15,7 +15,7 @@ class ProductsReport implements FromQuery
     )
     {}
 
-    public function query()
+    public function query(): Product
     {
         return Product::query()
             -> whereSearch(isset($this->filters['search']) ? $this->filters['search'] : null)

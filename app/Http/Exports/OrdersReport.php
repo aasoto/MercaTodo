@@ -3,8 +3,8 @@
 namespace App\Http\Exports;
 
 use App\Domain\Order\Models\Order;
+use App\Domain\Order\Services\Contracts\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromQuery;
 
 class OrdersReport implements FromQuery
 {
@@ -15,7 +15,7 @@ class OrdersReport implements FromQuery
     )
     {}
 
-    public function query()
+    public function query(): Order
     {
         return Order::query()
             ->whereDateBetween(

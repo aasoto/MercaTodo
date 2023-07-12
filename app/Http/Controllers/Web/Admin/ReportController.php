@@ -101,7 +101,7 @@ class ReportController extends Controller
                 )
                 -> join('products_categories', 'products.products_category_id', 'products_categories.id')
                 -> join('units', 'products.unit', 'units.code')
-                -> orderby('products.id')
+                -> orderBy('products.id')
                 -> paginate(10)
                 -> withQueryString(),
             'productsCategories' => ProductCategory::getFromCache(),

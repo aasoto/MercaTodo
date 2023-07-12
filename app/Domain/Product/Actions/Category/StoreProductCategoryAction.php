@@ -4,11 +4,12 @@ namespace App\Domain\Product\Actions\Category;
 
 use App\Domain\Product\Dtos\Category\StoreProductCategoryData;
 use App\Domain\Product\Models\ProductCategory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class StoreProductCategoryAction
 {
-    public function handle(StoreProductCategoryData $data): ProductCategory
+    public function handle(StoreProductCategoryData $data): Model
     {
         $product_category = ProductCategory::create([
             'name' => $data->name,

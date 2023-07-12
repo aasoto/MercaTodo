@@ -6,6 +6,9 @@ use App\Domain\Product\Models\Unit;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\QueryBuilder;
 
+/**
+ * @method static Unit select(...$parameters)
+ */
 class UnitQueryBuilder extends Builder
 {
     public function queryBuilderIndex(): QueryBuilder
