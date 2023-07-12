@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Domain\Product\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @mixin Product;
@@ -28,9 +29,9 @@ class ProductResource extends JsonResource
             'unit' => $this->unit,
             'product_unit' => UnitResource::make($this->whenLoaded('product_unit')),
             'stock' => $this->stock,
-            'picture_1' => $this->picture_1,
-            'picture_2' => $this->picture_2,
-            'picture_3' => $this->picture_3,
+            'picture_1' => Storage::url('images/products/'.$this->picture_1),
+            'picture_2' => Storage::url('images/products/'.$this->picture_2),
+            'picture_3' => Storage::url('images/products/'.$this->picture_3),
             'availability' => $this->availability,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,

@@ -20,8 +20,7 @@ class UnitController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $units = QueryBuilder::for(Unit::class)
-            ->allowedFilters(['name', 'code'])
+        $units = Unit::query()->queryBuilderIndex()
             ->paginate(10);
 
         return UnitResource::collection($units);
@@ -43,8 +42,8 @@ class UnitController extends Controller
 
     public function show(string $code): UnitResource
     {
-        $unit = QueryBuilder::for(Unit::class)
-            ->where('code', $code)
+        $unit = Unit::query()->queryBuilderShow()
+            ->whereCode($code)
             ->first();
 
         return UnitResource::make($unit);

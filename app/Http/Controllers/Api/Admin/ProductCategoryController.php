@@ -20,8 +20,7 @@ class ProductCategoryController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $products_categories = QueryBuilder::for(ProductCategory::class)
-            ->allowedFilters(['name'])
+        $products_categories = ProductCategory::query()->queryBuilderIndex()
             ->paginate(10);
 
         return ProductsCategoryResource::collection($products_categories);
@@ -43,8 +42,8 @@ class ProductCategoryController extends Controller
 
     public function show(string $id): ProductsCategoryResource
     {
-        $product_category = QueryBuilder::for(ProductCategory::class)
-            ->where('id', $id)
+        $product_category = ProductCategory::query()->queryBuilderShow()
+            ->whereId($id)
             ->first();
 
         return ProductsCategoryResource::make($product_category);

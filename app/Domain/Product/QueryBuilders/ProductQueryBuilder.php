@@ -4,6 +4,7 @@ namespace App\Domain\Product\QueryBuilders;
 
 use App\Domain\Product\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * @method static Product select(...$parameters)
@@ -84,5 +85,18 @@ class ProductQueryBuilder extends Builder
         } else {
             return $this;
         }
+    }
+
+    public function queryBuilderIndex(): QueryBuilder
+    {
+        return QueryBuilder::for(Product::class)
+        ->allowedFilters(['name', 'price', 'availability', 'products_category_id', 'unit'])
+        ->allowedIncludes(['category', 'product_unit']);
+    }
+
+    public function queryBuilderShow(): QueryBuilder
+    {
+        return QueryBuilder::for(Product::class)
+        ->allowedIncludes(['category', 'product_unit']);
     }
 }
