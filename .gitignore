@@ -5,6 +5,7 @@
 /public/exports
 /public/hot
 /public/images
+/public/reports
 /public/storage
 /storage/*.key
 /tests/coverage/*

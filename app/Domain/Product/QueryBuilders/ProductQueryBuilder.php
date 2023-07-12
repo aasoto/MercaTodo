@@ -48,8 +48,41 @@ class ProductQueryBuilder extends Builder
 
     public function wherePriceBetween(?string $min_price, ?string $max_price): self|Product
     {
-        return ($min_price && $max_price) ?
-            $this->whereBetween('products.price', [$min_price, $max_price]) :
-            $this;
+        if ($min_price && $max_price) {
+            return $this->whereBetween('products.price', [$min_price, $max_price]);
+        } elseif ($min_price) {
+            return $this->where('products.price', $min_price);
+        } elseif ($max_price) {
+            return $this->where('products.price', $max_price);
+        } else {
+            return $this;
+        }
+    }
+
+    public function whereStockBetween(?int $min_stock, ?int $max_stock): self|Product
+    {
+        if ($min_stock && $max_stock) {
+            return $this->whereBetween('products.stock', [$min_stock, $max_stock]);
+        } elseif ($min_stock) {
+            return $this->where('products.stock', $min_stock);
+        } elseif ($max_stock) {
+            return $this->where('products.stock', $max_stock);
+        } else {
+            return $this;
+        }
+    }
+
+    public function whereUnit(?string $unit_code): self
+    {
+        return $unit_code ? $this->where('products.unit', $unit_code) : $this;
+    }
+
+    public function whereSoldOut(?string $sold_out): self
+    {
+        if ($sold_out == 'true') {
+            return $this->where('products.stock', 0);
+        } else {
+            return $this;
+        }
     }
 }

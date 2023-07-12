@@ -34,6 +34,11 @@ class DashboardTest extends TestCase
             OrdersSeeder::class,
         ]);
 
+        $this->seed([
+            RoleSeeder::class,
+            OrdersSeeder::class,
+        ]);
+
         $user = User::factory()->create()->assignRole('admin');
 
         $response = $this->actingAs($user)

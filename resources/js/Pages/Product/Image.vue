@@ -9,10 +9,6 @@ import TitlePage from '@/Components/TitlePage.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
-const props = defineProps({
-    fileName: String,
-});
-
 const form = useForm({
     product_id: '',
     picture_number: '',
@@ -101,13 +97,5 @@ const form = useForm({
                 </div>
             </div>
         </div>
-        <AlertSuccess
-            v-if="fileName"
-            icon="success"
-            :title="fileName"
-            text="Este es el nombre de la imagen guardada."
-            :close="false"
-            :btn-close="true"
-        />
     </AuthenticatedLayout>
 </template>

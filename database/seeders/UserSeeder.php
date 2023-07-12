@@ -23,5 +23,11 @@ class UserSeeder extends Seeder
             'email' => env('CLIENT_EMAIL', 'client@example.com'),
             'password' => Hash::make(env('CLIENT_PASSWORD', '12345678')),
         ])->assignRole('client');
+
+        // for ($i=0; $i < 100; $i++) {
+        //     User::factory()->create()->assignRole('admin');
+        //     User::factory()->create()->assignRole('client');
+        // }
+
     }
 }

@@ -31,6 +31,7 @@ const props = defineProps({
     products: Object,
     products_categories: Object,
     success: String,
+    imageFilename: String,
 });
 
 const alertDelete = ref(false);
@@ -264,6 +265,14 @@ const tableTitles = ['Articulo', 'Categoría', 'Precio', 'Unidad', 'Stock', 'Hab
             icon="success"
             title="¡Listo!"
             text="Producto eliminado satisfactoriamente."
+            :close="false"
+            :btn-close="true"
+        />
+        <AlertSuccess
+            v-if="imageFilename"
+            icon="success"
+            :title="imageFilename"
+            text="Este es el nombre de la imagen guardada."
             :close="false"
             :btn-close="true"
         />

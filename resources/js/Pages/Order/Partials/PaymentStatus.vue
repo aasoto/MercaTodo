@@ -27,7 +27,7 @@ const props = defineProps({
     <MulticolorInfo color="zinc" v-if="order.payment_status == 'partial_expired'">
         PAGO EXPIRADO
     </MulticolorInfo>
-    <MulticolorInfo color="blue" v-if="!order.url">
+    <MulticolorInfo color="blue" v-if="!order.url && (order.payment_status == 'pending')">
         SIN LINK DE PAGO
     </MulticolorInfo>
 </template>

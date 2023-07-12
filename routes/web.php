@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\Admin\ProductController;
 use App\Http\Controllers\Web\Admin\ProductExportController;
 use App\Http\Controllers\Web\Admin\ProductImportController;
 use App\Http\Controllers\Web\Admin\ProductUploadImageController;
+use App\Http\Controllers\Web\Admin\ReportController;
 use App\Http\Controllers\Web\Admin\StateController;
 use App\Http\Controllers\Web\Admin\TypeDocumentController;
 use App\Http\Controllers\Web\Admin\UnitController;
@@ -59,7 +60,7 @@ Route::get('/showcase/{slug}', [ShowcaseController::class, 'show'])->name('showc
 Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
 
     /** DASHBOARD */
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('role:admin');
 
     /** PROFILE */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -130,6 +131,17 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
         Route::post('/unit/store', [UnitController::class, 'store'])->name('unit.store');
         Route::get('/unit/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
         Route::patch('/unit/edit/{id}', [UnitController::class, 'update'])->name('unit.update');
+    });
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/reporting', [ReportController::class, 'index'])->name('report.index');
+        Route::get('/user_report', [ReportController::class, 'create_user'])->name('user.report.create');
+        Route::post('/user_report_export', [ReportController::class, 'export_user'])->name('user.report.export');
+        Route::get('/product_report', [ReportController::class, 'create_product'])->name('product.report.create');
+        Route::post('/product_report_export', [ReportController::class, 'export_product'])->name('product.report.export');
+        Route::get('/order_report', [ReportController::class, 'create_order'])->name('order.report.create');
+        Route::post('/order_report_export', [ReportController::class, 'export_order'])->name('order.report.export');
+
     });
 
     /** ORDERS */

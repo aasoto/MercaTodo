@@ -33,6 +33,6 @@ class ProductUploadImageController extends Controller
             ImageProductData::fromRequest($request)
         );
 
-        return Redirect::route('product.image.create')->with('file_name', $file_name);
+        return Redirect::route('products.index')->with('file_name', $file_name);
     }
 }

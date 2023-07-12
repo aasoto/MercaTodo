@@ -65,6 +65,11 @@ if (usePage().props.auth.user) {
                                         Productos
                                     </NavLink>
                                 </div>
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                    <NavLink :href="route('report.index')" :active="route().current('report.index')">
+                                        Reportes
+                                    </NavLink>
+                                </div>
                             </template>
                             <template v-else-if="role == 'client'">
                                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
