@@ -47,7 +47,7 @@ class ProductUploadImageControllerTest extends TestCase
             'image_file' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
         ]);
 
-        $response->assertRedirect(route('product.image.create'));
+        $response->assertRedirect(route('products.index'));
     }
 
     public function test_can_replace_image_for_product(): void
@@ -63,6 +63,6 @@ class ProductUploadImageControllerTest extends TestCase
             'image_file' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
         ]);
 
-        $response->assertRedirect(route('product.image.create'));
+        $response->assertRedirect(route('products.index'));
     }
 }

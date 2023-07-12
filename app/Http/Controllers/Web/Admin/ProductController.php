@@ -45,6 +45,7 @@ class ProductController extends Controller
                 -> paginate(10)
                 -> withQueryString(),
             'success' => session('success'),
+            'imageFilename' => session('file_name'),
         ]);
     }
 
