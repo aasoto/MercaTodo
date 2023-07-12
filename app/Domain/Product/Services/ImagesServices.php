@@ -97,6 +97,9 @@ class ImagesServices
     public function upload_single_image(ImageProductData $data): string
     {
         if ($data->product_id && $data->picture_number) {
+            /**
+             * @var Product $current_file_name
+             */
             $current_file_name = Product::select('picture_'.$data->picture_number)
                 ->where('id', $data->product_id)
                 ->first();
