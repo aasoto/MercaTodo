@@ -183,8 +183,8 @@ To run the MercaTodo tests you can use one of these commands:
 > vendor/bin/phpunit --testdox
 > ```
 
-Current coverage: **98.4%**
-- **[See code current coverage report](https://soft-stardust-f90554.netlify.app/)**
+Current coverage: **98.34%**
+- **[See code current coverage report](https://mercatodo-coverage.netlify.app/)**
 
 To generate the coverage views in HTML, use the following command, remember that you must have Xdebug configured with the version of PHP you use.
 ```sh
