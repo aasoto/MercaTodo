@@ -17,10 +17,10 @@ class Start
      */
     public function handle(Request $request, Closure $next): RedirectResponse|Response
     {
-        if (auth()->user()?->hasRole('admin')) {
+        if ($request->user()?->hasRole('admin')) {
             return Redirect::route('dashboard.index')->with('user_role', 'admin');
         }
-        if (auth()->user()?->hasRole('client')) {
+        if ($request->user()?->hasRole('client')) {
             return Redirect::route('showcase.index')->with('user_role', 'client');
         }
         if (!auth()->user()) {
