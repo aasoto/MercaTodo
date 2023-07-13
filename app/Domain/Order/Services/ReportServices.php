@@ -6,6 +6,9 @@ use App\Domain\Order\Models\Order;
 
 class ReportServices
 {
+    /**
+     * @return array<mixed>
+     */
     public function orders_by_day(int $interval = 8): array
     {
         $color = 'rgb(75, 192, 192)';
@@ -17,12 +20,14 @@ class ReportServices
         $orders_by_day = 0;
 
         for ($i = $interval; $i >= 0; $i--) {
+            $searching_date = date('Y-m-d');
             /**
              * @var Order $order
              */
             foreach ($orders as $order) {
                 $order_date = strtotime($order['purchase_date']);
-                $searching_date = date('Y-m-d', strtotime($current_date.'- '.$i.' days'));
+                $past_date = strtotime($current_date.'- '.$i.' days');
+                $searching_date = date('Y-m-d', $past_date ? $past_date : null);
                 if (date('Y-m-d', $order_date) == $searching_date) {
                     $orders_by_day++;
                 }
@@ -39,6 +44,9 @@ class ReportServices
         ];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function orders_by_payment_status(): array
     {
         $color_bars = [

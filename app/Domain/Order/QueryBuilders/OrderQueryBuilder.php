@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static Order orderByDesc(...$parameters)
  * @method static Order pending()
  * @method static Order select(...$parameters)
+ * @method static Order whereBetween(...$parameters)
  */
 class OrderQueryBuilder extends Builder
 {

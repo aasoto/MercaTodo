@@ -21,9 +21,7 @@ class ProductController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $products = QueryBuilder::for(Product::class)
-            ->allowedFilters(['name', 'price', 'availability', 'products_category_id', 'unit'])
-            ->allowedIncludes(['category', 'product_unit'])
+        $products = Product::query()->queryBuilderIndex()
             ->paginate(10);
 
         return ProductResource::collection($products);
@@ -45,9 +43,8 @@ class ProductController extends Controller
 
     public function show(string $slug): ProductResource
     {
-        $product = QueryBuilder::for(Product::class)
-            ->allowedIncludes(['category', 'product_unit'])
-            ->where('slug', $slug)
+        $product = Product::query()->queryBuilderShow()
+            ->whereSlug($slug)
             ->first();
 
         return ProductResource::make($product);

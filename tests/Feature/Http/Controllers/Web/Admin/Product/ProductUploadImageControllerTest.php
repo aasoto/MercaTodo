@@ -14,6 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class ProductUploadImageControllerTest extends TestCase
@@ -39,6 +40,16 @@ class ProductUploadImageControllerTest extends TestCase
         Unit::factory()->create();
 
         $this->user = User::factory()->create()->assignRole('admin');
+    }
+
+    public function test_can_render_upload_products_image_frontend_component(): void
+    {
+        $response = $this->actingAs($this->user)->get(route('product.image.create'));
+
+        $response -> assertStatus(200)
+            -> assertInertia(fn (Assert $page) => $page
+                -> component('Product/Image')
+            );
     }
 
     public function test_can_upload_image_for_product(): void

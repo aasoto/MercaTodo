@@ -3,12 +3,14 @@
 namespace Tests\Feature\Http\Controllers\Web\Admin\Report;
 
 use App\Domain\Order\Models\Order;
+use App\Domain\Order\QueryBuilders\OrderQueryBuilder;
 use App\Domain\Product\Models\ProductCategory;
 use App\Domain\Product\Models\Unit;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
+use App\Http\Exports\OrdersReport;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -199,5 +201,16 @@ class ReportOrdersTest extends TestCase
 
         $response->assertRedirect(route('order.report.create'))
         ->assertSessionHasAll(['success' => 'Orders report generated.']);
+    }
+
+    public function test_can_return_query_with_the_expected_order_from_the_export_class(): void
+    {
+        $orders_report = new OrdersReport([
+            'min_total' => $this->order->purchase_total,
+        ]);
+
+        $response = $orders_report->query();
+
+        $this->assertInstanceOf(OrderQueryBuilder::class, $response);
     }
 }

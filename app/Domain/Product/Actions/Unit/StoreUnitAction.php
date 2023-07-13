@@ -4,6 +4,7 @@ namespace App\Domain\Product\Actions\Unit;
 
 use App\Domain\Product\Dtos\Unit\StoreUnitData;
 use App\Domain\Product\Models\Unit;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class StoreUnitAction
@@ -11,7 +12,7 @@ class StoreUnitAction
     /**
      * @param StoreUnitData $data
      */
-    public function handle(StoreUnitData $data): Unit
+    public function handle(StoreUnitData $data): Model
     {
         $unit = Unit::create([
             'code' => $data->code,

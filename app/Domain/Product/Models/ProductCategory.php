@@ -2,16 +2,20 @@
 
 namespace App\Domain\Product\Models;
 
+use App\Domain\Product\QueryBuilders\ProductCategoryQueryBuilder;
 use Database\Factories\ProductCategoryFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
  * @property string $name
+ * @method static ProductCategory select(...$parameters)
+ * @method static ProductCategory orderBy(...$parameters)
  * @method static ProductCategoryFactory factory(...$parameters)
  */
 class ProductCategory extends Model
@@ -21,6 +25,15 @@ class ProductCategory extends Model
     protected $table = 'products_categories';
 
     protected $fillable = ['name'];
+
+    /**
+     * @param Builder $query
+     * @return ProductCategoryQueryBuilder
+     */
+    public function newEloquentBuilder($query): ProductCategoryQueryBuilder
+    {
+        return new ProductCategoryQueryBuilder($query);
+    }
 
     public static function getFromCache(): Collection
     {

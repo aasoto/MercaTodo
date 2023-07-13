@@ -9,7 +9,7 @@ class ReportRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize(): bool|null
     {
         return auth()->user()?->hasRole('admin');
     }
@@ -17,7 +17,7 @@ class ReportRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array<string, array<int, string>>
      */
     public function rules(): array
     {

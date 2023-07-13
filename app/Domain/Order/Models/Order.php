@@ -27,6 +27,7 @@ use Illuminate\Database\Query\Builder;
  * @method static Order join(...$parameters)
  * @method static Order orderByDesc(...$parameters)
  * @method static Order pending()
+ * @method static Order whereBetween(...$parameters)
  * @method static Order select(...$parameters)
  * @method static OrderQueryBuilder query()
  * @method Order products()

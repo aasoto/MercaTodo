@@ -10,6 +10,9 @@ class ReportServices
 {
     use RandomColor;
 
+    /**
+     * @return array<mixed>
+     */
     public function products_by_category(): array
     {
         $colors = array();
@@ -29,6 +32,9 @@ class ReportServices
         ];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function products_status_by_stock(): array
     {
         $products = Product::get();
@@ -64,6 +70,9 @@ class ReportServices
         ];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function products_by_availability(): array
     {
         $products = Product::get();

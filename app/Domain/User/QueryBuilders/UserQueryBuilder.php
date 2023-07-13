@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @method static User select(...$parameters)
+ * @method static User whereBetween(...$parameters)
  */
 class UserQueryBuilder extends Builder
 {

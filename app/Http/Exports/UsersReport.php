@@ -5,11 +5,17 @@ namespace App\Http\Exports;
 use App\Domain\User\Models\User;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Query\Builder;
 
 class UsersReport implements FromQuery
 {
     use Exportable;
 
+    /**
+     * @param array<mixed> $filters
+     */
     public function __construct(
         private array $filters,
     )
@@ -17,7 +23,10 @@ class UsersReport implements FromQuery
 
     public function query()
     {
-        return User::query()
+        /**
+         * @var Builder|EloquentBuilder|Relation $query;
+         */
+        $query = User::query()
         -> whereSearch(isset($this->filters['search']) ? $this->filters['search'] : null)
         -> whereTypeDocument(isset($this->filters['type_document']) ? $this->filters['type_document'] : null)
         -> whereEnabled(isset($this->filters['enabled']) ? $this->filters['enabled'] : null)
@@ -51,5 +60,7 @@ class UsersReport implements FromQuery
         -> join('type_documents', 'users.type_document', 'type_documents.code')
         -> join('model_has_roles', 'users.id', 'model_has_roles.model_id')
         -> orderBy('users.id');
+
+        return $query;
     }
 }

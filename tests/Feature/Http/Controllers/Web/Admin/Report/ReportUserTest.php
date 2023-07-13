@@ -6,6 +6,8 @@ use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
+use App\Domain\User\QueryBuilders\UserQueryBuilder;
+use App\Http\Exports\UsersReport;
 use Carbon\Carbon;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -284,5 +286,16 @@ class ReportUserTest extends TestCase
 
         $response->assertRedirect(route('user.report.create'))
         ->assertSessionHasAll(['success' => 'Users report generated.']);
+    }
+
+    public function test_can_return_query_with_the_expected_user_from_the_export_class(): void
+    {
+        $users_report = new UsersReport([
+            'date_1' => $this->user_client->created_at,
+        ]);
+
+        $response = $users_report->query();
+
+        $this->assertInstanceOf(UserQueryBuilder::class, $response);
     }
 }

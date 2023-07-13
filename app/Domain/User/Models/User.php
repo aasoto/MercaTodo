@@ -35,6 +35,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static User join(...$parameters)
  * @method static User orderBy(...$parameters)
  * @method static User orderByDesc(...$parameters)
+ * @method static User whereBetween(...$parameters)
  * @method static User role($parameter)
  * @method static User select(...$parameters)
  * @method static UserFactory factory(...$parameters)
