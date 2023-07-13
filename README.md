@@ -148,12 +148,9 @@ php artisan serve
 >>- **Password:** 12345678
 
 ## Queues
-This application works with queues, currently there is two queues, the first one is for the email verification called *email_verification* and the second one is for the export of products called *export*, please run one thoses commands or both for the right dispatch of this job:
+This application works with queues for the email verfication, export and import of products and for the generation of reports, please run this command for dispatch the jobs:
 ```sh
-php artisan queue:work --queue=email_verification
-```
-```sh
-php artisan queue:work --queue=export
+php artisan queue:work
 ```
 * If you want to know more about queues and how they work internally, [please click here.](https://laravel.com/docs/10.x/queues)
 
@@ -174,7 +171,7 @@ To run the MercaTodo tests you can use one of these commands:
 > vendor/bin/phpunit --testdox
 > ```
 
-Current coverage: **98.1%**
+Current coverage: **98.4%**
 - **[See code current coverage report](https://soft-stardust-f90554.netlify.app/)**
 
 To generate the coverage views in HTML, use the following command, remember that you must have Xdebug configured with the version of PHP you use.
@@ -205,7 +202,7 @@ We use this tools in the verification of user's email, it's necessary that you m
 1. Open the inbox.
 1. On the right side, in the integration section, you must select the development framework, in this case select Laravel 7+.
 1. Copy the given variables and paste them over the same environment variables in the .env file.
-1. Finally change the name of the environment variable called MAIL_FROM_ADDRESS and place the email of the Mailtrap account that is being used.
+1. You can opcionally change the name of the environment variables called MAIL_FROM_ADDRESS and MAIL_FROM_NAME, who comes configured from the file .env.example.
 
 * ## [Placetopay by Evertec](https://sites.placetopay.com/)
-You need to configure the Webcheckout API payment gateway with the access credentials, exactly are the _login_, _tranKey_ and _url_; those credentials are provided by Placetopay. When you had the creditials what you need to do is go to the .env file and put the _login_ in the variable __PLACETOPAY_LOGIN__, the _tranKey_ in __PLACETOPAY_TRANKEY__ and the _url_ in __PLACETOPAY_URL__.
+You need to configure the Webcheckout API payment gateway with the access credentials, exactly are the _login_, _tranKey_ and _url_; those credentials are provided by Placetopay. When you had the creditials what you need to do is go to the .env file and put the _login_ in the variable __PLACETOPAY_LOGIN__, the _tranKey_ in __PLACETOPAY_TRANKEY__ and the _url_ in __PLACETOPAY_URL__. Also you will need to specify the __endpoint__ of the API, the __endpoint__ has to be assigned in the constant called __API_SESSION__ located on _App/Domain/Order/Services/Contracts/Placetopay/Endpoints.php_
