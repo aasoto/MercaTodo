@@ -147,6 +147,18 @@ php artisan serve
 >>- **Username:** client@example.com
 >>- **Password:** 12345678
 
+## Task Scheduling
+The software has been programmed for a periodic review of the order status, to enable this option use one of the following commands. [How this works?](https://laravel.com/docs/10.x/scheduling)
+
+> For run the scheduled tasks or commands (for one time)
+> ```sh
+> php artisan schedule:run
+> ```
+> Start the schedule worker (execute periodly the scheduled tasks or commands)
+> ```sh
+> php artisan schedule:work
+> ```
+
 ## Queues
 This application works with queues for the email verfication, export and import of products and for the generation of reports, please run this command for dispatch the jobs:
 ```sh
