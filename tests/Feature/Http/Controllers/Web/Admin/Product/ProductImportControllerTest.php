@@ -13,6 +13,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class ProductImportControllerTest extends TestCase
@@ -36,6 +37,16 @@ class ProductImportControllerTest extends TestCase
         TypeDocument::factory()->create();
 
         $this->user = User::factory()->create()->assignRole('admin');
+    }
+
+    public function test_can_render_products_import_frontend_component(): void
+    {
+        $response = $this->actingAs($this->user)->get(route('product.import.create'));
+
+        $response -> assertStatus(200)
+            -> assertInertia(fn (Assert $page) => $page
+                -> component('Product/Import')
+            );
     }
 
     public function test_can_enqueue_products_import_job(): void

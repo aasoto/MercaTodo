@@ -11,15 +11,9 @@ use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use App\Http\Jobs\ProductExportJob;
 use App\Http\Mail\SendEmailExportProducts;
-use Database\Seeders\CitySeeder;
-use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\RoleSeeder;
-use Database\Seeders\StateSeeder;
-use Database\Seeders\TypeDocumentSeeder;
-use Database\Seeders\UnitSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -29,8 +23,10 @@ class ProductExportJobTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_can_generate_export_file_successfully(): void
+    public function setUp(): void
     {
+        parent::setUp();
+
         Storage::fake(config()->get('filesystem.default'));
         Mail::fake();
 
@@ -45,7 +41,10 @@ class ProductExportJobTest extends TestCase
         Unit::factory()->create();
 
         Product::factory()->count(4)->create();
+    }
 
+    public function test_can_generate_export_file_successfully(): void
+    {
         $uuid = Str::uuid()->serialize();
 
         (new ProductExportJob(

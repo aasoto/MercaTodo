@@ -5,10 +5,12 @@ namespace Tests\Feature\Http\Controllers\Web\Admin\Report;
 use App\Domain\Product\Models\Product;
 use App\Domain\Product\Models\ProductCategory;
 use App\Domain\Product\Models\Unit;
+use App\Domain\Product\QueryBuilders\ProductQueryBuilder;
 use App\Domain\User\Models\City;
 use App\Domain\User\Models\State;
 use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
+use App\Http\Exports\ProductsReport;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -233,5 +235,16 @@ class ReportProductsTest extends TestCase
 
         $response->assertRedirect(route('product.report.create'))
         ->assertSessionHasAll(['success' => 'Products report generated.']);
+    }
+
+    public function test_can_return_query_with_the_expected_product_from_the_export_class(): void
+    {
+        $products_report = new ProductsReport([
+            'min_price' => $this->product->price,
+        ]);
+
+        $response = $products_report->query();
+
+        $this->assertInstanceOf(ProductQueryBuilder::class, $response);
     }
 }

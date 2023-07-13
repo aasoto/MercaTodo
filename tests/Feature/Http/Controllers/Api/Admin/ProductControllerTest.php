@@ -147,9 +147,9 @@ class ProductControllerTest extends TestCase
                     ->where('barcode', $product->barcode)
                     ->where('description', $product->description)
                     ->where('price', 50000)
-                    ->whereNot('picture_1', $product->picture_1)
-                    ->where('picture_2', $product->picture_2)
-                    ->where('picture_3', $product->picture_3)
+                    ->whereNot('picture_1', '/storage/images/products/'.$product->picture_1)
+                    ->where('picture_2', '/storage/images/products/'.$product->picture_2)
+                    ->where('picture_3', '/storage/images/products/'.$product->picture_3)
                     ->etc()
             )
         );

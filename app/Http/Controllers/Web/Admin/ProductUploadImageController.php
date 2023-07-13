@@ -20,9 +20,7 @@ class ProductUploadImageController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('Product/Image', [
-            'fileName' => session('file_name'),
-        ]);
+        return Inertia::render('Product/Image', []);
     }
 
     public function store(

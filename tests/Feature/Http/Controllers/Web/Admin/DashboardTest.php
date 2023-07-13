@@ -25,9 +25,12 @@ class DashboardTest extends TestCase
         State::factory()->create();
         City::factory()->create();
         TypeDocument::factory()->create();
-        ProductCategory::factory()->create();
+        ProductCategory::factory()->count(3)->create();
         Unit::factory()->create();
-        Product::factory()->count(3)->create();
+        Product::factory()->create(['stock' => 0]);
+        Product::factory()->create(['stock' => 3]);
+        Product::factory()->create(['stock' => 8]);
+        Product::factory()->create(['availability' => false]);
 
         $this->seed([
             RoleSeeder::class,
