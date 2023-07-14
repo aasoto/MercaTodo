@@ -39,7 +39,7 @@ class StoreUserAction
         ])
             -> assignRole($role ? $role['name'] : '');
 
-        SendEmailVerificationJob::dispatch($user)->onQueue('email_verification');
+        SendEmailVerificationJob::dispatch($user);
 
         return $role ? $role['name'] : '';
     }
