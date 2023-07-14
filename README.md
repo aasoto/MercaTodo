@@ -131,7 +131,13 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
-9. Run the dev server (the output will give the address):
+9. Public the symbolic links, the folders need to be created in _storage/app_:
+
+```sh
+php artisan storage:link
+```
+
+10. Run the dev server (the output will give the address):
 
 ```sh
 php artisan serve
