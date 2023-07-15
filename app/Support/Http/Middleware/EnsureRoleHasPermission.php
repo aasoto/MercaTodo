@@ -15,6 +15,7 @@ class EnsureRoleHasPermission
      */
     public function handle(Request $request, Closure $next, string $permission): Response
     {
+        /** @phpstan-ignore-next-line */
         if ($request->user()->can($permission)) {
             return $next($request);
         } else {
