@@ -37,3 +37,5 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
       run: vendor/bin/phpunit
+    - name: Search bugs via PHPStan level 8
+      run: vendor/bin/phpstan

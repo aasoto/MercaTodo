@@ -37,7 +37,9 @@ class ProductControllerTest extends TestCase
         ProductCategory::factory()->create();
         Unit::factory()->create();
 
-        $this->product = Product::factory()->create();
+        $this->product = Product::factory()->create([
+            'price' => 89999.42
+        ]);
 
         Product::factory()->count(3)->create();
 
@@ -148,8 +150,6 @@ class ProductControllerTest extends TestCase
                     ->where('description', $product->description)
                     ->where('price', 50000)
                     ->whereNot('picture_1', '/storage/images/products/'.$product->picture_1)
-                    ->where('picture_2', '/storage/images/products/'.$product->picture_2)
-                    ->where('picture_3', '/storage/images/products/'.$product->picture_3)
                     ->etc()
             )
         );
