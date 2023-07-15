@@ -224,3 +224,7 @@ We use this tools in the verification of user's email, it's necessary that you m
 
 * ## [Placetopay by Evertec](https://sites.placetopay.com/)
 You need to configure the Webcheckout API payment gateway with the access credentials, exactly are the _login_, _tranKey_ and _url_; those credentials are provided by Placetopay. When you had the creditials what you need to do is go to the .env file and put the _login_ in the variable __PLACETOPAY_LOGIN__, the _tranKey_ in __PLACETOPAY_TRANKEY__ and the _url_ in __PLACETOPAY_URL__. Also you will need to specify the __endpoint__ of the API, the __endpoint__ has to be assigned in the constant called __API_SESSION__ located on _App/Domain/Order/Services/Contracts/Placetopay/Endpoints.php_
+
+## Product API features
+This web application has a REST API, which allows product management, including dependent tables (categories and units) and complementary functionalities (export, import and image management). In turn, as an additional complement, it also has a small authentication module.
+You can read all the __documentation [here](https://documenter.getpostman.com/view/23091806/2s946fdCN6)__ and also download the __postman collection [here](https://drive.google.com/drive/folders/1i1C2Pq01xI0r2aV-0hR9MYVnWfPfJuF_?usp=sharing)__ to be able to test the endpoints.
