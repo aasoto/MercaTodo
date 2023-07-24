@@ -98,7 +98,7 @@ class ProductCategoryControllerTest extends TestCase
 
     public function test_can_return_not_found_when_the_category_id_makes_not_match_with_the_records_in_show_method(): void
     {
-        $response = $this->getJson(route('api.product.show', 12345));
+        $response = $this->getJson(route('api.product.category.show', 12345));
 
         $response->assertNotFound();
         $response->assertJson(fn (AssertableJson $json) =>
