@@ -15,7 +15,6 @@ use App\Http\Resources\ProductResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductController extends Controller
 {
@@ -41,13 +40,19 @@ class ProductController extends Controller
         ], 201);
     }
 
-    public function show(string $slug): ProductResource
+    public function show(string $slug): ProductResource | JsonResponse
     {
         $product = Product::query()->queryBuilderShow()
             ->whereSlug($slug)
             ->first();
 
-        return ProductResource::make($product);
+        if ($product) {
+            return ProductResource::make($product);
+        } else {
+            return response()->json([
+                'message' => trans('not found'),
+            ], 404);
+        }
     }
 
     public function update(
@@ -58,7 +63,13 @@ class ProductController extends Controller
         /**
          * @var Product $product
          */
-        $product = Product::query()->findOrFail($id);
+        $product = Product::query()->where('id', $id)->first();
+
+        if (!$product) {
+            return response()->json([
+                'message' => trans('not found'),
+            ], 404);
+        }
 
         $files = array(
             'picture_1' => $product->picture_1,
