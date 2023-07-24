@@ -120,6 +120,16 @@ class ProductControllerTest extends TestCase
         );
     }
 
+    public function test_can_return_not_found_when_the_slug_makes_not_match_with_the_records_in_show_method(): void
+    {
+        $response = $this->getJson(route('api.product.show', 'abcd1234'));
+
+        $response->assertNotFound();
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->where('message', 'not found')
+        );
+    }
+
     public function test_can_update_product_from_api(): void
     {
         /**
@@ -157,6 +167,33 @@ class ProductControllerTest extends TestCase
         Storage::disk('public')->assertMissing('images/products/'.$product->picture_1);
         $product = $product->fresh();
         Storage::disk('public')->assertExists('images/products/'.$product->picture_1);
+    }
+
+    public function test_can_return_not_found_when_the_id_makes_not_match_with_the_records_in_update_method(): void
+    {
+        /**
+         * @var Product $product
+         */
+        $product = Product::first();
+
+        $response = $this->patchJson(route('api.product.update', 12345678), [
+            'name' => 'Product edited from api test2',
+            'products_category_id' => $product->products_category_id,
+            'barcode' => '12121212',
+            'description' => $product->description,
+            'price' => 50000,
+            'unit' => $product->unit,
+            'stock' => $product->stock,
+            'picture_1' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
+            'picture_2' => '',
+            'picture_3' => '',
+            'availability' => $product->availability,
+        ]);
+
+        $response->assertNotFound();
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->where('message', 'not found')
+        );
     }
 
     public function test_can_delete_product_from_api(): void

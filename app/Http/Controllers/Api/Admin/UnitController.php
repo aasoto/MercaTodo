@@ -40,13 +40,19 @@ class UnitController extends Controller
         ], 201);
     }
 
-    public function show(string $code): UnitResource
+    public function show(string $code): UnitResource | JsonResponse
     {
         $unit = Unit::query()->queryBuilderShow()
             ->whereCode($code)
             ->first();
 
-        return UnitResource::make($unit);
+        if ($unit) {
+            return UnitResource::make($unit);
+        } else {
+            return response()->json([
+                'message' => trans('not found'),
+            ], 404);
+        }
     }
 
     public function update(
@@ -56,11 +62,17 @@ class UnitController extends Controller
     {
         $data = UpdateUnitData::fromRequest($request);
 
-        $update_unit_action->handle($id, $data);
+        $response = $update_unit_action->handle($id, $data);
 
-        return response()->json([
-            'message' => trans('message.updated', ['attribute' => 'product']),
-            'data' => new UnitResource(Unit::query()->findOrFail($id)),
-        ], 200);
+        if ($response) {
+            return response()->json([
+                'message' => trans('message.updated', ['attribute' => 'product']),
+                'data' => new UnitResource(Unit::query()->findOrFail($id)),
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => trans('not found'),
+            ], 404);
+        }
     }
 }
