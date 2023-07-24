@@ -65,7 +65,7 @@ class ProductController extends Controller
          */
         $product = Product::query()->where('id', $id)->first();
 
-        if (!$product) {
+        if (!isset($product->name)) {
             return response()->json([
                 'message' => trans('not found'),
             ], 404);
