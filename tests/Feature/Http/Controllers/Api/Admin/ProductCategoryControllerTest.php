@@ -96,6 +96,16 @@ class ProductCategoryControllerTest extends TestCase
         );
     }
 
+    public function test_can_return_not_found_when_the_category_id_makes_not_match_with_the_records_in_show_method(): void
+    {
+        $response = $this->getJson(route('api.product.show', 12345));
+
+        $response->assertNotFound();
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->where('message', 'not found')
+        );
+    }
+
     public function test_can_update_product_category_from_api(): void
     {
         /**
@@ -114,6 +124,18 @@ class ProductCategoryControllerTest extends TestCase
                 $json->where('id', $product_category->id)
                     ->where('name', 'change category')
             )
+        );
+    }
+
+    public function test_can_return_not_found_updating_product_category_from_api_when_id_does_not_match_with_records(): void
+    {
+        $response = $this->patchJson(route('api.product.category.update', 12345678), [
+            'name' => 'change category2',
+        ]);
+
+        $response->assertNotFound();
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->where('message', 'not found')
         );
     }
 }
