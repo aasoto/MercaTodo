@@ -100,6 +100,16 @@ class UnitControllerTest extends TestCase
         );
     }
 
+    public function test_can_return_not_found_when_the_unit_code_makes_not_match_with_the_records_in_show_method(): void
+    {
+        $response = $this->getJson(route('api.product.unit.show', 'abc'));
+
+        $response->assertNotFound();
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->where('message', 'not found')
+        );
+    }
+
     public function test_can_update_product_unit_from_api(): void
     {
         /**
@@ -119,6 +129,18 @@ class UnitControllerTest extends TestCase
                     ->where('code', $unit->code)
                     ->where('name', 'changed unit')
             )
+        );
+    }
+
+    public function test_can_return_not_found_updating_product_category_from_api_when_id_does_not_match_with_records(): void
+    {
+        $response = $this->patchJson(route('api.product.unit.update', 12345678), [
+            'name' => 'change unit2',
+        ]);
+
+        $response->assertNotFound();
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->where('message', 'not found')
         );
     }
 }
