@@ -5,10 +5,6 @@ namespace App\Http\Exports;
 use App\Domain\Order\Models\Order;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Query\Builder;
 use Maatwebsite\Excel\Concerns\FromView;
 
 class OrdersReport implements FromView

@@ -8,8 +8,11 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class ProductsReport implements FromQuery
+class ProductsReport implements FromQuery, WithColumnFormatting, WithHeadings
 {
     use Exportable;
 
@@ -54,5 +57,43 @@ class ProductsReport implements FromQuery
             -> orderBy('products.id');
 
         return $query;
+    }
+
+    public function headings(): array
+    {
+        return [
+            'ID',
+            'Nombre',
+            'Categoría del producto',
+            'Precio',
+            'Unidad',
+            'Stock',
+            'Disponibilidad',
+        ];
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'D' => NumberFormat::FORMAT_CURRENCY_USD,
+            'F' => NumberFormat::FORMAT_NUMBER,
+        ];
+    }
+
+    public function prepareRows($rows)
+    {
+        return $rows->transform(function ($product) {
+
+            $product->name = ucwords($product->name);
+            $product->category = ucwords($product->category);
+
+            if ($product->availability == 1) {
+                $product->availability = 'Habilitado';
+            } else {
+                $product->availability = 'Inhabilitado';
+            }
+
+            return $product;
+        });
     }
 }
