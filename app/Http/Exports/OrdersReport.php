@@ -3,13 +3,15 @@
 namespace App\Http\Exports;
 
 use App\Domain\Order\Models\Order;
+use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class OrdersReport implements FromQuery
+class OrdersReport implements FromView
 {
     use Exportable;
 
@@ -21,12 +23,10 @@ class OrdersReport implements FromQuery
     )
     {}
 
-    public function query()
+    public function view(): View
     {
-        /**
-         * @var Builder|EloquentBuilder|Relation $query;
-         */
-        $query = Order::query()
+        return view('report.orders', [
+            'orders' => Order::query()
             ->whereDateBetween(
                 isset($this->filters['date_1']) ? $this->filters['date_1'] : null,
                 isset($this->filters['date_2']) ? $this->filters['date_2'] : null,
@@ -53,8 +53,8 @@ class OrdersReport implements FromQuery
                 'users.second_surname',
             )
             -> orderByDesc('orders.purchase_date')
-            -> join('users', 'orders.user_id', 'users.id');
-
-        return $query;
+            -> join('users', 'orders.user_id', 'users.id')
+            -> get(),
+        ]);
     }
 }
