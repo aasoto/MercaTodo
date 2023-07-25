@@ -3,13 +3,18 @@
 namespace App\Http\Exports;
 
 use App\Domain\User\Models\User;
+use Carbon\Carbon;
+use DateTime;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class UsersReport implements FromQuery
+class UsersReport implements FromQuery, WithHeadings
 {
     use Exportable;
 
@@ -62,5 +67,44 @@ class UsersReport implements FromQuery
         -> orderBy('users.id');
 
         return $query;
+    }
+
+    public function headings(): array
+    {
+        return [
+            'ID',
+            'Tipo de documento',
+            'Número de documento',
+            'Primer nombre',
+            'Segundo nombre',
+            'Primer apellido',
+            'Segundo apellido',
+            'Fecha de verificación',
+            'Habilitado',
+            'Estado',
+            'Ciudad',
+            'Rol',
+            'Fecha de creación',
+        ];
+    }
+
+    public function prepareRows($rows)
+    {
+        return $rows->transform(function ($user) {
+
+            switch ($user->role_id) {
+                case 1:
+                    $user->role_id = 'Administrador';
+                    break;
+                case 2:
+                    $user->role_id = 'Cliente';
+                    break;
+                default:
+                    $user->role_id = 'Desconocido';
+                    break;
+            }
+
+            return $user;
+        });
     }
 }
