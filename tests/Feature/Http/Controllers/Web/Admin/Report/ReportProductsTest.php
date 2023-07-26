@@ -12,6 +12,7 @@ use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use App\Http\Exports\ProductsReport;
 use Database\Seeders\RoleSeeder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
@@ -246,5 +247,41 @@ class ReportProductsTest extends TestCase
         $response = $products_report->query();
 
         $this->assertInstanceOf(ProductQueryBuilder::class, $response);
+    }
+
+    public function test_can_return_array_the_headers_of_products_report_table(): void
+    {
+        $products_report = new ProductsReport([]);
+
+        $response = $products_report->headings();
+
+        $this->assertIsArray($response);
+        $this->assertContains('ID', $response);
+        $this->assertContains('Nombre', $response);
+        $this->assertContains('Categoría del producto', $response);
+        $this->assertContains('Precio', $response);
+        $this->assertContains('Unidad', $response);
+        $this->assertContains('Stock', $response);
+        $this->assertContains('Disponibilidad', $response);
+    }
+
+    public function test_can_return_array_the_column_formats_of_products_report_table(): void
+    {
+        $products_report = new ProductsReport([]);
+
+        $response = $products_report->columnFormats();
+
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('D', $response);
+        $this->assertArrayHasKey('F', $response);
+    }
+
+    public function test_can_return_array_the_prepare_rows_of_products_report_table(): void
+    {
+        $products_report = new ProductsReport([]);
+
+        $response = $products_report->prepareRows(Product::all());
+
+        $this->assertInstanceOf(Collection::class, $response);
     }
 }

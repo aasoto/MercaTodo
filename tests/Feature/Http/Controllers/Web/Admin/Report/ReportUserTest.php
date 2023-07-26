@@ -10,6 +10,7 @@ use App\Domain\User\QueryBuilders\UserQueryBuilder;
 use App\Http\Exports\UsersReport;
 use Carbon\Carbon;
 use Database\Seeders\RoleSeeder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
@@ -297,5 +298,30 @@ class ReportUserTest extends TestCase
         $response = $users_report->query();
 
         $this->assertInstanceOf(UserQueryBuilder::class, $response);
+    }
+
+    public function test_can_return_array_the_headers_of_users_report_table(): void
+    {
+        $users_report = new UsersReport([]);
+
+        $response = $users_report->headings();
+
+        $this->assertIsArray($response);
+        $this->assertContains('ID', $response);
+        $this->assertContains('Número de documento', $response);
+        $this->assertContains('Primer nombre', $response);
+        $this->assertContains('Primer apellido', $response);
+        $this->assertContains('Habilitado', $response);
+        $this->assertContains('Rol', $response);
+        $this->assertContains('Fecha de creación', $response);
+    }
+
+    public function test_can_return_array_the_prepare_rows_of_users_report_table(): void
+    {
+        $users_report = new UsersReport([]);
+
+        $response = $users_report->prepareRows(User::query()->join('model_has_roles', 'users.id', 'model_has_roles.model_id')->get());
+
+        $this->assertInstanceOf(Collection::class, $response);
     }
 }
