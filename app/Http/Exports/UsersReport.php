@@ -3,16 +3,12 @@
 namespace App\Http\Exports;
 
 use App\Domain\User\Models\User;
-use Carbon\Carbon;
-use DateTime;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
-use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class UsersReport implements FromQuery, WithHeadings
 {
@@ -69,6 +65,9 @@ class UsersReport implements FromQuery, WithHeadings
         return $query;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function headings(): array
     {
         return [
@@ -88,7 +87,7 @@ class UsersReport implements FromQuery, WithHeadings
         ];
     }
 
-    public function prepareRows($rows)
+    public function prepareRows(mixed $rows): mixed
     {
         return $rows->transform(function ($user) {
 

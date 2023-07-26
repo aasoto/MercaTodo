@@ -59,6 +59,9 @@ class ProductsReport implements FromQuery, WithColumnFormatting, WithHeadings
         return $query;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function headings(): array
     {
         return [
@@ -72,6 +75,9 @@ class ProductsReport implements FromQuery, WithColumnFormatting, WithHeadings
         ];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function columnFormats(): array
     {
         return [
@@ -80,7 +86,7 @@ class ProductsReport implements FromQuery, WithColumnFormatting, WithHeadings
         ];
     }
 
-    public function prepareRows($rows)
+    public function prepareRows(mixed $rows): mixed
     {
         return $rows->transform(function ($product) {
 
