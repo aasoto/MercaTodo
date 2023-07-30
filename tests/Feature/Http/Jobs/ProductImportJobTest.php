@@ -62,7 +62,7 @@ class ProductImportJobTest extends TestCase
             ->assertStatus(201)
             ->assertJsonStructure(['message', 'file']);
 
-        $this->assertDatabaseCount('products', 3);
+        $this->assertDatabaseCount('products', 4);
         $this->assertDatabaseHas('products', [
             'name' => 'Test import product',
             'barcode' => '123456789',
@@ -70,7 +70,7 @@ class ProductImportJobTest extends TestCase
             'unit' => 'unidad',
         ]);
 
-        $this->assertDatabaseCount('products_categories', 3);
+        $this->assertDatabaseCount('products_categories', 4);
         $this->assertDatabaseHas('products_categories', [
             'name' => 'Test import category',
         ]);

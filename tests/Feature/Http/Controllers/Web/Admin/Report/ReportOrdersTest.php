@@ -12,6 +12,7 @@ use App\Domain\User\Models\TypeDocument;
 use App\Domain\User\Models\User;
 use App\Http\Exports\OrdersReport;
 use Database\Seeders\RoleSeeder;
+use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
@@ -203,14 +204,14 @@ class ReportOrdersTest extends TestCase
         ->assertSessionHasAll(['success' => 'Orders report generated.']);
     }
 
-    public function test_can_return_query_with_the_expected_order_from_the_export_class(): void
+    public function test_can_return_view_with_the_expected_order_from_the_export_class(): void
     {
         $orders_report = new OrdersReport([
             'min_total' => $this->order->purchase_total,
         ]);
 
-        $response = $orders_report->query();
+        $response = $orders_report->view();
 
-        $this->assertInstanceOf(OrderQueryBuilder::class, $response);
+        $this->assertInstanceOf(View::class, $response);
     }
 }
