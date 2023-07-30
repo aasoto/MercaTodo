@@ -276,8 +276,12 @@ class ReportProductsTest extends TestCase
         $this->assertArrayHasKey('F', $response);
     }
 
-    public function test_can_return_array_the_prepare_rows_of_products_report_table(): void
+    public function test_can_return_collection_from_prepare_rows_of_products_report_table(): void
     {
+        Product::factory()->create([
+            'availability' => false,
+        ]);
+
         $products_report = new ProductsReport([]);
 
         $response = $products_report->prepareRows(Product::all());

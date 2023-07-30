@@ -316,8 +316,11 @@ class ReportUserTest extends TestCase
         $this->assertContains('Fecha de creación', $response);
     }
 
-    public function test_can_return_array_the_prepare_rows_of_users_report_table(): void
+    public function test_can_return_collection_from_prepare_rows_of_users_report_table(): void
     {
+        User::factory()->create()->assignRole('admin');
+        User::factory()->create()->assignRole('client');
+
         $users_report = new UsersReport([]);
 
         $response = $users_report->prepareRows(User::query()->join('model_has_roles', 'users.id', 'model_has_roles.model_id')->get());
