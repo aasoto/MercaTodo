@@ -6,6 +6,7 @@ use App\Domain\Product\Models\Product;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
@@ -86,7 +87,7 @@ class ProductsReport implements FromQuery, WithColumnFormatting, WithHeadings
         ];
     }
 
-    public function prepareRows(mixed $rows): mixed
+    public function prepareRows(Collection $rows): Collection
     {
         return $rows->transform(function ($product) {
 
