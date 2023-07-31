@@ -2,22 +2,11 @@
 
 namespace App\Http\Controllers\Web\Client;
 
-use App\Domain\Order\Actions\GetProductsByOrderAction;
-use App\Domain\Order\Actions\RemoveProductOfOrder;
-use App\Domain\Order\Actions\UpdateOrderAction;
-use App\Domain\Order\Actions\UpdateOrderHasProductAction;
-use App\Domain\Order\Dtos\StoreOrderData;
-use App\Domain\Order\Dtos\UpdateOrderData;
-use App\Domain\Order\Dtos\UpdateOrderHasProductData;
 use App\Domain\Order\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Domain\Order\Services\PlaceToPayPaymentServices;
 use App\Domain\Order\Services\RestoreStockProductsService;
-use App\Domain\Order\Traits\Cart;
 use App\Domain\Order\Traits\CheckStock;
-use App\Domain\Product\Actions\UpdateProductAction;
-use App\Domain\Product\Dtos\UpdateProductData;
-use App\Domain\Product\Models\Product;
 use App\Http\Requests\Web\Client\Payment\UpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -92,7 +81,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function process_response(PlaceToPayPaymentServices $placetopay_payment, string $code): RedirectResponse
+    public function processResponse(PlaceToPayPaymentServices $placetopay_payment, string $code): RedirectResponse
     {
         $result = $placetopay_payment->getRequestInformation($code);
 
@@ -104,7 +93,7 @@ class PaymentController extends Controller
         return Redirect::route('order.show', $order['id'])->with('success', $result == 'ok' ?  'Payment completed.' : 'Payment error.');
     }
 
-    public function process_canceled(
+    public function processCanceled(
         PlaceToPayPaymentServices $placetopay_payment,
         string $code): RedirectResponse
     {
@@ -121,7 +110,7 @@ class PaymentController extends Controller
         return Redirect::route('showcase.index')->with('success', $result == 'ok' ?  'Payment canceled.' : 'Error.');
     }
 
-    public function process_error(int $status): RedirectResponse
+    public function processError(int $status): RedirectResponse
     {
         switch ($status) {
             case 401:

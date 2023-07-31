@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Web\Admin;
 
 use App\Domain\Product\Dtos\ImageProductData;
-use App\Domain\Product\Models\Product;
 use App\Domain\Product\Services\ImagesServices;
 use App\Domain\Product\Traits\StorageFiles;
 use App\Http\Controllers\Controller;

@@ -14,7 +14,6 @@ use App\Http\Resources\UnitResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class UnitController extends Controller
 {

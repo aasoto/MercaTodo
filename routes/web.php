@@ -138,12 +138,12 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
 
     Route::middleware(['role:admin', 'permission:generate-reports'])->group(function () {
         Route::get('/reporting', [ReportController::class, 'index'])->name('report.index');
-        Route::get('/user_report', [ReportController::class, 'create_user'])->name('user.report.create');
-        Route::post('/user_report_export', [ReportController::class, 'export_user'])->name('user.report.export');
-        Route::get('/product_report', [ReportController::class, 'create_product'])->name('product.report.create');
-        Route::post('/product_report_export', [ReportController::class, 'export_product'])->name('product.report.export');
-        Route::get('/order_report', [ReportController::class, 'create_order'])->name('order.report.create');
-        Route::post('/order_report_export', [ReportController::class, 'export_order'])->name('order.report.export');
+        Route::get('/user_report', [ReportController::class, 'createUser'])->name('user.report.create');
+        Route::post('/user_report_export', [ReportController::class, 'exportUser'])->name('user.report.export');
+        Route::get('/product_report', [ReportController::class, 'createProduct'])->name('product.report.create');
+        Route::post('/product_report_export', [ReportController::class, 'exportProduct'])->name('product.report.export');
+        Route::get('/order_report', [ReportController::class, 'createOrder'])->name('order.report.create');
+        Route::post('/order_report_export', [ReportController::class, 'exportOrder'])->name('order.report.export');
 
     });
 
@@ -157,9 +157,9 @@ Route::middleware(['auth', 'verified', 'enabled'])->group(function () {
 
     Route::middleware(['role:client', 'permission:client-payment-process'])->group( function () {
         Route::get('/payment/show/{code}', [PaymentController::class, 'show'])->name('payment.show');
-        Route::get('/payment/response/{code}', [PaymentController::class, 'process_response'])->name('payment.response');
-        Route::get('/payment/canceled/{code}', [PaymentController::class, 'process_canceled'])->name('payment.canceled');
-        Route::get('/payment/error/{status}', [PaymentController::class, 'process_error'])->name('payment.error');
+        Route::get('/payment/response/{code}', [PaymentController::class, 'processResponse'])->name('payment.response');
+        Route::get('/payment/canceled/{code}', [PaymentController::class, 'processCanceled'])->name('payment.canceled');
+        Route::get('/payment/error/{status}', [PaymentController::class, 'processError'])->name('payment.error');
         Route::patch('/payment/{id}', [PaymentController::class, 'update'])->name('payment.update');
     });
 });
