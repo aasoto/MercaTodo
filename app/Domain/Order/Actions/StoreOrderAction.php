@@ -18,8 +18,9 @@ class StoreOrderAction
         foreach ($data->products as $key => $value) {
             $purchase_total = $purchase_total + $value['totalPrice'];
         }
+
         return Order::create([
-            'code' => $this->generate_code(),
+            'code' => $this->generateCode(),
             'user_id' => auth()->user()?->id,
             'purchase_date' => date('Y-m-d H:i:s'),
             'payment_status' => 'pending',

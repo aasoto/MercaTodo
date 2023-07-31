@@ -52,7 +52,7 @@ class ProductExportJob implements ShouldQueue
             $file = $this->open_file($file_name);
             fputcsv($file, $headers);
 
-            Product::with('category')->with('product_unit')->chunk(10, function ($products) use ($file) {
+            Product::with('category')->with('productUnit')->chunk(10, function ($products) use ($file) {
                 /**
                  * @var Product $product
                  */
@@ -64,7 +64,7 @@ class ProductExportJob implements ShouldQueue
                         'barcode' => $product->barcode,
                         'description' => $product->description,
                         'price' => $product->price,
-                        'unit' => $product->product_unit?->name,
+                        'unit' => $product->productUnit?->name,
                         'stock' => $product->stock,
                         'picture_1' => $product->picture_1,
                         'picture_2' => $product->picture_2,

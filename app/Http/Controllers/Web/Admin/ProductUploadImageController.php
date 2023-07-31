@@ -27,7 +27,7 @@ class ProductUploadImageController extends Controller
         ImageRequest $request,
         ImagesServices $images_services): RedirectResponse
     {
-        $file_name = $images_services->upload_single_image(
+        $file_name = $images_services->uploadSingleImage(
             ImageProductData::fromRequest($request)
         );
 

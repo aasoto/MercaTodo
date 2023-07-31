@@ -19,7 +19,6 @@ class StoreUserAction
     {
         $role = $this->roles->get($data->role_id);
 
-        // Call to an undefined method Illuminate\Database\Eloquent\Model::assignRole().
         /** @phpstan-ignore-next-line */
         $user = User::create([
             "type_document"     => $data->type_document,

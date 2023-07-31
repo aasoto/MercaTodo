@@ -60,7 +60,7 @@ class Order extends Model
         return OrderFactory::new();
     }
 
-    public function approved_partial(): void
+    public function approvedPartial(): void
     {
         $this->update([
             'payment_status' => 'approved_partial'
@@ -81,7 +81,7 @@ class Order extends Model
         ]);
     }
 
-    public function partial_expired(): void
+    public function partialExpired(): void
     {
         $this->update([
             'payment_status' => 'partial_expired'
@@ -102,7 +102,7 @@ class Order extends Model
         ]);
     }
 
-    public function verify_bank(): void
+    public function verifyBank(): void
     {
         $this->update([
             'payment_status' => 'verify_bank'

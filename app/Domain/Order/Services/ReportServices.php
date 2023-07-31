@@ -9,7 +9,7 @@ class ReportServices
     /**
      * @return array<mixed>
      */
-    public function orders_by_day(int $interval = 8): array
+    public function ordersByDay(int $interval = 8): array
     {
         $color = 'rgb(75, 192, 192)';
         $data = array();
@@ -47,7 +47,7 @@ class ReportServices
     /**
      * @return array<mixed>
      */
-    public function orders_by_payment_status(): array
+    public function ordersByPaymentStatus(): array
     {
         $color_bars = [
             'rgba(22, 163, 74, 0.2)', //green

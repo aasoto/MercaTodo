@@ -26,7 +26,7 @@ class RestoreStockProductsService
     )
     {}
 
-    public function get_products(): StoreOrderData
+    public function getProducts(): StoreOrderData
     {
         $get_products = new GetProductsByOrderAction();
 
@@ -42,18 +42,18 @@ class RestoreStockProductsService
     /**
      * @return array<mixed>
      */
-    public function insolvent_products(StoreOrderData $products_data): array
+    public function insolventProducts(StoreOrderData $products_data): array
     {
         if (isset($this->request?->validated()['products'])) {
-            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(true, $products_data->products, null), $this->request->validated()['payment_method'])));
+            $limitated_stock = $this->solventOrder((new StoreOrderData($this->getCart(true, $products_data->products, null), $this->request->validated()['payment_method'])));
         }else {
-            $limitated_stock = $this->solvent_order((new StoreOrderData($this->get_cart(false, null, $this->order), $this->request?->validated()['payment_method'])));
+            $limitated_stock = $this->solventOrder((new StoreOrderData($this->getCart(false, null, $this->order), $this->request?->validated()['payment_method'])));
         }
 
         return $limitated_stock;
     }
 
-    public function update_order(): void
+    public function updateOrder(): void
     {
         $update_order_action = new UpdateOrderAction();
 
@@ -67,7 +67,7 @@ class RestoreStockProductsService
         }
     }
 
-    public function update_orders_products_decrement_stock(): void
+    public function updateOrdersProductsDecrementStock(): void
     {
         $remove_product_of_order = new RemoveProductOfOrder();
         $update_product_action = new UpdateProductAction((new ImagesServices));
@@ -78,7 +78,7 @@ class RestoreStockProductsService
              */
             $product = $value->product;
             if ($product->stock != 0) {
-                $this->update_products($product, $value->quantity, $update_product_action, false);
+                $this->updateProducts($product, $value->quantity, $update_product_action, false);
             } else {
                 $remove_product_of_order->handle($this->order->id, strval($product->id));
             }
@@ -86,7 +86,7 @@ class RestoreStockProductsService
         }
     }
 
-    public function update_orders_products_increment_stock(): void
+    public function updateOrdersProductsIncrementStock(): void
     {
         $update_product_action = new UpdateProductAction((new ImagesServices));
 
@@ -95,11 +95,11 @@ class RestoreStockProductsService
              * @var Product $product
              */
             $product = $value->product;
-            $this->update_products($product, $value->quantity, $update_product_action);
+            $this->updateProducts($product, $value->quantity, $update_product_action);
         }
     }
 
-    private function update_products(
+    private function updateProducts(
         Product $product,
         int $quantity,
         UpdateProductAction $update_product_action,
@@ -114,8 +114,8 @@ class RestoreStockProductsService
             strval($product->price),
             $product->unit,
             strval($increment ?
-                $this->increment_stock($product->stock, $quantity) :
-                $this->decrement_stock($product->stock, $quantity)
+                $this->incrementStock($product->stock, $quantity) :
+                $this->decrementStock($product->stock, $quantity)
             ),
             null,
             null,
@@ -126,12 +126,12 @@ class RestoreStockProductsService
         $update_product_action->handle($update_product_data, strval($product->id), '[]');
     }
 
-    private function increment_stock(int $stock, int $quantity): int
+    private function incrementStock(int $stock, int $quantity): int
     {
         return  $stock + $quantity;
     }
 
-    private function decrement_stock(int $stock, int $quantity): int
+    private function decrementStock(int $stock, int $quantity): int
     {
         return  $stock - $quantity;
     }

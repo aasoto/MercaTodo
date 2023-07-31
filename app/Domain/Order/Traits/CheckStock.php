@@ -10,7 +10,7 @@ trait CheckStock
     /**
      * @return array<mixed>
      */
-    public function solvent_order(StoreOrderData $data): array
+    public function solventOrder(StoreOrderData $data): array
     {
         $limitated_stock = array();
         foreach ($data->products as $key => $value) {

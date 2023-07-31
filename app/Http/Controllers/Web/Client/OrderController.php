@@ -64,7 +64,7 @@ class OrderController extends Controller
     {
         $data = StoreOrderData::fromRequest($request);
 
-        $limitated_stock = $this->solvent_order($data);
+        $limitated_stock = $this->solventOrder($data);
 
         if (count($limitated_stock) == 0) {
             /**

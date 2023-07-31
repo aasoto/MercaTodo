@@ -51,17 +51,17 @@ class PaymentController extends Controller
 
         $restore_stock_products = new RestoreStockProductsService($order, $request);
 
-        $products_data = $restore_stock_products->get_products();
+        $products_data = $restore_stock_products->getProducts();
 
         if ($order->payment_status == 'canceled') {
 
-            $limitated_stock = $restore_stock_products->insolvent_products($products_data);
+            $limitated_stock = $restore_stock_products->insolventProducts($products_data);
 
             if (count($limitated_stock) == 0) {
 
-                $restore_stock_products->update_order();
+                $restore_stock_products->updateOrder();
 
-                $restore_stock_products->update_orders_products_decrement_stock();
+                $restore_stock_products->updateOrdersProductsDecrementStock();
 
                 $order->pending();
             } else {
@@ -116,7 +116,7 @@ class PaymentController extends Controller
         $order = Order::where('code', $code)->first();
 
         (new RestoreStockProductsService($order, null))
-            ->update_orders_products_increment_stock();
+            ->updateOrdersProductsIncrementStock();
 
         return Redirect::route('showcase.index')->with('success', $result == 'ok' ?  'Payment canceled.' : 'Error.');
     }
