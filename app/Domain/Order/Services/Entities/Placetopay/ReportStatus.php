@@ -74,7 +74,7 @@ class ReportStatus
                 $payment_status == 'REJECTED' &&
                 $payment_message == 'Transacción pendiente. Por favor consulte con su entidad financiera si el débito fue realizado'
             ) {
-                $this->order->verify_bank();
+                $this->order->verifyBank();
             } else {
                 $this->order->waiting();
             }
@@ -93,13 +93,13 @@ class ReportStatus
 
     private function approved_partial(LogsReportStatus $logs_report_status): void
     {
-        $this->order->approved_partial();
+        $this->order->approvedPartial();
         $logs_report_status->save('APPROVED_PARTIAL');
     }
 
     private function partial_expired(LogsReportStatus $logs_report_status): void
     {
-        $this->order->partial_expired();
+        $this->order->partialExpired();
         $logs_report_status->save('PARTIAL_EXPIRED');
     }
 

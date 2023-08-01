@@ -28,7 +28,5 @@ class StoreOrderHasProductAction
                 'stock' => intval($product['stock']) - $value['quantity'],
             ]);
         }
-
-
     }
 }

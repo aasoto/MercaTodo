@@ -13,7 +13,7 @@ trait Cart
      * @param ?Order $order_saved
      * @return array<mixed>
      */
-    public function get_cart(bool $has_products, ?array $order, ?Order $order_saved): array
+    public function getCart(bool $has_products, ?array $order, ?Order $order_saved): array
     {
         $cart = array();
 

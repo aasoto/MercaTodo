@@ -20,11 +20,11 @@ class DashboardController extends Controller
         ProductReportServices $product_reports, ): Response
     {
         return Inertia::render('Dashboard', [
-            'ordersByDay' => $order_reports->orders_by_day(10),
-            'ordersByPaymentStatus' => $order_reports->orders_by_payment_status(),
-            'productsByCategory' => $product_reports->products_by_category(),
-            'productsStatusByStock' => $product_reports->products_status_by_stock(),
-            'productsByAvailability' => $product_reports->products_by_availability(),
+            'ordersByDay' => $order_reports->ordersByDay(10),
+            'ordersByPaymentStatus' => $order_reports->ordersByPaymentStatus(),
+            'productsByCategory' => $product_reports->productsByCategory(),
+            'productsStatusByStock' => $product_reports->productsStatusByStock(),
+            'productsByAvailability' => $product_reports->productsByAvailability(),
             'userRole' =>
                 session('user_role') ? session('user_role') : $this->authHasRole(Role::getFromCache()),
         ]);

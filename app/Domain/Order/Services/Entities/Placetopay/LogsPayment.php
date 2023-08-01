@@ -23,7 +23,7 @@ class LogsPayment
         } elseif ($this->response->status() === 500) {
             $this->error();
         } else {
-            $this->default_response();
+            $this->defaultResponse();
         }
     }
 
@@ -51,7 +51,7 @@ class LogsPayment
             ]);
     }
 
-    private function default_response(): void
+    private function defaultResponse(): void
     {
         Log::channel('response_webcheckout')
             ->error('['.$this->response->status().'][OTHER RESPONSE] Error creating the session for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [

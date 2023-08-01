@@ -50,7 +50,7 @@ class ProductImportJob implements ShouldQueue
                 fgetcsv($file);
 
                 while (($row = fgetcsv($file)) !== false) {
-                    $this->process_row($row);
+                    $this->processRow($row);
                 }
 
                 fclose($file);
@@ -72,7 +72,7 @@ class ProductImportJob implements ShouldQueue
     /**
      * @param array<mixed> $row
      */
-    private function process_row(array $row): void
+    private function processRow(array $row): void
     {
         Product::query()->updateOrCreate([
             'id' => $row[self::HEADERS['id']],
@@ -80,20 +80,20 @@ class ProductImportJob implements ShouldQueue
             'id' => $row[self::HEADERS['id']],
             'name' => $row[self::HEADERS['name']],
             'slug' => Str::slug($row[self::HEADERS['name']]),
-            'products_category_id' => $this->get_product_category_id($row[self::HEADERS['category']]),
+            'products_category_id' => $this->getProductCategoryId($row[self::HEADERS['category']]),
             'barcode' => $row[self::HEADERS['barcode']],
             'description' => $row[self::HEADERS['description']],
             'price' => $row[self::HEADERS['price']],
-            'unit' => $this->get_unit_code($row[self::HEADERS['unit']]),
+            'unit' => $this->getUnitCode($row[self::HEADERS['unit']]),
             'stock' => $row[self::HEADERS['stock']],
             'picture_1' => $row[self::HEADERS['picture_1']],
             'picture_2' => $row[self::HEADERS['picture_2']],
             'picture_3' => $row[self::HEADERS['picture_3']],
-            'availability' => $this->get_availability($row[self::HEADERS['availability']]),
+            'availability' => $this->getAvailability($row[self::HEADERS['availability']]),
         ]);
     }
 
-    private function get_product_category_id(string $name): int
+    private function getProductCategoryId(string $name): int
     {
         /**
          * @var ProductCategory $product_category
@@ -107,7 +107,7 @@ class ProductImportJob implements ShouldQueue
         return $product_category->id;
     }
 
-    private function get_unit_code(string $name): string
+    private function getUnitCode(string $name): string
     {
         /**
          * @var Unit $unit
@@ -122,7 +122,7 @@ class ProductImportJob implements ShouldQueue
         return $unit->code;
     }
 
-    private function get_availability(string $status): bool
+    private function getAvailability(string $status): bool
     {
         if ($status == 'enabled') {
             return true;

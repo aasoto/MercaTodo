@@ -86,7 +86,7 @@ class OrderModelTest extends TestCase
         $order = Order::factory()->create(['user_id' => $this->user->id]);
 
         $this->assertEquals('pending', $order->payment_status);
-        $order->verify_bank();
+        $order->verifyBank();
         $this->assertEquals('verify_bank', $order->payment_status);
     }
 

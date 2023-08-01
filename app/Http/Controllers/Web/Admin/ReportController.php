@@ -34,7 +34,7 @@ class ReportController extends Controller
         ]);
     }
 
-    public function create_order(Request $request): Response
+    public function createOrder(Request $request): Response
     {
         return Inertia::render('Report/Order/Create', [
             'filters' => $request->only([
@@ -67,7 +67,7 @@ class ReportController extends Controller
         ]);
     }
 
-    public function export_order(OrderReportRequest $request): RedirectResponse
+    public function exportOrder(OrderReportRequest $request): RedirectResponse
     {
         $path_file = 'reports/orders/orders_'.$request->validated()['time'].'.xlsx';
         (new OrdersReport($request->validated()))->queue($path_file)->chain([
@@ -77,7 +77,7 @@ class ReportController extends Controller
         return Redirect::route('order.report.create')->with('success', 'Orders report generated.');
     }
 
-    public function create_product(Request $request): Response
+    public function createProduct(Request $request): Response
     {
         return Inertia::render('Report/Product/Create', [
             'filters' => $request->only([
@@ -110,7 +110,7 @@ class ReportController extends Controller
         ]);
     }
 
-    public function export_product(ProductReportRequest $request): RedirectResponse
+    public function exportProduct(ProductReportRequest $request): RedirectResponse
     {
         $path_file = 'reports/products/products_'.$request->validated()['time'].'.xlsx';
         (new ProductsReport($request->validated()))->queue($path_file)->chain([
@@ -120,7 +120,7 @@ class ReportController extends Controller
         return Redirect::route('product.report.create')->with('success', 'Products report generated.');
     }
 
-    public function create_user(Request $request): Response
+    public function createUser(Request $request): Response
     {
         return Inertia::render('Report/User/Create', [
             'filters' => $request->only([
@@ -164,7 +164,7 @@ class ReportController extends Controller
         ]);
     }
 
-    public function export_user(UserReportRequest $request): RedirectResponse
+    public function exportUser(UserReportRequest $request): RedirectResponse
     {
         $path_file = 'reports/users/users_'.$request->validated()['time'].'.xlsx';
         (new UsersReport($request->validated()))->queue($path_file)->chain([
