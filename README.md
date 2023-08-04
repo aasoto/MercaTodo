@@ -133,7 +133,7 @@ php artisan migrate --seed
 
 > For create the remaining required folders please introduce the following commands (you need to be located in the project root):
 >```sh
-mkdir storage\app\exports storage\app\reports
+> mkdir storage\app\exports storage\app\reports
 >```
 
 Finally public the created folders.
