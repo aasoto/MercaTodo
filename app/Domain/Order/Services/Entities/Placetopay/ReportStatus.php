@@ -6,7 +6,6 @@ use App\Domain\Order\Actions\UpdateOrderAction;
 use App\Domain\Order\Dtos\UpdateOrderData;
 use App\Domain\Order\Models\Order;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Log;
 
 class ReportStatus
 {
@@ -34,10 +33,10 @@ class ReportStatus
                 $this->rejected($logs_report_status);
                 break;
             case 'APPROVED_PARTIAL':
-                $this->approved_partial($logs_report_status);
+                $this->approvedPartial($logs_report_status);
                 break;
             case 'PARTIAL_EXPIRED':
-                $this->partial_expired($logs_report_status);
+                $this->partialExpired($logs_report_status);
                 break;
             default:
                 $this->other($logs_report_status);
@@ -91,13 +90,13 @@ class ReportStatus
         $logs_report_status->save('REJECTED');
     }
 
-    private function approved_partial(LogsReportStatus $logs_report_status): void
+    private function approvedPartial(LogsReportStatus $logs_report_status): void
     {
         $this->order->approvedPartial();
         $logs_report_status->save('APPROVED_PARTIAL');
     }
 
-    private function partial_expired(LogsReportStatus $logs_report_status): void
+    private function partialExpired(LogsReportStatus $logs_report_status): void
     {
         $this->order->partialExpired();
         $logs_report_status->save('PARTIAL_EXPIRED');
