@@ -48,11 +48,11 @@ class ProductExportJob implements ShouldQueue
         try {
 
             $file_name = sprintf('exports/%s.csv', $this->uuid);
-            $this->create_file($file_name);
-            $file = $this->open_file($file_name);
+            $this->createFile($file_name);
+            $file = $this->openFile($file_name);
             fputcsv($file, $headers);
 
-            Product::with('category')->with('product_unit')->chunk(10, function ($products) use ($file) {
+            Product::with('category')->with('productUnit')->chunk(10, function ($products) use ($file) {
                 /**
                  * @var Product $product
                  */
@@ -64,7 +64,7 @@ class ProductExportJob implements ShouldQueue
                         'barcode' => $product->barcode,
                         'description' => $product->description,
                         'price' => $product->price,
-                        'unit' => $product->product_unit?->name,
+                        'unit' => $product->productUnit?->name,
                         'stock' => $product->stock,
                         'picture_1' => $product->picture_1,
                         'picture_2' => $product->picture_2,
@@ -88,12 +88,12 @@ class ProductExportJob implements ShouldQueue
 
     }
 
-    private function create_file(string $file_name): void
+    private function createFile(string $file_name): void
     {
         Storage::disk(config()->get('filesystem.default'))->put($file_name, '');
     }
 
-    private function open_file(string $file_name): mixed
+    private function openFile(string $file_name): mixed
     {
         return fopen(Storage::disk(config()->get('filesystem.default'))->path($file_name), 'w');
     }

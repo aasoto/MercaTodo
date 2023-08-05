@@ -16,7 +16,7 @@ class ImagesServices
      * @param StoreProductData|UpdateProductData $data
      * @return array<mixed> $data_filtered
      */
-    public function Save(StoreProductData|UpdateProductData $data): array
+    public function save(StoreProductData|UpdateProductData $data): array
     {
         $counter = 0;
         $data_filtered = [
@@ -62,7 +62,7 @@ class ImagesServices
      * @param UpdateProductData $data
      * @return array<mixed> $data
      */
-    public function Update(UpdateProductData $data, string $files): array
+    public function update(UpdateProductData $data, string $files): array
     {
         $data = $this->Save($data);
 
@@ -75,7 +75,7 @@ class ImagesServices
      * @param array<mixed> $files
      * @param array<mixed> $data
      */
-    public function Delete(array $files, bool $updating = false, array $data = null): void
+    public function delete(array $files, bool $updating = false, array $data = null): void
     {
         if (!$updating) {
             $data = $files;
@@ -94,7 +94,7 @@ class ImagesServices
         }
     }
 
-    public function upload_single_image(ImageProductData $data): string
+    public function uploadSingleImage(ImageProductData $data): string
     {
         if ($data->product_id && $data->picture_number) {
             /**

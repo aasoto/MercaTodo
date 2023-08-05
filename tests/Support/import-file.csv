@@ -2,3 +2,4 @@ id,name,category,barcode,description,price,unit,stock,picture_1,picture_2,pictur
 1,"Test import product","Test import category",123456789,"Voluptas natus aut nihil illum. Qui porro minus dolorem facilis fuga fugit.",10000,Unidad,8,7240763594.jpg,8294128420.jpg,6579801784.jpg,enabled
 2,"aliquam eligendi aut inventore","amet ut voluptatum",3069585247,"Placeat nobis voluptate porro est dolores maiores ut. Vel non aut consectetur consectetur qui et ea consequatur.",145110.22,Docena,0,1731891433.jpg,6262971321.jpg,0675871509.jpg,enabled
 3,"consequatur autem eius porro","nesciunt quasi ut",7022442643,"Consectetur autem sit neque nemo velit. Aliquid dolor unde aut nemo qui culpa nihil. Et est non ducimus rerum.",499297.95,Arroba,2,9319071007.jpg,7959048670.jpg,9036506646.jpg,enabled
+4,"Televisión","tecnología",32984392,"descripción aquí",1200000,Unidad,80,389248.jpg,,,disabled

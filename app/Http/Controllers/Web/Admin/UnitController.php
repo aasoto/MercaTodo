@@ -49,7 +49,7 @@ class UnitController extends Controller
     public function update(UpdateRequest $request, UpdateUnitAction $update_unit_action, string $id): RedirectResponse
     {
         $data = UpdateUnitData::fromRequest($request);
-        $update_unit_action->handle($id, $data);
+        $response = $update_unit_action->handle($id, $data);
         return Redirect::route('unit.index')->with('success', 'Unit updated.');
     }
 }

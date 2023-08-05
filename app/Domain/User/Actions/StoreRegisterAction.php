@@ -10,8 +10,6 @@ class StoreRegisterAction
 {
     public function handle(StoreRegisterData $data, ?string $role = 'client'): User
     {
-
-        // Call to an undefined method Illuminate\Database\Eloquent\Model::assignRole().
         /** @phpstan-ignore-next-line */
         return User::create([
             "type_document"     => $data->type_document,

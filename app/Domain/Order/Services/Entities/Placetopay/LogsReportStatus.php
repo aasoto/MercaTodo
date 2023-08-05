@@ -28,13 +28,13 @@ class LogsReportStatus
                 $this->canceled();
                 break;
             case 'APPROVED_PARTIAL':
-                $this->approved_partial();
+                $this->approvedPartial();
                 break;
             case 'PARTIAL_EXPIRED':
-                $this->partial_expired();
+                $this->partialExpired();
                 break;
             default:
-                $this->default_status($this->response->json()['status']['status']);
+                $this->defaultStatus($this->response->json()['status']['status']);
                 break;
         }
     }
@@ -63,7 +63,7 @@ class LogsReportStatus
             ]);
     }
 
-    private function approved_partial(): void
+    private function approvedPartial(): void
     {
         Log::channel('payment_webcheckout')
             ->warning('['.$this->response->status().']['.$this->mode.'][APPROVED_PARTIAL] for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [
@@ -71,7 +71,7 @@ class LogsReportStatus
             ]);
     }
 
-    private function partial_expired(): void
+    private function partialExpired(): void
     {
         Log::channel('payment_webcheckout')
             ->error('['.$this->response->status().']['.$this->mode.'][PARTIAL_EXPIRED] for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [
@@ -79,7 +79,7 @@ class LogsReportStatus
             ]);
     }
 
-    private function default_status(string $status): void
+    private function defaultStatus(string $status): void
     {
         Log::channel('payment_webcheckout')
             ->notice('['.$this->response->status().']['.$this->mode.']['.$status.'] Payment has an unknown response for the order No.'.$this->order->id.' with code '.$this->order->code.' with the response {response}', [

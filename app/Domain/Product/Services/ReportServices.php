@@ -13,7 +13,7 @@ class ReportServices
     /**
      * @return array<mixed>
      */
-    public function products_by_category(): array
+    public function productsByCategory(): array
     {
         $colors = array();
         $data = array();
@@ -22,7 +22,7 @@ class ReportServices
         foreach (ProductCategory::getFromCache() as $key => $value) {
             array_push($data, count(Product::where('products_category_id', $value['id'])->get()));
             array_push($labels, ucwords($value['name']));
-            array_push($colors, $this->generate_random_color());
+            array_push($colors, $this->generateRandomColor());
         }
 
         return [
@@ -35,7 +35,7 @@ class ReportServices
     /**
      * @return array<mixed>
      */
-    public function products_status_by_stock(): array
+    public function productsStatusByStock(): array
     {
         $products = Product::get();
 
@@ -73,7 +73,7 @@ class ReportServices
     /**
      * @return array<mixed>
      */
-    public function products_by_availability(): array
+    public function productsByAvailability(): array
     {
         $products = Product::get();
 

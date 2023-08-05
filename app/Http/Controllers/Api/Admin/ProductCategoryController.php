@@ -14,7 +14,6 @@ use App\Http\Resources\ProductsCategoryResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductCategoryController extends Controller
 {
@@ -40,13 +39,19 @@ class ProductCategoryController extends Controller
         ], 201);
     }
 
-    public function show(string $id): ProductsCategoryResource
+    public function show(string $id): ProductsCategoryResource | JsonResponse
     {
         $product_category = ProductCategory::query()->queryBuilderShow()
             ->whereId($id)
             ->first();
 
-        return ProductsCategoryResource::make($product_category);
+        if ($product_category) {
+            return ProductsCategoryResource::make($product_category);
+        } else {
+            return response()->json([
+                'message' => trans('not found'),
+            ], 404);
+        }
     }
 
     public function update(
@@ -56,11 +61,17 @@ class ProductCategoryController extends Controller
     {
         $data = UpdateProductCategoryData::fromRequest($request);
 
-        $update_product_category_action->handle($id, $data);
+        $response = $update_product_category_action->handle($id, $data);
 
-        return response()->json([
-            'message' => trans('message.updated', ['attribute' => 'data']),
-            'data' => new ProductsCategoryResource(ProductCategory::query()->findOrFail($id)),
-        ], 200);
+        if ($response) {
+            return response()->json([
+                'message' => trans('message.updated', ['attribute' => 'data']),
+                'data' => new ProductsCategoryResource(ProductCategory::query()->findOrFail($id)),
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => trans('not found'),
+            ], 404);
+        }
     }
 }

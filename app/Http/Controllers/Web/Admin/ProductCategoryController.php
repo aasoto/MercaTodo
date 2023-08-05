@@ -57,7 +57,7 @@ class ProductCategoryController extends Controller
         string $id): RedirectResponse
     {
         $data = UpdateProductCategoryData::fromRequest($request);
-        $update_product_category_action->handle($id, $data);
+        $response = $update_product_category_action->handle($id, $data);
         return Redirect::route('product_category.index')->with('success', 'Product category updated.');
     }
 }

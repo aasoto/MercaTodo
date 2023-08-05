@@ -1,5 +1,5 @@
 [![merca-todo-logo-mini.png](https://i.postimg.cc/2SgCTSLx/merca-todo-logo-mini.png)](https://postimg.cc/VJByk1RS)
- 
+
 # MercaTodo
 ## Description
 
@@ -42,7 +42,7 @@ This is the most popular PHP development environment. XAMPP is a completely free
 >>If you have an older or newer version of XAMPP installed, keep in mind that this application was developed with [PHP 8.1.6](https://www.php.net/downloads.php) and that it also has [Xdebug version 3.2.1](https://xdebug.org/docs/install) configured.
 >
 >> 1. [What Xdebug is?](https://xdebug.org/) 
->> 1. [How to configure Xdebug with XAMPP?](https://www.youtube.com/watch?v=TexkCrk6njc)
+>> 1. [How to configure Xdebug with XAMPP?](https://www.youtube.com/watch?v=TexkCrk6njc) additionally add the line *xdebug.mode=coverage* to the file **php.ini**.
 
 * ### [Composer](https://getcomposer.org/)
 Composer is a tool for dependency management in PHP. It allows you to declare the libraries your project depends on and it will manage (install/update) them for you.
@@ -133,6 +133,12 @@ php artisan migrate --seed
 
 9. Public the symbolic links, the folders need to be created in _storage/app_:
 
+> For create the remaining required folders please introduce the following commands (you need to be located in the project root):
+>```sh
+> mkdir storage\app\exports storage\app\reports
+>```
+
+Finally public the created folders.
 ```sh
 php artisan storage:link
 ```
@@ -167,6 +173,8 @@ The software has been programmed for a periodic review of the order status, to e
 
 ## Queues
 This application works with queues for the email verfication, export and import of products and for the generation of reports, please run this command for dispatch the jobs:
+
+>The download of the generated files from the email only works if you have specified the environment variable called *APP_URL* in **.env** file with your domain URL. Example: *[https://www.mydomain.com]()*
 ```sh
 php artisan queue:work
 ```
@@ -189,10 +197,11 @@ To run the MercaTodo tests you can use one of these commands:
 > vendor/bin/phpunit --testdox
 > ```
 
-Current coverage: **98.34%**
+Current coverage: **98.27%**
 - **[See code current coverage report](https://mercatodo-coverage.netlify.app/)**
 
-To generate the coverage views in HTML, use the following command, remember that you must have Xdebug configured with the version of PHP you use.
+To generate the coverage views in HTML, use the following command, remember that you must have [Xdebug configured](https://www.youtube.com/watch?v=TexkCrk6njc) with the version of PHP you use. Additionally add the line *xdebug.mode=coverage* to the file **php.ini**.
+
 ```sh
 vendor/bin/phpunit --coverage-html tests/coverage
 ```

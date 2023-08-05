@@ -8,14 +8,16 @@ use Illuminate\Support\Facades\Cache;
 
 class UpdateProductCategoryAction
 {
-    public function handle(string $id, UpdateProductCategoryData $data): void
+    public function handle(string $id, UpdateProductCategoryData $data): int
     {
-        ProductCategory::where('id', $id)->update([
+        $response = ProductCategory::where('id', $id)->update([
             'name' => $data->name,
         ]);
 
         Cache::put('products_categories',
             ProductCategory::select('id', 'name')->orderBy('name')->get()
         );
+
+        return $response;
     }
 }

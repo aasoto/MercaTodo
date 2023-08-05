@@ -11,12 +11,14 @@ class UpdateUnitAction
     /**
      * @param UpdateUnitData $data
      */
-    public function handle(string $id, UpdateUnitData $data): void
+    public function handle(string $id, UpdateUnitData $data): int
     {
-        Unit::where('id', $id)->update([
+        $response = Unit::where('id', $id)->update([
             'name' => $data->name,
         ]);
 
         Cache::put('units', Unit::select('id', 'code', 'name')->get());
+
+        return $response;
     }
 }
