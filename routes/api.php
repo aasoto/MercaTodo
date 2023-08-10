@@ -34,6 +34,7 @@ Route::name('api.')->group(function () {
     Route::prefix('v1')->group(function () {
 
         Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase.index');
+        Route::get('/showcase/{slug}', [ShowcaseController::class, 'show'])->name('showcase.show');
 
         Route::middleware('auth:sanctum')->group(function () {
             Route::get('/product/export', ProductExportController::class)->name('product.export');
