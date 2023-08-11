@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\CityController;
 use App\Http\Controllers\Api\Admin\ProductCategoryController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductExportController;
 use App\Http\Controllers\Api\Admin\ProductImportController;
 use App\Http\Controllers\Api\Admin\ProductUploadImageController;
+use App\Http\Controllers\Api\Admin\StateController;
+use App\Http\Controllers\Api\Admin\TypeDocumentController;
 use App\Http\Controllers\Api\Admin\UnitController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
@@ -37,6 +40,10 @@ Route::name('api.')->group(function () {
 
         Route::get('/showcase', [ShowcaseController::class, 'index'])->name('showcase.index');
         Route::get('/showcase/{slug}', [ShowcaseController::class, 'show'])->name('showcase.show');
+
+        Route::get('/type_documents', [TypeDocumentController::class, 'index'])->name('type_document.index');
+        Route::get('/states', [StateController::class, 'index'])->name('state.index');
+        Route::get('/cities', [CityController::class, 'index'])->name('city.index');
 
         Route::middleware('auth:sanctum')->group(function () {
 
