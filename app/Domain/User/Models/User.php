@@ -24,6 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $surname
  * @property string $second_surname
  * @property string $email
+ * @property string $email_verified_at
  * @property string $password
  * @property string $birthdate
  * @property string $gender

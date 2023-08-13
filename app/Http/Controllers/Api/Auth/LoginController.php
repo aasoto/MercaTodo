@@ -40,6 +40,8 @@ class LoginController extends Controller
             'access_token' => $token,
             'role' => $role,
             'user_id' => intval($user->id),
+            'email_verified_at' => $user->email_verified_at,
+            'name' => $user->first_name.' '.$user->surname,
         ]);
     }
 }

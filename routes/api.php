@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::name('api.')->group(function () {
     Route::post('login', LoginController::class)->name('login');
     Route::post('logout', LogoutController::class)->name('logout');
-    Route::post('register/{role}', RegisterController::class)->name('register');
+    Route::post('register/{role:client}', RegisterController::class)->name('register.client');
 
     Route::prefix('v1')->group(function () {
 
@@ -48,6 +48,8 @@ Route::name('api.')->group(function () {
         Route::middleware('auth:sanctum')->group(function () {
 
             Route::middleware(['ability:admin'])->group(function () {
+                Route::post('register/{role:admin}', RegisterController::class)->name('register.admin');
+
                 Route::get('/product/export', ProductExportController::class)->name('product.export');
                 Route::post('/product/import', ProductImportController::class)->name('product.import');
                 Route::post('/product/image', ProductUploadImageController::class)->name('product.image');
