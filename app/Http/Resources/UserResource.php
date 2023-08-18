@@ -33,6 +33,7 @@ class UserResource extends JsonResource
             'state' => StateResource::make($this->whenLoaded('state')),
             'city_id' => $this->city_id,
             'city' => CityResource::make($this->whenLoaded('city')),
+            'role' => $this->getRoleNames(),
             'enabled' => $this->enabled,
         ];
     }
