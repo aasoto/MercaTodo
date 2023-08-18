@@ -15,6 +15,7 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'type_document' => $this->type_document,
             'type_document_info' => TypeDocumentResource::make($this->whenLoaded('typeDocument')),
             'number_document' => $this->number_document,
@@ -32,7 +33,7 @@ class UserResource extends JsonResource
             'state' => StateResource::make($this->whenLoaded('state')),
             'city_id' => $this->city_id,
             'city' => CityResource::make($this->whenLoaded('city')),
-            'enabled' => $this->enable,
+            'enabled' => $this->enabled,
         ];
     }
 }
