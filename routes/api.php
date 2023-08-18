@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\ProductUploadImageController;
 use App\Http\Controllers\Api\Admin\StateController;
 use App\Http\Controllers\Api\Admin\TypeDocumentController;
 use App\Http\Controllers\Api\Admin\UnitController;
+use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
@@ -49,6 +50,8 @@ Route::name('api.')->group(function () {
 
             Route::middleware(['ability:admin'])->group(function () {
                 Route::post('register/{role:admin}', RegisterController::class)->name('register.admin');
+
+                Route::get('/users', [UserController::class, 'index'])->name('user.index');
 
                 Route::get('/product/export', ProductExportController::class)->name('product.export');
                 Route::post('/product/import', ProductImportController::class)->name('product.import');

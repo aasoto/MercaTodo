@@ -4,6 +4,7 @@ namespace App\Domain\User\QueryBuilders;
 
 use App\Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * @method static User select(...$parameters)
@@ -92,5 +93,12 @@ class UserQueryBuilder extends Builder
         } else {
             return $this;
         }
+    }
+
+    public function queryBuilderIndex(): QueryBuilder
+    {
+        return QueryBuilder::for(User::class)
+        ->allowedFilters(['type_document', 'number_document', 'first_name', 'second_name', 'surname', 'second_surname', 'email', 'password', 'birthdate', 'gender', 'address', 'phone', 'state_id', 'city_id', 'enabled'])
+        ->allowedIncludes(['typeDocument', 'state', 'city']);
     }
 }

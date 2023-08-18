@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -106,5 +108,20 @@ class User extends Authenticatable implements MustVerifyEmail
     protected static function newFactory(): Factory
     {
         return UserFactory::new();
+    }
+
+    public function typeDocument(): HasOne
+    {
+        return $this->hasOne(TypeDocument::class, 'code', 'type_document');
+    }
+
+    public function state(): BelongsTo
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id');
     }
 }
