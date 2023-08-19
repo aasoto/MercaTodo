@@ -90,7 +90,7 @@ class ProductQueryBuilder extends Builder
     public function queryBuilderIndex(): QueryBuilder
     {
         return QueryBuilder::for(Product::class)
-        ->allowedFilters(['name', 'price', 'availability', 'products_category_id', 'unit'])
+        ->allowedFilters(['name', 'price', 'availability', 'products_category_id', 'unit', 'stock'])
         ->allowedIncludes(['category', 'product_unit']);
     }
 
