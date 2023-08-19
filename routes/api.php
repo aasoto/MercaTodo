@@ -45,6 +45,8 @@ Route::name('api.')->group(function () {
         Route::get('/type_documents', [TypeDocumentController::class, 'index'])->name('type_document.index');
         Route::get('/states', [StateController::class, 'index'])->name('state.index');
         Route::get('/cities', [CityController::class, 'index'])->name('city.index');
+        Route::get('/product_categories', [ProductCategoryController::class, 'index'])->name('product.category.index');
+        Route::get('/units', [UnitController::class, 'index'])->name('product.unit.index');
 
         Route::middleware('auth:sanctum')->group(function () {
 
@@ -62,12 +64,10 @@ Route::name('api.')->group(function () {
                 Route::patch('/product/edit/{id}', [ProductController::class, 'update'])->name('product.update');
                 Route::delete('/product/{slug}', [ProductController::class, 'destroy'])->name('product.destroy');
 
-                Route::get('/units', [UnitController::class, 'index'])->name('product.unit.index');
                 Route::post('/unit', [UnitController::class, 'store'])->name('product.unit.store');
                 Route::get('/unit/{code}', [UnitController::class, 'show'])->name('product.unit.show');
                 Route::patch('/unit/edit/{id}', [UnitController::class, 'update'])->name('product.unit.update');
 
-                Route::get('/product_categories', [ProductCategoryController::class, 'index'])->name('product.category.index');
                 Route::post('/product_category', [ProductCategoryController::class, 'store'])->name('product.category.store');
                 Route::get('/product_category/{id}', [ProductCategoryController::class, 'show'])->name('product.category.show');
                 Route::patch('/product_category/edit/{id}', [ProductCategoryController::class, 'update'])->name('product.category.update');
