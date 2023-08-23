@@ -40,12 +40,12 @@ class ProductUploadImageControllerTest extends TestCase
         Unit::factory()->create();
 
         $this->user = User::factory()->create()->assignRole('admin');
+        Sanctum::actingAs($this->user, ['admin']);
+
     }
 
     public function test_can_upload_image_for_product_from_api(): void
     {
-        Sanctum::actingAs($this->user);
-
         $response = $this->postJson(route('api.product.image'), [
             'image_file' => UploadedFile::fake()->image('fotoPrueba.png', 500, 500)->size(500),
         ]);
@@ -57,8 +57,6 @@ class ProductUploadImageControllerTest extends TestCase
 
     public function test_can_replace_image_for_product_from_api(): void
     {
-        Sanctum::actingAs($this->user);
-
         /**
          * @var Product $product
          */

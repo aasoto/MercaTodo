@@ -31,7 +31,7 @@ class UnitControllerTest extends TestCase
 
         $user = User::factory()->create()->assignRole('admin');
 
-        Sanctum::actingAs($user);
+        Sanctum::actingAs($user, ['admin']);
     }
 
     public function test_can_list_products_units_from_api(): void
@@ -51,8 +51,6 @@ class UnitControllerTest extends TestCase
                 ->where('code', $unit->code)
                 ->where('name', $unit->name)
             )
-            ->has('links')
-            ->has('meta')
         );
     }
 

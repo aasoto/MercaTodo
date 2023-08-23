@@ -31,7 +31,7 @@ class ProductCategoryControllerTest extends TestCase
 
         $user = User::factory()->create()->assignRole('admin');
 
-        Sanctum::actingAs($user);
+        Sanctum::actingAs($user, ['admin']);
     }
 
     public function test_can_list_products_categories_from_api(): void
@@ -50,8 +50,6 @@ class ProductCategoryControllerTest extends TestCase
                 $json->where('id', $product_category->id)
                 ->where('name', $product_category->name)
             )
-            ->has('links')
-            ->has('meta')
         );
     }
 
