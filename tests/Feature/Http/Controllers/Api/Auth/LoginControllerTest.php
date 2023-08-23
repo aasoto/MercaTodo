@@ -28,22 +28,41 @@ class LoginControllerTest extends TestCase
         TypeDocument::factory()->create();
     }
 
-    public function test_can_login_from_api(): void
+    public function test_can_login_admin_from_api(): void
     {
         /**
          * @var User $user
          */
-        $user = User::factory()->create();
+        $user = User::factory()->create()->assignRole('admin');
 
-        $response = $this->post(route('api.login'), [
+        $response = $this->postJson(route('api.login'), [
             'email' => $user->email,
             'password' => '12345678',
-        ], ['accept' => 'application/json']);
+        ]);
 
         $response->assertStatus(200);
         $response->assertJsonMissingValidationErrors(['email', 'password']);
         $response->assertJsonStructure([
-            'access_token',
+            'access_token', 'role', 'user_id', 'email_verified_at', 'name'
+        ]);
+    }
+
+    public function test_can_login_client_from_api(): void
+    {
+        /**
+         * @var User $user
+         */
+        $user = User::factory()->create()->assignRole('client');
+
+        $response = $this->postJson(route('api.login'), [
+            'email' => $user->email,
+            'password' => '12345678',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonMissingValidationErrors(['email', 'password']);
+        $response->assertJsonStructure([
+            'access_token', 'role', 'user_id', 'email_verified_at', 'name'
         ]);
     }
 
@@ -52,7 +71,7 @@ class LoginControllerTest extends TestCase
         /**
          * @var User $user
          */
-        $user = User::factory()->create();
+        $user = User::factory()->create()->assignRole('admin');
 
         $response = $this->post(route('api.login'), [
             'email' => $user->email,

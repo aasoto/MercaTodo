@@ -14,6 +14,9 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Cache;
 
 /**
+ * @property string id
+ * @property string name
+ * @property string state_id
  * @method static CityFactory factory(...$parameters)
  */
 class City extends Model
