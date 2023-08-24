@@ -2,15 +2,17 @@
 
 namespace App\Http\Resources;
 
+use App\Domain\User\Models\TypeDocument;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin TypeDocument;
+ */
 class TypeDocumentResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
+     * @return array<mixed>
      */
     public function toArray(Request $request): array
     {

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
  * @property int $id
  * @property string $code
  * @property string $name
+ * @method static TypeDocument select(...$parameters)
  * @method static TypeDocumentFactory factory(...$parameters)
  */
 class TypeDocument extends Model

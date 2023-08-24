@@ -64,7 +64,7 @@ class ProductExportJob implements ShouldQueue
                         'barcode' => $product->barcode,
                         'description' => $product->description,
                         'price' => $product->price,
-                        'unit' => $product->productUnit?->name,
+                        'unit' => $product->product_unit?->name,
                         'stock' => $product->stock,
                         'picture_1' => $product->picture_1,
                         'picture_2' => $product->picture_2,

@@ -12,6 +12,8 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Cache;
 
 /**
+ * @method static State select(...$parameters)
+ * @method static State orderBy(...$parameters)
  * @method static StateFactory factory(...$parameters)
  */
 class State extends Model

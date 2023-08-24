@@ -12,7 +12,7 @@ class LogoutController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(LogoutRequest $request)
+    public function __invoke(LogoutRequest $request): void
     {
         /**
          * @var User $user
