@@ -37,7 +37,7 @@ class ProductExportControllerTest extends TestCase
 
     public function test_can_enqueue_products_export_job_from_api(): void
     {
-        Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user, ['admin']);
         Queue::fake();
 
         $response = $this->getJson(route('api.product.export'));

@@ -20,7 +20,7 @@ class ProductCategoryController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $products_categories = ProductCategory::query()->queryBuilderIndex()
-            ->paginate(10);
+            ->get();
 
         return ProductsCategoryResource::collection($products_categories);
     }

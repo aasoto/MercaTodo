@@ -24,10 +24,24 @@ class LoginController extends Controller
          * @var User $user
          */
         $user = User::query()->where('email', $request->get('email'))->first();
-        $token = $user->createToken(Str::random())->plainTextToken;
+
+        $role = '';
+
+        if ($user->hasRole('admin')) {
+            $role = 'admin';
+        }
+        if ($user->hasRole('client')) {
+            $role = 'client';
+        }
+
+        $token = $user->createToken(Str::random(), [$role])->plainTextToken;
 
         return response()->json([
             'access_token' => $token,
+            'role' => $role,
+            'user_id' => intval($user->id),
+            'email_verified_at' => $user->email_verified_at,
+            'name' => $user->first_name.' '.$user->surname,
         ]);
     }
 }

@@ -44,7 +44,7 @@ class ProductImportJobTest extends TestCase
         Storage::fake(config()->get('filesystem.default'));
         Bus::fake();
         Mail::fake();
-        Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user, ['admin']);
 
         $response = $this->post(route('api.product.import'), [
             'products_file' => new UploadedFile(__DIR__.'/../../../Support/import-file.csv', 'testing_file', test: true),

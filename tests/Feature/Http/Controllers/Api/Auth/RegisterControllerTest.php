@@ -9,6 +9,7 @@ use App\Domain\User\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class RegisterControllerTest extends TestCase
@@ -52,7 +53,9 @@ class RegisterControllerTest extends TestCase
 
     public function test_can_register_new_user_admin_by_api(): void
     {
-        $response = $this->postJson(route('api.register', 'admin'), $this->data);
+        Sanctum::actingAs(User::factory()->create(), ['admin']);
+
+        $response = $this->postJson(route('api.register.admin', 'admin'), $this->data);
 
         $response->assertJsonMissingValidationErrors();
         $response->assertStatus(201);
@@ -67,7 +70,7 @@ class RegisterControllerTest extends TestCase
             ],
         ]);
 
-        $this->assertDatabaseCount('users', 1);
+        $this->assertDatabaseCount('users', 2);
         $this->assertDatabaseHas('users', [
             'first_name' => $this->data['first_name'],
             'second_name' => $this->data['second_name'],
@@ -81,7 +84,7 @@ class RegisterControllerTest extends TestCase
 
     public function test_can_register_new_user_client_by_api(): void
     {
-        $response = $this->postJson(route('api.register', 'client'), $this->data);
+        $response = $this->postJson(route('api.register.client', 'client'), $this->data);
 
         $response->assertJsonMissingValidationErrors();
         $response->assertStatus(201);
@@ -110,6 +113,8 @@ class RegisterControllerTest extends TestCase
 
     public function test_can_validate_when_some_fields_are_not_sent(): void
     {
+        Sanctum::actingAs(User::factory()->create(), ['admin']);
+
         /**
          * @var User $user
          */
@@ -133,7 +138,7 @@ class RegisterControllerTest extends TestCase
             'city_id' => '',
         ];
 
-        $response = $this->post(route('api.register', 'admin'), $data, [
+        $response = $this->post(route('api.register.admin', 'admin'), $data, [
             'Accept' => 'application/json',
         ]);
 

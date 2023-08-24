@@ -49,7 +49,7 @@ class ProductControllerTest extends TestCase
 
         $user = User::factory()->create()->assignRole('admin');
 
-        Sanctum::actingAs($user);
+        Sanctum::actingAs($user, ['admin']);
     }
 
     public function test_can_list_products_from_api(): void

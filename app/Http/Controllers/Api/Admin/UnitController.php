@@ -20,7 +20,7 @@ class UnitController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $units = Unit::query()->queryBuilderIndex()
-            ->paginate(10);
+            ->get();
 
         return UnitResource::collection($units);
     }

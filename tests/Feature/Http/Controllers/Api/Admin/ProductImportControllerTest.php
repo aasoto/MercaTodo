@@ -41,7 +41,7 @@ class ProductImportControllerTest extends TestCase
 
     public function test_can_enqueue_products_import_job_from_api(): void
     {
-        Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user, ['admin']);
         Queue::fake();
 
         $response = $this->post(route('api.product.import'), [

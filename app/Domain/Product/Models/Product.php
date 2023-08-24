@@ -79,7 +79,7 @@ class Product extends Model
         return $this->belongsTo(ProductCategory::class, 'products_category_id');
     }
 
-    public function productUnit(): HasOne
+    public function product_unit(): HasOne
     {
         return $this->hasOne(Unit::class, 'code', 'unit');
     }
