@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Client\OrderController;
+use App\Http\Controllers\Api\Client\PaymentMethodController;
 use App\Http\Controllers\Api\Client\ShowcaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -78,6 +79,9 @@ Route::name('api.')->group(function () {
                 Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
                 Route::post('/order', [OrderController::class, 'store'])->name('order.store');
                 Route::get('/order/{code}', [OrderController::class, 'show'])->name('order.show');
+
+                Route::get('/payment_methods', PaymentMethodController::class)->name('payment_method');
+
             });
         });
 

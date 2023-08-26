@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * @property string $id
+ * @property string $code
+ * @property string $name
+ */
 class PaymentMethod extends Model
 {
     use HasFactory;
