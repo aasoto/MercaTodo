@@ -66,7 +66,7 @@ class OrderController extends Controller
 
         return response()->json([
             'message' => trans('Order created'),
-            'orderId' => $order->id,
+            'orderCode' => $order->code,
         ], 201);
     }
 
@@ -80,6 +80,7 @@ class OrderController extends Controller
             $products_by_order = OrderHasProduct::query()
                 -> select(
                         'products.name',
+                        'products.slug',
                         'order_has_products.price',
                         'order_has_products.quantity',
                         'units.name as unit',
